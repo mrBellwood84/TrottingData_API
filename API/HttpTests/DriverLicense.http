@@ -1,0 +1,69 @@
+@API_HostAddress = http://localhost:5007
+
+### Get all Driver License IDs
+GET {{API_HostAddress}}/model/driverlicense/id
+Accept: application/json
+
+> {%
+    client.test("Request should be successful", function() {
+        client.assert(response.status === 200, "Expected HTTP 200");
+    });
+%}
+
+
+### Get all simple Driver License entities
+GET {{API_HostAddress}}/model/driverlicense/entity
+Accept: application/json
+
+> {%
+    client.test("Request should return all simple entities", function() {
+        client.assert(response.status === 200, "Expected HTTP 200");
+        client.assert(Array.isArray(response.body), "Expected response to be an array");
+    });
+%}
+
+
+### Get simple Driver License entity by ID
+GET {{API_HostAddress}}/model/driverlicense/entity/055d7a3d-77b9-47ff-9d33-a4aae14fa891
+Accept: application/json
+
+> {%
+    client.test("Request should return simple entity", function() {
+        client.assert(response.status === 200, "Expected HTTP 200");
+        client.assert(response.body.id === "055d7a3d-77b9-47ff-9d33-a4aae14fa891", "ID mismatch");
+    });
+%}
+
+
+### Get all complex Driver License entities
+GET {{API_HostAddress}}/model/driverlicense/complex
+Accept: application/json
+
+> {%
+    client.test("Request should return all complex entities", function() {
+        client.assert(response.status === 200, "Expected HTTP 200");
+        client.assert(Array.isArray(response.body), "Expected response to be an array");
+    });
+%}
+
+
+### Get complex Driver License entity by ID
+GET {{API_HostAddress}}/model/driverlicense/complex/055d7a3d-77b9-47ff-9d33-a4aae14fa891
+Accept: application/json
+
+> {%
+    client.test("Request should return complex entity", function() {
+        client.assert(response.status === 200, "Expected HTTP 200");
+    });
+%}
+
+
+### Test 404 behavior for non-existing entity
+GET {{API_HostAddress}}/model/driverlicense/complex/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+> {%
+    client.test("Request should return 404 NotFound", function() {
+        client.assert(response.status === 404, "Expected HTTP 404");
+    });
+%}

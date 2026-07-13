@@ -6,7 +6,7 @@ public interface IDbService<TSimple, TComplex>
 {
     Task<List<IdEntity>> GetIdsAsync();
     Task<List<TSimple>> GetAllSimpleAsync();
-    Task<TSimple> GetSimpleByIdAsync(string id);
+    Task<TSimple?> GetSimpleByIdAsync(string id);
     Task<List<TComplex>> GetAllComplexAsync();
-    Task<TComplex> GetComplexByIdAsync(string id);
+    Task<TComplex?> GetComplexByIdAsync(string id);
 }
