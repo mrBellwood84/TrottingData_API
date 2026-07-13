@@ -9,6 +9,7 @@ var services = builder.Services;
 services.AddControllers();
 
 // add services
+services.AddCache();
 services.AddEntityPolicies();
 services.AddPersistence();
 
