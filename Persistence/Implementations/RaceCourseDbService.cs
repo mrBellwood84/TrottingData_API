@@ -11,8 +11,8 @@ namespace Persistence.Implementations;
 public class RaceCourseDbService : DbService<RaceCourseEntity, RaceCourseComplex>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RaceCourseDbService"/> class
-    /// and configures the specific SQL queries for Race Course entities.
+    ///     Initializes a new instance of the <see cref="RaceCourseDbService" /> class
+    ///     and configures the specific SQL queries for Race Course entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="policy">The policy governing access to race course entities.</param>

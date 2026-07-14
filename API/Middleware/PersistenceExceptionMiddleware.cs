@@ -5,15 +5,15 @@ using Persistence.Exceptions;
 namespace API.Middleware;
 
 /// <summary>
-/// Global middleware to intercept, log, and gracefully handle database and persistence exceptions.
+///     Global middleware to intercept, log, and gracefully handle database and persistence exceptions.
 /// </summary>
 /// <remarks>
-/// Converts caught exceptions into standardized RFC 7807 Problem Details responses.
+///     Converts caught exceptions into standardized RFC 7807 Problem Details responses.
 /// </remarks>
 public class PersistenceExceptionMiddleware(RequestDelegate next, ILogger<PersistenceExceptionMiddleware> logger)
 {
     /// <summary>
-    /// Invokes the middleware to process the current HTTP context.
+    ///     Invokes the middleware to process the current HTTP context.
     /// </summary>
     /// <param name="context">The current HTTP context.</param>
     public async Task InvokeAsync(HttpContext context)
@@ -25,12 +25,12 @@ public class PersistenceExceptionMiddleware(RequestDelegate next, ILogger<Persis
         catch (PersistenceQueryNotAllowedException ex)
         {
             logger.LogWarning(ex, "Persistence query blocked by policy: {Message}", ex.Message);
-            
+
             await WriteProblemDetailsResponseAsync(
                 context,
-                statusCode: StatusCodes.Status403Forbidden,
-                title: "Access Forbidden",
-                detail: ex.Message
+                StatusCodes.Status403Forbidden,
+                "Access Forbidden",
+                ex.Message
             );
         }
         catch (Exception ex)
@@ -41,17 +41,18 @@ public class PersistenceExceptionMiddleware(RequestDelegate next, ILogger<Persis
             // Return a generic, safe message to the client to avoid leaking sensitive database schemas or connection details
             await WriteProblemDetailsResponseAsync(
                 context,
-                statusCode: StatusCodes.Status500InternalServerError,
-                title: "Internal Server Error",
-                detail: "An unexpected error occurred while processing your request. Please try again later."
+                StatusCodes.Status500InternalServerError,
+                "Internal Server Error",
+                "An unexpected error occurred while processing your request. Please try again later."
             );
         }
     }
 
     /// <summary>
-    /// Writes a standardized RFC 7807 Problem Details JSON response to the HTTP output stream.
+    ///     Writes a standardized RFC 7807 Problem Details JSON response to the HTTP output stream.
     /// </summary>
-    private static async Task WriteProblemDetailsResponseAsync(HttpContext context, int statusCode, string title, string detail)
+    private static async Task WriteProblemDetailsResponseAsync(HttpContext context, int statusCode, string title,
+        string detail)
     {
         context.Response.ContentType = "application/problem+json";
         context.Response.StatusCode = statusCode;

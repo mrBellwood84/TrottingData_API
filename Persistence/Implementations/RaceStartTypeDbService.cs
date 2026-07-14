@@ -11,8 +11,8 @@ namespace Persistence.Implementations;
 public class RaceStartTypeDbService : DbService<RaceStartTypeEntity, RaceStartTypeComplex>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RaceStartTypeDbService"/> class
-    /// and configures the specific SQL queries for Race Start Type entities.
+    ///     Initializes a new instance of the <see cref="RaceStartTypeDbService" /> class
+    ///     and configures the specific SQL queries for Race Start Type entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="modelPolicy">The policy governing access to race start type entities.</param>

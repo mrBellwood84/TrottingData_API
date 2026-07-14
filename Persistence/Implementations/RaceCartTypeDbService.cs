@@ -11,8 +11,8 @@ namespace Persistence.Implementations;
 public class RaceCartTypeDbService : DbService<RaceCartTypeEntity, RaceCartTypeComplex>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RaceCartTypeDbService"/> class
-    /// and configures the specific SQL queries for Race Cart Type entities.
+    ///     Initializes a new instance of the <see cref="RaceCartTypeDbService" /> class
+    ///     and configures the specific SQL queries for Race Cart Type entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="policy">The policy governing access to race cart type entities.</param>

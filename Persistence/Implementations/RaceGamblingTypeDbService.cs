@@ -11,8 +11,8 @@ namespace Persistence.Implementations;
 public class RaceGamblingTypeDbService : DbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RaceGamblingTypeDbService"/> class
-    /// and configures the specific SQL queries for Race Gambling Type entities.
+    ///     Initializes a new instance of the <see cref="RaceGamblingTypeDbService" /> class
+    ///     and configures the specific SQL queries for Race Gambling Type entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="policy">The policy governing access to race gambling type entities.</param>

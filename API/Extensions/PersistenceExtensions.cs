@@ -6,12 +6,12 @@ using Persistence.Interfaces;
 namespace API.Extensions;
 
 /// <summary>
-/// Extension methods for configuring persistence and database services.
+///     Extension methods for configuring persistence and database services.
 /// </summary>
 public static class PersistenceExtensions
 {
     /// <summary>
-    /// Registers all database services (IDbService) in the Dependency Injection container.
+    ///     Registers all database services (IDbService) in the Dependency Injection container.
     /// </summary>
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {

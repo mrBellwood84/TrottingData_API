@@ -6,15 +6,15 @@ using Models.Entity;
 namespace API.Extensions;
 
 /// <summary>
-/// Extension methods for configuring and registering repository services.
+///     Extension methods for configuring and registering repository services.
 /// </summary>
 public static class RepositoryExtensions
 {
     /// <summary>
-    /// Registers all repository services (IRepositoryService) in the Dependency Injection container.
+    ///     Registers all repository services (IRepositoryService) in the Dependency Injection container.
     /// </summary>
     /// <param name="services">The service collection to add the repository services to.</param>
-    /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
+    /// <returns>The updated <see cref="IServiceCollection" />.</returns>
     public static IServiceCollection AddRepositoryServices(this IServiceCollection services)
     {
         // the simple ones <3
@@ -23,7 +23,9 @@ public static class RepositoryExtensions
         services.AddScoped<IRepositoryService<HorseTypeEntity, HorseTypeComplex>, HorseTypeRepository>();
         services.AddScoped<IRepositoryService<RaceCartTypeEntity, RaceCartTypeComplex>, RaceCartTypeRepository>();
         services.AddScoped<IRepositoryService<RaceCourseEntity, RaceCourseComplex>, RaceCourseRepository>();
-        services.AddScoped<IRepositoryService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeRepository>();
+        services
+            .AddScoped<IRepositoryService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>,
+                RaceGamblingTypeRepository>();
         services.AddScoped<IRepositoryService<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeRepository>();
 
         return services;

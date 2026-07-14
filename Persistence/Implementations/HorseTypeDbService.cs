@@ -11,8 +11,8 @@ namespace Persistence.Implementations;
 public class HorseTypeDbService : DbService<HorseTypeEntity, HorseTypeComplex>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="HorseTypeDbService"/> class
-    /// and configures the specific SQL queries for Horse Type entities.
+    ///     Initializes a new instance of the <see cref="HorseTypeDbService" /> class
+    ///     and configures the specific SQL queries for Horse Type entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="policy">The policy governing access to horse type entities.</param>

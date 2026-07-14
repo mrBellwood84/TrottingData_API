@@ -11,8 +11,8 @@ namespace Persistence.Implementations;
 public class HorseSexDbService : DbService<HorseSexEntity, HorseSexComplex>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="HorseSexDbService"/> class
-    /// and configures the specific SQL queries for Horse Sex entities.
+    ///     Initializes a new instance of the <see cref="HorseSexDbService" /> class
+    ///     and configures the specific SQL queries for Horse Sex entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="policy">The policy governing access to horse sex entities.</param>
@@ -38,7 +38,7 @@ public class HorseSexDbService : DbService<HorseSexEntity, HorseSexComplex>
     private protected override async Task<HorseSexComplex?> GetComplexByIdLogicAsync(string id)
     {
         await using var connection = await CreateConnection();
-        
+
         // OBS: Husk den generiske typen <HorseSexComplex> her!
         var data = await connection.QueryFirstOrDefaultAsync<HorseSexComplex>(QueryComplexById, new { Id = id });
         return data;
