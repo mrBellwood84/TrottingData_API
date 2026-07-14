@@ -13,6 +13,8 @@ public static class CacheExtensions
     public static IServiceCollection AddCache(this IServiceCollection services)
     {
         services.AddSingleton(typeof(CacheService<>));
+        services.AddSingleton(typeof(SourcedCacheService<>));
+        
         return services;
     }
 }
