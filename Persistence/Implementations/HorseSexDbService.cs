@@ -7,8 +7,15 @@ using Persistence.Services;
 
 namespace Persistence.Implementations;
 
+/// <inheritdoc />
 public class HorseSexDbService : DbService<HorseSexEntity, HorseSexComplex>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HorseSexDbService"/> class
+    /// and configures the specific SQL queries for Horse Sex entities.
+    /// </summary>
+    /// <param name="configuration">The application configuration.</param>
+    /// <param name="policy">The policy governing access to horse sex entities.</param>
     public HorseSexDbService(IConfiguration configuration, ModelPolicy<HorseSexEntity> policy)
         : base(configuration, policy)
     {
@@ -19,6 +26,7 @@ public class HorseSexDbService : DbService<HorseSexEntity, HorseSexComplex>
         QueryComplexById = @"SELECT Id, Sex FROM HorseSex WHERE Id = @Id";
     }
 
+    /// <inheritdoc />
     private protected override async Task<List<HorseSexComplex>> GetAllComplexLogicAsync()
     {
         await using var connection = await CreateConnection();
@@ -26,10 +34,13 @@ public class HorseSexDbService : DbService<HorseSexEntity, HorseSexComplex>
         return data.ToList();
     }
 
+    /// <inheritdoc />
     private protected override async Task<HorseSexComplex?> GetComplexByIdLogicAsync(string id)
     {
         await using var connection = await CreateConnection();
-        var data = await connection.QueryFirstOrDefaultAsync(QueryComplexById, new { Id = id });
+        
+        // OBS: Husk den generiske typen <HorseSexComplex> her!
+        var data = await connection.QueryFirstOrDefaultAsync<HorseSexComplex>(QueryComplexById, new { Id = id });
         return data;
     }
 }
