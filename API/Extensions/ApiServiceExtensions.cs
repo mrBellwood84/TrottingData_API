@@ -13,6 +13,7 @@ public static class ApiServiceExtensions
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddControllers();
+        services.AddOpenApi();
 
         return services;
     }

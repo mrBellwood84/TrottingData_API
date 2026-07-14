@@ -1,4 +1,5 @@
 using API.Middleware;
+using Scalar.AspNetCore;
 
 namespace API.Extensions;
 
@@ -15,6 +16,16 @@ public static class PipelineExtensions
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
         app.UseMiddleware<PersistenceExceptionMiddleware>();
+
+        app.MapOpenApi();
+
+        app.MapScalarApiReference(options =>
+        {
+            options
+                .WithTitle("TrottingData API Documentation")
+                .WithTheme(ScalarTheme.DeepSpace)
+                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+        });
 
         app.MapControllers();
 
