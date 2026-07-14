@@ -5,7 +5,7 @@ namespace API.Extensions;
 
 public static class PolicyExtensions
 {
-    public static IServiceCollection AddEntityPolicies(this IServiceCollection services)
+    public static IServiceCollection AddModelPolicies(this IServiceCollection services)
     {
         services.RegisterEntityPolicy<DriverLicenseEntity>(allowSimple: true, allowComplex: true);
         
@@ -14,7 +14,7 @@ public static class PolicyExtensions
 
     private static void RegisterEntityPolicy<T>(this IServiceCollection services, bool allowSimple, bool allowComplex)
     {
-        services.AddSingleton(new EntityPolicy<T>
+        services.AddSingleton(new ModelPolicy<T>
         {
             AllowAllSimple = allowSimple,
             AllowAllComplex = allowComplex,

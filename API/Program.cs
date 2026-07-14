@@ -10,8 +10,9 @@ services.AddControllers();
 
 // add services
 services.AddCache();
-services.AddEntityPolicies();
+services.AddModelPolicies();
 services.AddPersistence();
+services.AddRepositoryServices();
 
 // crash on missing dependency added
 builder.Host.UseDefaultServiceProvider(options =>

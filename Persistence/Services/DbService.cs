@@ -6,7 +6,7 @@ using Persistence.Interfaces;
 
 namespace Persistence.Services;
 
-public class DbService<TSimple, TComplex>(IConfiguration configuration, EntityPolicy<TSimple> policy) 
+public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPolicy<TSimple> policy) 
     : DbConnection(configuration), IDbService<TSimple, TComplex>
 {
     internal string QueryIds { get; init; } = string.Empty;
@@ -15,13 +15,13 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, EntityPo
     internal string QueryComplex { get; init; } = string.Empty;
     internal string QueryComplexById { get; init; } = string.Empty;
     
-    public async Task<List<IdEntity>> GetIdsAsync()
+    public async Task<List<IdModel>> GetIdsAsync()
     {
         if (string.IsNullOrEmpty(QueryIds))
             throw new PersistenceMissingQueryException($"Missing QueryIds for {typeof(TComplex).Name})");
 
         await using var connection = await CreateConnection();
-        var data = await connection.QueryAsync<IdEntity>(QueryIds);
+        var data = await connection.QueryAsync<IdModel>(QueryIds);
         return data.ToList();
     }
 

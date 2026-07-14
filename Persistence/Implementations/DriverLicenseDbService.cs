@@ -9,7 +9,7 @@ namespace Persistence.Implementations;
 
 public class DriverLicenseDbService : DbService<DriverLicenseEntity, DriverLicenseComplex>
 {
-    public DriverLicenseDbService(IConfiguration configuration, EntityPolicy<DriverLicenseEntity> policy) : base(
+    public DriverLicenseDbService(IConfiguration configuration, ModelPolicy<DriverLicenseEntity> policy) : base(
         configuration, policy)
     {
         QueryIds = @"SELECT Id FROM DriverLicense";

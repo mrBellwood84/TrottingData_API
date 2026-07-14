@@ -1,6 +1,8 @@
+using Models.Interfaces;
+
 namespace Models.Complex;
 
-public class DriverLicenseComplex
+public class DriverLicenseComplex : IDbItem
 {
     public string Id { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;

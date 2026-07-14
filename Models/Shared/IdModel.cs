@@ -1,6 +1,6 @@
 namespace Models.Entities;
 
-public class IdEntity
+public class IdModel
 {
     public string Id { get; init; }
 }
