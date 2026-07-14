@@ -19,7 +19,7 @@ public class SourcedDbService<TEntity, TComplex>(
     IConfiguration configuration,
     ModelPolicy<TEntity> policy)
     : DbService<TEntity, TComplex>(configuration, policy), ISourcedDbService<TEntity, TComplex>
-    where TEntity : ISourcedEntity
+    where TEntity : ISourcedEntity where TComplex : ISourcedEntity
 {
     /// <summary>
     ///     Gets the SQL query used to retrieve a single flat entity by its external Source ID.

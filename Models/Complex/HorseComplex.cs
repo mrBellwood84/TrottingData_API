@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Complex;
 
-public class HorseComplex : IEntity
+public class HorseComplex : IEntity, ISourcedEntity
 {
     public string Id { get; init; }
     public string SourceId { get; init; }

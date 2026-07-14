@@ -17,7 +17,7 @@ public static class RepositoryExtensions
     /// <returns>The updated <see cref="IServiceCollection" />.</returns>
     public static IServiceCollection AddRepositoryServices(this IServiceCollection services)
     {
-        // the simple ones <3
+        // the flat ones ones <3
         services.AddScoped<IRepositoryService<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseRepository>();
         services.AddScoped<IRepositoryService<HorseSexEntity, HorseSexComplex>, HorseSexRepository>();
         services.AddScoped<IRepositoryService<HorseTypeEntity, HorseTypeComplex>, HorseTypeRepository>();
@@ -27,6 +27,10 @@ public static class RepositoryExtensions
             .AddScoped<IRepositoryService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>,
                 RaceGamblingTypeRepository>();
         services.AddScoped<IRepositoryService<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeRepository>();
+        
+        // the sourced ones ^^
+        services.AddScoped<ISourcedRepositoryService<DriverEntity, DriverComplex>, DriverRepository>();
+        services.AddScoped<ISourcedRepositoryService<HorseEntity, HorseComplex>, HorseRepository>();
 
         return services;
     }
