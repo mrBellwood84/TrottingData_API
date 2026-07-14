@@ -15,15 +15,15 @@ public static class PolicyExtensions
     /// <returns>The updated <see cref="IServiceCollection" />.</returns>
     public static IServiceCollection AddModelPolicies(this IServiceCollection services)
     {
-        services.RegisterEntityPolicy<DriverEntity>(false);
-        services.RegisterEntityPolicy<DriverLicenseEntity>(true);
-        services.RegisterEntityPolicy<HorseEntity>(false);
-        services.RegisterEntityPolicy<HorseSexEntity>(true);
-        services.RegisterEntityPolicy<HorseTypeEntity>(true);
-        services.RegisterEntityPolicy<RaceCartTypeEntity>(true);
-        services.RegisterEntityPolicy<RaceCourseEntity>(true);
-        services.RegisterEntityPolicy<RaceGamblingTypeEntity>(true);
-        services.RegisterEntityPolicy<RaceStartTypeEntity>(true);
+        services.RegisterEntityPolicy<DriverEntity>(false, false);
+        services.RegisterEntityPolicy<DriverLicenseEntity>(true, true);
+        services.RegisterEntityPolicy<HorseEntity>(false, false);
+        services.RegisterEntityPolicy<HorseSexEntity>(false, false);
+        services.RegisterEntityPolicy<HorseTypeEntity>(false, false);
+        services.RegisterEntityPolicy<RaceCartTypeEntity>(true, true);
+        services.RegisterEntityPolicy<RaceCourseEntity>(true, true);
+        services.RegisterEntityPolicy<RaceGamblingTypeEntity>(true, true);
+        services.RegisterEntityPolicy<RaceStartTypeEntity>(true, true);
 
         return services;
     }
@@ -33,11 +33,13 @@ public static class PolicyExtensions
     /// </summary>
     /// <typeparam name="T">The entity type the policy applies to.</typeparam>
     /// <param name="services">The service collection.</param>
+    /// <param name="allowIdList"></param>
     /// <param name="allowGetAll">Specifies whether retrieving all entities of type <typeparamref name="T" /> is allowed.</param>
-    private static void RegisterEntityPolicy<T>(this IServiceCollection services, bool allowGetAll)
+    private static void RegisterEntityPolicy<T>(this IServiceCollection services, bool allowIdList, bool allowGetAll)
     {
         services.AddSingleton(new ModelPolicy<T>
         {
+            AllowIdList = allowIdList,
             AllowGetAll = allowGetAll
         });
     }

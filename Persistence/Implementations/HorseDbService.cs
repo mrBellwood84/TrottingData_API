@@ -23,20 +23,19 @@ public class HorseDbService : SourcedDbService<HorseEntity, HorseComplex>
         : base(configuration, policy)
     {
         // Flat / simple queries mapping 1:1 with the Horse table
-        QueryIds = @"SELECT Id FROM Horse LIMIT 10";
         QueryEntityById = @"SELECT * FROM Horse WHERE Id = @Id";
         QueryEntityBySourceId = @"SELECT * FROM Horse WHERE SourceId = @SourceId";
 
         // Complex queries joining both sex and type info to build the complete horse model
         QueryComplexById = @"SELECT * FROM Horse AS h
-                                JOIN HorseSex AS hs on h.HorseSexId = hs.Id
-                                JOIN HorseType AS ht ON h.HorseTypeId = ht.Id 
-                                WHERE h.Id = @Id";
+                    LEFT JOIN HorseSex AS hs ON h.HorseSexId = hs.Id
+                    LEFT JOIN HorseType AS ht ON h.HorseTypeId = ht.Id 
+                    WHERE h.Id = @Id";
 
         QueryComplexBySourceId = @"SELECT * FROM Horse AS h
-                                JOIN HorseSex as hs on h.HorseSexId = hs.Id
-                                JOIN HorseType AS ht ON h.HorseTypeId = ht.Id 
-                                WHERE h.SourceId = @SourceId";
+                          LEFT JOIN HorseSex AS hs ON h.HorseSexId = hs.Id
+                          LEFT JOIN HorseType AS ht ON h.HorseTypeId = ht.Id 
+                          WHERE h.SourceId = @SourceId";
     }
 
     /// <summary>
@@ -53,7 +52,7 @@ public class HorseDbService : SourcedDbService<HorseEntity, HorseComplex>
         // Multi-mapping: Dapper maps each row to three distinct objects: HorseComplex, HorseSexComplex, and HorseTypeComplex.
         // The lambda expression then wires up the relationships before returning the parent horse object.
         var data = await connection
-            .QueryAsync<HorseComplex, HorseSexComplex, HorseTypeComplex, HorseComplex>(
+            .QueryAsync<HorseComplex, HorseSexComplex?, HorseTypeComplex?, HorseComplex>(
                 query,
                 (horse, sex, type) =>
                 {

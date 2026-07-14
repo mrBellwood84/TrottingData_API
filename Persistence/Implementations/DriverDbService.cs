@@ -23,17 +23,16 @@ public class DriverDbService : SourcedDbService<DriverEntity, DriverComplex>
         : base(configuration, policy)
     {
         // Flat / simple queries mapping 1:1 with the Driver table
-        QueryIds = @"SELECT Id FROM Driver LIMIT 10";
         QueryEntityById = @"SELECT * FROM Driver WHERE Id = @Id";
         QueryEntityBySourceId = @"SELECT * FROM Driver WHERE SourceId = @SourceId";
 
         // Complex queries requiring SQL Joins to stitch together the complete domain model
         QueryComplexById = @"SELECT * FROM Driver AS d 
-                                JOIN DriverLicense AS dl on d.DriverLicenseId = dl.Id
+                                LEFT JOIN DriverLicense AS dl on d.DriverLicenseId = dl.Id
                                 WHERE d.Id = @Id";
 
         QueryComplexBySourceId = @"SELECT * FROM Driver AS d 
-                                JOIN DriverLicense AS dl on d.DriverLicenseId = dl.Id
+                                LEFT JOIN DriverLicense AS dl on d.DriverLicenseId = dl.Id
                                 WHERE d.SourceId = @SourceId";
     }
 
@@ -51,7 +50,7 @@ public class DriverDbService : SourcedDbService<DriverEntity, DriverComplex>
         // Multi-mapping: Dapper splits each row into a DriverComplex and a DriverLicenseComplex,
         // then passes them into the lambda where they are stitched together.
         var data = await connection
-            .QueryAsync<DriverComplex, DriverLicenseComplex, DriverComplex>(
+            .QueryAsync<DriverComplex, DriverLicenseComplex?, DriverComplex>(
                 query,
                 (driver, license) =>
                 {

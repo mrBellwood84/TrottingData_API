@@ -1,47 +1,41 @@
 @API_HostAddress = http://localhost:5007
 
-### =======================================================
-### DRIVER CONTROLLER TESTS
-### =======================================================
-
-### 1. Get limited Driver IDs (Expected: 200 OK)
-# Retrieves a capped list of raw GUIDs and extracts the first one
+### 1. Get all Driver IDs (Expected: 403 Forbidden)
+# Blocked by model policy
 GET {{API_HostAddress}}/model/driver/id
 Accept: application/json
 
 > {%
-    client.test("Should retrieve a limited list of IDs", function () {
-        client.assert(response.status === 200, "Expected HTTP 200");
-        client.assert(response.body.length > 0, "Expected to find at least one ID");
-
-        // Extract the raw internal GUID dynamically
-        client.global.set("driver_id", response.body[0].id);
+    client.test("Should block bulk ID retrieval", function () {
+        client.assert(response.status === 403, "Expected HTTP 403 Forbidden due to security policy");
     });
 %}
 
 
 ### 2. Get simple Driver entity by ID (Expected: 200 OK)
-# Retrieves the entity representation to dynamically extract the Source ID
+< {%
+    client.global.set("driver_id", "09be28e0-00ec-461e-bf20-5fa5a3af4dec");
+%}
 GET {{API_HostAddress}}/model/driver/entity/{{driver_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return simple entity and extract Source ID", function () {
+    client.test("Should return simple driver entity by ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.id === client.global.get("driver_id"), "ID mismatch");
-
-        // Dynamically extract and save the external Source ID for subsequent tests
-        client.global.set("driver_source_id", response.body.sourceId);
     });
 %}
 
 
 ### 3. Get complex Driver entity by ID (Expected: 200 OK)
+< {%
+    client.global.set("driver_id", "09be28e0-00ec-461e-bf20-5fa5a3af4dec");
+%}
 GET {{API_HostAddress}}/model/driver/complex/{{driver_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return complex entity with correct ID", function () {
+    client.test("Should return complex driver entity by ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.id === client.global.get("driver_id"), "ID mismatch");
     });
@@ -49,11 +43,14 @@ Accept: application/json
 
 
 ### 4. Get simple Driver entity by external Source ID (Expected: 200 OK)
+< {%
+    client.global.set("driver_source_id", "30016511");
+%}
 GET {{API_HostAddress}}/model/driver/entity/source/{{driver_source_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return simple entity with correct Source ID", function () {
+    client.test("Should return simple driver entity by Source ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.sourceId === client.global.get("driver_source_id"), "Source ID mismatch");
     });
@@ -61,11 +58,14 @@ Accept: application/json
 
 
 ### 5. Get complex Driver entity by external Source ID (Expected: 200 OK)
+< {%
+    client.global.set("driver_source_id", "30016511");
+%}
 GET {{API_HostAddress}}/model/driver/complex/source/{{driver_source_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return complex entity with correct Source ID", function () {
+    client.test("Should return complex driver entity by Source ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.sourceId === client.global.get("driver_source_id"), "Source ID mismatch");
     });
@@ -73,7 +73,7 @@ Accept: application/json
 
 
 ### 6. Get all simple Driver entities (Expected: 403 Forbidden)
-# Verified to be strictly blocked by model policy
+# Blocked by model policy
 GET {{API_HostAddress}}/model/driver/entity
 Accept: application/json
 
@@ -85,7 +85,7 @@ Accept: application/json
 
 
 ### 7. Get all complex Driver entities (Expected: 403 Forbidden)
-# Verified to be strictly blocked by model policy
+# Blocked by model policy
 GET {{API_HostAddress}}/model/driver/complex
 Accept: application/json
 

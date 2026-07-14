@@ -1,79 +1,99 @@
 @API_HostAddress = http://localhost:5007
 
-### =======================================================
-### HORSE CONTROLLER TESTS
-### =======================================================
-
-### 1. Get limited Horse IDs (Expected: 200 OK)
-# Retrieves a capped list of raw GUIDs and extracts the first one
-GET {{API_HostAddress}}/model/horse/id
-Accept: application/json
-
-> {%
-    client.test("Should retrieve a limited list of IDs", function () {
-        client.assert(response.status === 200, "Expected HTTP 200");
-        client.assert(response.body.length > 0, "Expected to find at least one ID");
-
-        // Extract the raw internal GUID dynamically
-        client.global.set("horse_id", response.body[2].id);
-    });
+### 1. Get simple Horse entity by ID - Standard (Expected: 200 OK)
+< {%
+    client.global.set("horse_id", "000049b2-f0a0-4972-839c-bb279b99a84b");
 %}
-
-
-### 2. Get simple Horse entity by ID (Expected: 200 OK)
-# Retrieves the entity representation to dynamically extract the Source ID
 GET {{API_HostAddress}}/model/horse/entity/{{horse_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return simple entity and extract Source ID", function () {
+    client.test("Should return simple horse entity by ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.id === client.global.get("horse_id"), "ID mismatch");
-
-        // Dynamically extract and save the external Source ID for subsequent tests
-        client.global.set("horse_source_id", response.body.sourceId);
     });
 %}
 
 
-### 3. Get complex Horse entity by ID (Expected: 200 OK)
+### 2. Get complex Horse entity by ID - Standard (Expected: 200 OK)
+< {%
+    client.global.set("horse_id", "000049b2-f0a0-4972-839c-bb279b99a84b");
+%}
 GET {{API_HostAddress}}/model/horse/complex/{{horse_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return complex entity with correct ID", function () {
+    client.test("Should return complex horse entity by ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.id === client.global.get("horse_id"), "ID mismatch");
     });
 %}
 
 
-### 4. Get simple Horse entity by external Source ID (Expected: 200 OK)
+### 3. Get complex Horse entity by ID - Minimal data / null fields (Expected: 200 OK)
+# Verifies that horses with missing or null fields (e.g. sex, type, name, birth year) are handled gracefully
+< {%
+    client.global.set("minimal_horse_id", "0090fb4a-5d74-4f93-9071-da28a8f75715");
+%}
+GET {{API_HostAddress}}/model/horse/complex/{{minimal_horse_id}}
+Accept: application/json
+
+> {%
+    client.test("Should return complex minimal horse entity by ID even with null values", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK despite null/missing database values");
+        client.assert(response.body.id === client.global.get("minimal_horse_id"), "ID mismatch");
+    });
+%}
+
+
+### 4. Get simple Horse entity by external Source ID - Standard (Expected: 200 OK)
+< {%
+    client.global.set("horse_source_id", "75200221S080356");
+%}
 GET {{API_HostAddress}}/model/horse/entity/source/{{horse_source_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return simple entity with correct Source ID", function () {
+    client.test("Should return simple horse entity by Source ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.sourceId === client.global.get("horse_source_id"), "Source ID mismatch");
     });
 %}
 
 
-### 5. Get complex Horse entity by external Source ID (Expected: 200 OK)
+### 5. Get complex Horse entity by external Source ID - Standard (Expected: 200 OK)
+< {%
+    client.global.set("horse_source_id", "75200221S080356");
+%}
 GET {{API_HostAddress}}/model/horse/complex/source/{{horse_source_id}}
 Accept: application/json
 
 > {%
-    client.test("Should return complex entity with correct Source ID", function () {
+    client.test("Should return complex horse entity by Source ID", function () {
         client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.sourceId === client.global.get("horse_source_id"), "Source ID mismatch");
     });
 %}
 
 
-### 6. Get all simple Horse entities (Expected: 403 Forbidden)
-# Verified to be strictly blocked by model policy
+### 6. Get complex Horse entity by external Source ID - Minimal data / null fields (Expected: 200 OK)
+# Verifies that horses with missing or null fields are handled gracefully by Source ID lookup
+< {%
+    client.global.set("minimal_horse_source_id", "75200211S103657");
+%}
+GET {{API_HostAddress}}/model/horse/complex/source/{{minimal_horse_source_id}}
+Accept: application/json
+
+> {%
+    client.test("Should return complex minimal horse entity by Source ID even with null values", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK despite null/missing database values");
+        client.assert(response.body.sourceId === client.global.get("minimal_horse_source_id"), "Source ID mismatch");
+    });
+%}
+
+
+### 7. Get all simple Horse entities (Expected: 403 Forbidden)
+# Blocked by model policy
 GET {{API_HostAddress}}/model/horse/entity
 Accept: application/json
 
@@ -84,8 +104,8 @@ Accept: application/json
 %}
 
 
-### 7. Get all complex Horse entities (Expected: 403 Forbidden)
-# Verified to be strictly blocked by model policy
+### 8. Get all complex Horse entities (Expected: 403 Forbidden)
+# Blocked by model policy
 GET {{API_HostAddress}}/model/horse/complex
 Accept: application/json
 
@@ -96,7 +116,7 @@ Accept: application/json
 %}
 
 
-### 8. Test 404 behavior for non-existing ID
+### 9. Test 404 behavior for non-existing ID
 GET {{API_HostAddress}}/model/horse/complex/00000000-0000-0000-0000-000000000000
 Accept: application/json
 
