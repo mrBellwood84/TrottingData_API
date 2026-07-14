@@ -46,7 +46,7 @@ public class RepositoryService<TSimple, TComplex>(
         var cacheData = await simpleCache.GetAll();
         if (cacheData.Count > 0) return cacheData;
 
-        var dbData = await dbService.GetAllSimpleAsync();
+        var dbData = await dbService.GetAllEntityAsync();
         foreach (var item in dbData)
             await simpleCache.Set(item.Id, item);
 
@@ -67,7 +67,7 @@ public class RepositoryService<TSimple, TComplex>(
         var cacheData = await simpleCache.Get(id);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetSimpleByIdAsync(id);
+        var dbData = await dbService.GetEntityByIdAsync(id);
         if (dbData is null) return default;
 
         await simpleCache.Set(dbData.Id, dbData);

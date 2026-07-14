@@ -20,8 +20,8 @@ public class HorseTypeDbService : DbService<HorseTypeEntity, HorseTypeComplex>
         : base(configuration, policy)
     {
         QueryIds = @"SELECT Id FROM HorseType";
-        QuerySimple = @"SELECT * FROM HorseType";
-        QuerySimpleById = @"SELECT * FROM HorseType WHERE Id = @Id";
+        QueryEntity = @"SELECT * FROM HorseType";
+        QueryEntityById = @"SELECT * FROM HorseType WHERE Id = @Id";
         QueryComplex = @"SELECT Id, Type FROM HorseType";
         QueryComplexById = @"SELECT Id, Type FROM HorseType WHERE Id = @Id";
     }

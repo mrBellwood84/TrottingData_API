@@ -20,8 +20,8 @@ public class RaceCourseDbService : DbService<RaceCourseEntity, RaceCourseComplex
         : base(configuration, policy)
     {
         QueryIds = @"SELECT Id FROM RaceCourse";
-        QuerySimple = @"SELECT * FROM RaceCourse ORDER BY Name";
-        QuerySimpleById = @"SELECT * FROM RaceCourse WHERE Id = @Id ORDER BY Name";
+        QueryEntity = @"SELECT * FROM RaceCourse ORDER BY Name";
+        QueryEntityById = @"SELECT * FROM RaceCourse WHERE Id = @Id ORDER BY Name";
         QueryComplex = @"SELECT Id, Name FROM RaceCourse ORDER BY Name";
         QueryComplexById = @"SELECT Id, Name FROM RaceCourse WHERE Id = @Id ORDER BY Name";
     }

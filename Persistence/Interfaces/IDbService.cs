@@ -25,7 +25,7 @@ public interface IDbService<TSimple, TComplex>
     ///     Thrown when 'GetAll' is disallowed by policy, or the SQL query is
     ///     empty.
     /// </exception>
-    Task<List<TSimple>> GetAllSimpleAsync();
+    Task<List<TSimple>> GetAllEntityAsync();
 
     /// <summary>
     ///     Retrieves a single simple entity by its unique identifier.
@@ -34,9 +34,9 @@ public interface IDbService<TSimple, TComplex>
     /// <returns>The matching <typeparamref name="TSimple" /> entity, or <see langword="null" /> if not found.</returns>
     /// <exception cref="PersistenceMissingQueryException">
     ///     Thrown when
-    ///     <see cref="DbService{TSimple,TComplex}.QuerySimpleById" /> has not been configured.
+    ///     <see cref="DbService{TSimple,TComplex}.QueryEntityById" /> has not been configured.
     /// </exception>
-    Task<TSimple?> GetSimpleByIdAsync(string id);
+    Task<TSimple?> GetEntityByIdAsync(string id);
 
     /// <summary>
     ///     Retrieves all complex representation models. Relies on internal mapping logic.

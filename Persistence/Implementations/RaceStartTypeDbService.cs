@@ -20,8 +20,8 @@ public class RaceStartTypeDbService : DbService<RaceStartTypeEntity, RaceStartTy
         : base(configuration, modelPolicy)
     {
         QueryIds = @"SELECT Id FROM RaceStartType";
-        QuerySimple = @"SELECT * FROM RaceStartType";
-        QuerySimpleById = @"SELECT * FROM RaceStartType WHERE Id = @Id";
+        QueryEntity = @"SELECT * FROM RaceStartType";
+        QueryEntityById = @"SELECT * FROM RaceStartType WHERE Id = @Id";
         QueryComplex = @"SELECT Id, Type FROM RaceStartType";
         QueryComplexById = @"SELECT Id, Type FROM RaceStartType WHERE Id = @Id";
     }

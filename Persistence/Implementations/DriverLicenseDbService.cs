@@ -20,8 +20,8 @@ public class DriverLicenseDbService : DbService<DriverLicenseEntity, DriverLicen
         : base(configuration, policy)
     {
         QueryIds = @"SELECT Id FROM DriverLicense";
-        QuerySimple = @"SELECT * FROM DriverLicense ORDER BY Code";
-        QuerySimpleById = @"SELECT * FROM DriverLicense WHERE Id = @Id ORDER BY Code";
+        QueryEntity = @"SELECT * FROM DriverLicense ORDER BY Code";
+        QueryEntityById = @"SELECT * FROM DriverLicense WHERE Id = @Id ORDER BY Code";
         QueryComplex = @"SELECT Id, Code, Description FROM DriverLicense ORDER BY Code";
         QueryComplexById = @"SELECT Id, Code, Description FROM DriverLicense WHERE Id = @Id ORDER BY Code";
     }

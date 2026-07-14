@@ -7,43 +7,43 @@ using Persistence.Interfaces;
 namespace Persistence.Services;
 
 /// <summary>
-///     A generic database service that handles standard CRUD operations for both simple and complex models.
+///     A generic database service that handles standard CRUD operations for both flat entities and complex models.
 ///     Inherits from <see cref="DbConnection" /> to manage lifecycle of connections.
 /// </summary>
-/// <typeparam name="TSimple">The flat entity model mapping 1:1 with the database table.</typeparam>
+/// <typeparam name="TEntity">The flat entity model mapping 1:1 with the database table.</typeparam>
 /// <typeparam name="TComplex">The aggregated/nested model used for API responses.</typeparam>
 /// <param name="configuration">The application configuration for retrieving database connection strings.</param>
 /// <param name="policy">
 ///     The policy governing permissions (e.g., whether GetAll is allowed) for
-///     <typeparamref name="TSimple" />.
+///     <typeparamref name="TEntity" />.
 /// </param>
-public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPolicy<TSimple> policy)
-    : DbConnection(configuration), IDbService<TSimple, TComplex>
+public class DbService<TEntity, TComplex>(IConfiguration configuration, ModelPolicy<TEntity> policy)
+    : DbConnection(configuration), IDbService<TEntity, TComplex>
 {
     /// <summary>
     ///     Gets the SQL query used to retrieve all IDs for this entity type.
     /// </summary>
-    internal string QueryIds { get; init; } = string.Empty;
+    protected string QueryIds { get; init; } = string.Empty;
 
     /// <summary>
-    ///     Gets the SQL query used to retrieve all simple entities.
+    ///     Gets the SQL query used to retrieve all flat entities.
     /// </summary>
-    internal string QuerySimple { get; init; } = string.Empty;
+    protected string QueryEntity { get; init; } = string.Empty;
 
     /// <summary>
-    ///     Gets the SQL query used to retrieve a single simple entity by its ID.
+    ///     Gets the SQL query used to retrieve a single flat entity by its ID.
     /// </summary>
-    internal string QuerySimpleById { get; init; } = string.Empty;
+    protected string QueryEntityById { get; init; } = string.Empty;
 
     /// <summary>
     ///     Gets the SQL query used to retrieve all complex entities.
     /// </summary>
-    internal string QueryComplex { get; init; } = string.Empty;
+    protected string QueryComplex { get; init; } = string.Empty;
 
     /// <summary>
     ///     Gets the SQL query used to retrieve a single complex entity by its ID.
     /// </summary>
-    internal string QueryComplexById { get; init; } = string.Empty;
+    protected string QueryComplexById { get; init; } = string.Empty;
 
     /// <summary>
     ///     Retrieves all IDs for the entity from the database. This query bypasses any cache.
@@ -55,50 +55,42 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPol
         if (string.IsNullOrEmpty(QueryIds))
             throw new PersistenceMissingQueryException($"Missing QueryIds for {typeof(TComplex).Name}");
 
-        // Open an asynchronous connection and automatically dispose of it when leaving scope
         await using var connection = await CreateConnection();
-
-        // Execute query directly against the DB via Dapper
         var data = await connection.QueryAsync<IdModel>(QueryIds);
         return data.ToList();
     }
 
     /// <summary>
-    ///     Retrieves all simple entities from the database, provided that the model's policy allows it.
+    ///     Retrieves all flat entities from the database, provided that the model's policy allows it.
     /// </summary>
-    /// <returns>A list of <typeparamref name="TSimple" /> entities.</returns>
+    /// <returns>A list of <typeparamref name="TEntity" /> entities.</returns>
     /// <exception cref="PersistenceQueryNotAllowedException">Thrown when the query is disallowed by policy.</exception>
-    /// <exception cref="PersistenceMissingQueryException">
-    ///     Thrown when 'GetAll' is disallowed by policy, or the SQL query is
-    ///     empty.
-    /// </exception>
-    public async Task<List<TSimple>> GetAllSimpleAsync()
+    /// <exception cref="PersistenceMissingQueryException">Thrown when 'GetAll' is disallowed by policy, or the SQL query is empty.</exception>
+    public async Task<List<TEntity>> GetAllEntityAsync()
     {
         if (!policy.AllowGetAll)
-            throw new PersistenceQueryNotAllowedException($"GetAllSimple for {typeof(TSimple).Name} is disallowed");
-        if (string.IsNullOrEmpty(QuerySimple))
-            throw new PersistenceMissingQueryException($"Missing QuerySimple for {typeof(TSimple).Name}");
+            throw new PersistenceQueryNotAllowedException($"GetAllEntity for {typeof(TEntity).Name} is disallowed");
+        if (string.IsNullOrEmpty(QueryEntity))
+            throw new PersistenceMissingQueryException($"Missing QueryEntity for {typeof(TEntity).Name}");
 
         await using var connection = await CreateConnection();
-        var data = await connection.QueryAsync<TSimple>(QuerySimple);
+        var data = await connection.QueryAsync<TEntity>(QueryEntity);
         return data.ToList();
     }
 
     /// <summary>
-    ///     Retrieves a single simple entity by its unique identifier.
+    ///     Retrieves a single flat entity by its unique identifier.
     /// </summary>
     /// <param name="id">The GUID string of the entity.</param>
-    /// <returns>The matching <typeparamref name="TSimple" /> entity, or <see langword="null" /> if not found.</returns>
-    /// <exception cref="PersistenceMissingQueryException">Thrown when <see cref="QuerySimpleById" /> has not been configured.</exception>
-    public async Task<TSimple?> GetSimpleByIdAsync(string id)
+    /// <returns>The matching <typeparamref name="TEntity" /> entity, or <see langword="null" /> if not found.</returns>
+    /// <exception cref="PersistenceMissingQueryException">Thrown when <see cref="QueryEntityById" /> has not been configured.</exception>
+    public async Task<TEntity?> GetEntityByIdAsync(string id)
     {
-        if (string.IsNullOrEmpty(QuerySimpleById))
-            throw new PersistenceMissingQueryException($"Missing QuerySimpleById for {typeof(TSimple).Name}");
+        if (string.IsNullOrEmpty(QueryEntityById))
+            throw new PersistenceMissingQueryException($"Missing QueryEntityById for {typeof(TEntity).Name}");
 
         await using var connection = await CreateConnection();
-
-        // Use parameterized query to protect against SQL Injection
-        var data = await connection.QueryFirstOrDefaultAsync<TSimple>(QuerySimpleById, new { Id = id });
+        var data = await connection.QueryFirstOrDefaultAsync<TEntity>(QueryEntityById, new { Id = id });
         return data;
     }
 
@@ -115,7 +107,6 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPol
         if (string.IsNullOrEmpty(QueryComplex))
             throw new PersistenceMissingQueryException($"Missing QueryComplex for {typeof(TComplex).Name}");
 
-        // Delegate execution to the virtual method designed for child-class overriding
         var data = await GetAllComplexLogicAsync();
         return data;
     }

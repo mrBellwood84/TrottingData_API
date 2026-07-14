@@ -20,8 +20,8 @@ public class RaceGamblingTypeDbService : DbService<RaceGamblingTypeEntity, RaceG
         : base(configuration, policy)
     {
         QueryIds = @"SELECT Id FROM RaceGamblingType";
-        QuerySimple = @"SELECT * FROM RaceGamblingType";
-        QuerySimpleById = @"SELECT * FROM RaceGamblingType WHERE Id = @Id";
+        QueryEntity = @"SELECT * FROM RaceGamblingType";
+        QueryEntityById = @"SELECT * FROM RaceGamblingType WHERE Id = @Id";
         QueryComplex = @"SELECT Id, Type FROM RaceGamblingType";
         QueryComplexById = @"SELECT Id, Type FROM RaceGamblingType WHERE Id = @Id";
     }
