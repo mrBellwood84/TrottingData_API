@@ -1,13 +1,12 @@
 using Application.Repository.Interfaces;
 using Models.Complex;
-using Models.Entities;
-using Models.Simple;
+using Models.Entity;
 
 namespace API.Controllers.Implementations;
 
+/// <inheritdoc />
 public class HorseTypeController(
-    IRepositoryService<HorseTypeEntity, HorseTypeComplex> repository,
-    ModelPolicy<HorseTypeEntity> modelPolicy)
-    : ModelController<HorseTypeEntity, HorseTypeComplex>(repository, modelPolicy)
+    IRepositoryService<HorseTypeEntity, HorseTypeComplex> repository)
+    : ModelController<HorseTypeEntity, HorseTypeComplex>(repository)
 {
 }

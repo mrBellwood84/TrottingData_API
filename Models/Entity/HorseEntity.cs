@@ -1,4 +1,4 @@
-namespace Models.Simple;
+namespace Models.Entity;
 
 public class HorseEntity
 {

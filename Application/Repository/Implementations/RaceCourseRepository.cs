@@ -1,7 +1,7 @@
 using Application.Cache.Services;
 using Application.Repository.Services;
 using Models.Complex;
-using Models.Simple;
+using Models.Entity;
 using Persistence.Interfaces;
 
 namespace Application.Repository.Implementations;

@@ -1,12 +1,11 @@
 using Models.Interfaces;
 
-namespace Models.Simple;
+namespace Models.Entity;
 
-public class DriverLicenseEntity : IDbItem
+public class RaceCourseEntity : IDbItem
 {
     public string Id { get; init; }
-    public string Code { get; init; }
-    public string Description { get; init; }
+    public string Name { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 }

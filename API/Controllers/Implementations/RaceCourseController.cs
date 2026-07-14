@@ -1,13 +1,11 @@
 using Application.Repository.Interfaces;
 using Models.Complex;
-using Models.Entities;
-using Models.Simple;
+using Models.Entity;
 
 namespace API.Controllers.Implementations;
 
 public class RaceCourseController(
-    IRepositoryService<RaceCourseEntity, RaceCourseComplex> repository,
-    ModelPolicy<RaceCourseEntity> modelPolicy)
-    : ModelController<RaceCourseEntity, RaceCourseComplex>(repository, modelPolicy)
+    IRepositoryService<RaceCourseEntity, RaceCourseComplex> repository)
+    : ModelController<RaceCourseEntity, RaceCourseComplex>(repository)
 {
 }

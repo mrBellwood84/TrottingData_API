@@ -1,8 +1,8 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
-using Models.Entities;
-using Models.Simple;
+using Models.Entity;
+using Models.Shared;
 using Persistence.Services;
 
 namespace Persistence.Implementations;

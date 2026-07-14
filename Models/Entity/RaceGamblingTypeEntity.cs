@@ -1,8 +1,8 @@
 using Models.Interfaces;
 
-namespace Models.Simple;
+namespace Models.Entity;
 
-public class RaceCartTypeEntity : IDbItem
+public class RaceGamblingTypeEntity : IDbItem
 {
     public string Id { get; init; }
     public string Type { get; init; }

@@ -1,4 +1,4 @@
-using Models.Entities;
+using Models.Shared;
 using Persistence.Exceptions;
 using Persistence.Services;
 

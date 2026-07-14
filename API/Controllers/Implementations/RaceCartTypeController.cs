@@ -1,13 +1,12 @@
 using Application.Repository.Interfaces;
 using Models.Complex;
-using Models.Entities;
-using Models.Simple;
+using Models.Entity;
 
 namespace API.Controllers.Implementations;
 
+/// <inheritdoc />
 public class RaceCartTypeController(
-    IRepositoryService<RaceCartTypeEntity, RaceCartTypeComplex> repository,
-    ModelPolicy<RaceCartTypeEntity> modelPolicy)
-    : ModelController<RaceCartTypeEntity, RaceCartTypeComplex>(repository, modelPolicy)
+    IRepositoryService<RaceCartTypeEntity, RaceCartTypeComplex> repository)
+    : ModelController<RaceCartTypeEntity, RaceCartTypeComplex>(repository)
 {
 }

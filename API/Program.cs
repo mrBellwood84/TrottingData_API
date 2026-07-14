@@ -2,18 +2,15 @@ using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var services = builder.Services;
+// 1. Register all application services (Dependency Injection container)
+builder.Services
+    .AddApiServices()
+    .AddCache()
+    .AddModelPolicies()
+    .AddPersistence()
+    .AddRepositoryServices();
 
-// todo : API services not an extension yet, awaiting 
-services.AddControllers();
-
-// add services
-services.AddCache();
-services.AddModelPolicies();
-services.AddPersistence();
-services.AddRepositoryServices();
-
-// crash on missing dependency added
+// 2. Enable strict dependency injection validation (Fail-Fast on startup)
 builder.Host.UseDefaultServiceProvider(options =>
 {
     options.ValidateScopes = true;
@@ -22,7 +19,7 @@ builder.Host.UseDefaultServiceProvider(options =>
 
 var app = builder.Build();
 
-// todo : configure pipelien in extension?
-app.MapControllers();
+// 3. Configure the HTTP request pipeline (Middleware)
+app.UseApiPipeline();
 
 app.Run();

@@ -1,6 +1,6 @@
 using Models.Interfaces;
 
-namespace Models.Simple;
+namespace Models.Entity;
 
 public class RaceResultEntity : IDbItem
 {

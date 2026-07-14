@@ -1,6 +1,6 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using Models.Entities;
+using Models.Shared;
 using Persistence.Exceptions;
 using Persistence.Interfaces;
 

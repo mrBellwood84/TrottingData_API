@@ -1,13 +1,12 @@
 using Application.Repository.Interfaces;
 using Models.Complex;
-using Models.Entities;
-using Models.Simple;
+using Models.Entity;
 
 namespace API.Controllers.Implementations;
 
+/// <inheritdoc />
 public class DriverLicenseController(
-    IRepositoryService<DriverLicenseEntity, DriverLicenseComplex> repository,
-    ModelPolicy<DriverLicenseEntity> modelPolicy)
-    : ModelController<DriverLicenseEntity, DriverLicenseComplex>(repository, modelPolicy)
+    IRepositoryService<DriverLicenseEntity, DriverLicenseComplex> repository)
+    : ModelController<DriverLicenseEntity, DriverLicenseComplex>(repository)
 {
 }
