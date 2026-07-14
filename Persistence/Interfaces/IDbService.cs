@@ -14,7 +14,7 @@ public interface IDbService<TSimple, TComplex>
     ///     Thrown when <see cref="DbService{TSimple,TComplex}.QueryIds" /> has
     ///     not been configured.
     /// </exception>
-    Task<List<IdModel>> GetIdsAsync();
+    public Task<List<IdModel>> GetIdsAsync();
 
     /// <summary>
     ///     Retrieves all simple entities from the database, provided that the model's policy allows it.
@@ -25,7 +25,7 @@ public interface IDbService<TSimple, TComplex>
     ///     Thrown when 'GetAll' is disallowed by policy, or the SQL query is
     ///     empty.
     /// </exception>
-    Task<List<TSimple>> GetAllEntityAsync();
+    public Task<List<TSimple>> GetAllEntityAsync();
 
     /// <summary>
     ///     Retrieves a single simple entity by its unique identifier.
@@ -36,7 +36,7 @@ public interface IDbService<TSimple, TComplex>
     ///     Thrown when
     ///     <see cref="DbService{TSimple,TComplex}.QueryEntityById" /> has not been configured.
     /// </exception>
-    Task<TSimple?> GetEntityByIdAsync(string id);
+    public Task<TSimple?> GetEntityByIdAsync(string id);
 
     /// <summary>
     ///     Retrieves all complex representation models. Relies on internal mapping logic.
@@ -47,7 +47,7 @@ public interface IDbService<TSimple, TComplex>
     ///     Thrown when <see cref="DbService{TSimple,TComplex}.QueryComplex" />
     ///     has not been configured.
     /// </exception>
-    Task<List<TComplex>> GetAllComplexAsync();
+    public Task<List<TComplex>> GetAllComplexAsync();
 
     /// <summary>
     ///     Retrieves a specific complex model by its ID.
@@ -58,5 +58,5 @@ public interface IDbService<TSimple, TComplex>
     ///     Thrown when
     ///     <see cref="DbService{TSimple,TComplex}.QueryComplexById" /> has not been configured.
     /// </exception>
-    Task<TComplex?> GetComplexByIdAsync(string id);
+    public Task<TComplex?> GetComplexByIdAsync(string id);
 }

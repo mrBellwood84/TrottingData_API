@@ -65,7 +65,10 @@ public class DbService<TEntity, TComplex>(IConfiguration configuration, ModelPol
     /// </summary>
     /// <returns>A list of <typeparamref name="TEntity" /> entities.</returns>
     /// <exception cref="PersistenceQueryNotAllowedException">Thrown when the query is disallowed by policy.</exception>
-    /// <exception cref="PersistenceMissingQueryException">Thrown when 'GetAll' is disallowed by policy, or the SQL query is empty.</exception>
+    /// <exception cref="PersistenceMissingQueryException">
+    ///     Thrown when 'GetAll' is disallowed by policy, or the SQL query is
+    ///     empty.
+    /// </exception>
     public async Task<List<TEntity>> GetAllEntityAsync()
     {
         if (!policy.AllowGetAll)
@@ -132,7 +135,7 @@ public class DbService<TEntity, TComplex>(IConfiguration configuration, ModelPol
     /// </summary>
     /// <returns>A task representing the asynchronous operation, containing the list of complex models.</returns>
     /// <exception cref="PersistenceNotImplementedException">Thrown if called without a concrete override in a subclass.</exception>
-    private protected virtual async Task<List<TComplex>> GetAllComplexLogicAsync()
+    private protected virtual Task<List<TComplex>> GetAllComplexLogicAsync()
     {
         throw new PersistenceNotImplementedException(
             $"GetAllComplex logic for {typeof(TComplex).Name} is not implemented");
@@ -145,7 +148,7 @@ public class DbService<TEntity, TComplex>(IConfiguration configuration, ModelPol
     /// <param name="id">The unique identifier of the entity.</param>
     /// <returns>A task representing the asynchronous operation, containing the complex model or null.</returns>
     /// <exception cref="PersistenceNotImplementedException">Thrown if called without a concrete override in a subclass.</exception>
-    private protected virtual async Task<TComplex?> GetComplexByIdLogicAsync(string id)
+    private protected virtual Task<TComplex?> GetComplexByIdLogicAsync(string id)
     {
         throw new PersistenceNotImplementedException(
             $"GetComplexByIdAsync logic for {typeof(TComplex).Name} is not implemented");

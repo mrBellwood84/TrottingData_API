@@ -15,7 +15,7 @@ public static class PersistenceExtensions
     /// </summary>
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        // the simple data models <3
+        // adding the flat data models <3
         services.AddScoped<IDbService<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseDbService>();
         services.AddScoped<IDbService<HorseSexEntity, HorseSexComplex>, HorseSexDbService>();
         services.AddScoped<IDbService<HorseTypeEntity, HorseTypeComplex>, HorseTypeDbService>();
@@ -23,6 +23,11 @@ public static class PersistenceExtensions
         services.AddScoped<IDbService<RaceCourseEntity, RaceCourseComplex>, RaceCourseDbService>();
         services.AddScoped<IDbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeDbService>();
         services.AddScoped<IDbService<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeDbService>();
+        
+        // add sourced entity db services
+        services.AddScoped<ISourcedDbService<DriverEntity, DriverComplex>, DriverDbService>();
+        services.AddScoped<ISourcedDbService<HorseEntity, HorseComplex>, HorseDbService>();
+        
 
         return services;
     }

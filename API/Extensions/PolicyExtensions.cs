@@ -15,7 +15,9 @@ public static class PolicyExtensions
     /// <returns>The updated <see cref="IServiceCollection" />.</returns>
     public static IServiceCollection AddModelPolicies(this IServiceCollection services)
     {
+        services.RegisterEntityPolicy<DriverEntity>(false);
         services.RegisterEntityPolicy<DriverLicenseEntity>(true);
+        services.RegisterEntityPolicy<HorseEntity>(false);
         services.RegisterEntityPolicy<HorseSexEntity>(true);
         services.RegisterEntityPolicy<HorseTypeEntity>(true);
         services.RegisterEntityPolicy<RaceCartTypeEntity>(true);

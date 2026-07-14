@@ -11,5 +11,5 @@ public class DriverComplex : IEntity
     public bool Monte { get; init; }
 
     // Nested object
-    public DriverLicenseComplex License { get; init; }
+    public DriverLicenseComplex License { get; set; }
 }

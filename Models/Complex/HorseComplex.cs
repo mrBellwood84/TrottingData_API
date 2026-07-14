@@ -12,6 +12,6 @@ public class HorseComplex : IEntity
     public string MotherSourceId { get; init; }
 
     // Nested objects
-    public HorseSexComplex Sex { get; init; }
-    public HorseTypeComplex Type { get; init; }
+    public HorseSexComplex Sex { get; set; }
+    public HorseTypeComplex Type { get; set; }
 }
