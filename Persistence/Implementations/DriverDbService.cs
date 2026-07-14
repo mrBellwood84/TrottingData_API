@@ -23,7 +23,7 @@ public class DriverDbService : SourcedDbService<DriverEntity, DriverComplex>
         : base(configuration, policy)
     {
         // Flat / simple queries mapping 1:1 with the Driver table
-        QueryIds = @"SELECT Id FROM Driver";
+        QueryIds = @"SELECT Id FROM Driver LIMIT 10";
         QueryEntityById = @"SELECT * FROM Driver WHERE Id = @Id";
         QueryEntityBySourceId = @"SELECT * FROM Driver WHERE SourceId = @SourceId";
 

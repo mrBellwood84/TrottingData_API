@@ -23,7 +23,7 @@ public class HorseDbService : SourcedDbService<HorseEntity, HorseComplex>
         : base(configuration, policy)
     {
         // Flat / simple queries mapping 1:1 with the Horse table
-        QueryIds = @"SELECT Id FROM Horse";
+        QueryIds = @"SELECT Id FROM Horse LIMIT 10";
         QueryEntityById = @"SELECT * FROM Horse WHERE Id = @Id";
         QueryEntityBySourceId = @"SELECT * FROM Horse WHERE SourceId = @SourceId";
 

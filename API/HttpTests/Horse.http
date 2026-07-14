@@ -1,0 +1,107 @@
+@API_HostAddress = http://localhost:5007
+
+### =======================================================
+### HORSE CONTROLLER TESTS
+### =======================================================
+
+### 1. Get limited Horse IDs (Expected: 200 OK)
+# Retrieves a capped list of raw GUIDs and extracts the first one
+GET {{API_HostAddress}}/model/horse/id
+Accept: application/json
+
+> {%
+    client.test("Should retrieve a limited list of IDs", function () {
+        client.assert(response.status === 200, "Expected HTTP 200");
+        client.assert(response.body.length > 0, "Expected to find at least one ID");
+
+        // Extract the raw internal GUID dynamically
+        client.global.set("horse_id", response.body[2].id);
+    });
+%}
+
+
+### 2. Get simple Horse entity by ID (Expected: 200 OK)
+# Retrieves the entity representation to dynamically extract the Source ID
+GET {{API_HostAddress}}/model/horse/entity/{{horse_id}}
+Accept: application/json
+
+> {%
+    client.test("Should return simple entity and extract Source ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === client.global.get("horse_id"), "ID mismatch");
+
+        // Dynamically extract and save the external Source ID for subsequent tests
+        client.global.set("horse_source_id", response.body.sourceId);
+    });
+%}
+
+
+### 3. Get complex Horse entity by ID (Expected: 200 OK)
+GET {{API_HostAddress}}/model/horse/complex/{{horse_id}}
+Accept: application/json
+
+> {%
+    client.test("Should return complex entity with correct ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === client.global.get("horse_id"), "ID mismatch");
+    });
+%}
+
+
+### 4. Get simple Horse entity by external Source ID (Expected: 200 OK)
+GET {{API_HostAddress}}/model/horse/entity/source/{{horse_source_id}}
+Accept: application/json
+
+> {%
+    client.test("Should return simple entity with correct Source ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.sourceId === client.global.get("horse_source_id"), "Source ID mismatch");
+    });
+%}
+
+
+### 5. Get complex Horse entity by external Source ID (Expected: 200 OK)
+GET {{API_HostAddress}}/model/horse/complex/source/{{horse_source_id}}
+Accept: application/json
+
+> {%
+    client.test("Should return complex entity with correct Source ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.sourceId === client.global.get("horse_source_id"), "Source ID mismatch");
+    });
+%}
+
+
+### 6. Get all simple Horse entities (Expected: 403 Forbidden)
+# Verified to be strictly blocked by model policy
+GET {{API_HostAddress}}/model/horse/entity
+Accept: application/json
+
+> {%
+    client.test("Should block bulk simple entities retrieval", function () {
+        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    });
+%}
+
+
+### 7. Get all complex Horse entities (Expected: 403 Forbidden)
+# Verified to be strictly blocked by model policy
+GET {{API_HostAddress}}/model/horse/complex
+Accept: application/json
+
+> {%
+    client.test("Should block bulk complex entities retrieval", function () {
+        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    });
+%}
+
+
+### 8. Test 404 behavior for non-existing ID
+GET {{API_HostAddress}}/model/horse/complex/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+> {%
+    client.test("Request should return 404 NotFound", function () {
+        client.assert(response.status === 404, "Expected HTTP 404");
+    });
+%}

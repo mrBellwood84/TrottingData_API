@@ -8,15 +8,15 @@ namespace API.Controllers;
 /// <summary>
 /// A generic base controller providing standard CRUD-like read operations for simple and complex model representations.
 /// </summary>
-/// <typeparam name="TSimple">The simple model type representing the entity. Must implement <see cref="IEntity"/>.</typeparam>
+/// <typeparam name="TEntity">The simple model type representing the entity. Must implement <see cref="IEntity"/>.</typeparam>
 /// <typeparam name="TComplex">The complex model type representing the entity. Must implement <see cref="IEntity"/>.</typeparam>
 /// <param name="repository">The repository service handling data flow and caching for the entities.</param>
 [ApiController]
 [Route("model/[controller]")]
 [Produces("application/json")] // Forteller Scalar at alle endepunkter returnerer JSON
-public abstract class ModelController<TSimple, TComplex>(IRepositoryService<TSimple, TComplex> repository)
+public abstract class ModelController<TEntity, TComplex>(IRepositoryService<TEntity, TComplex> repository)
     : ControllerBase 
-    where TSimple : IEntity 
+    where TEntity : IEntity 
     where TComplex : IEntity
 {
     /// <summary>
@@ -43,7 +43,7 @@ public abstract class ModelController<TSimple, TComplex>(IRepositoryService<TSim
     [HttpGet("entity")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<List<TSimple>>> GetEntitiesAsync()
+    public async Task<ActionResult<List<TEntity>>> GetEntitiesAsync()
     {
         var data = await repository.GetAllSimplesAsync();
         return Ok(data);
@@ -61,7 +61,7 @@ public abstract class ModelController<TSimple, TComplex>(IRepositoryService<TSim
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<TSimple>> GetEntityAsync(string id)
+    public async Task<ActionResult<TEntity>> GetEntityAsync(string id)
     {
         var data = await repository.GetSimpleByIdAsync(id);
         if (data is null) return NotFound();
