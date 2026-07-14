@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Complex;
 
-public class CompetitionComplex : IDbItem
+public class CompetitionComplex : IEntity
 {
     public string Id { get; init; }
     public DateTime Date { get; init; }

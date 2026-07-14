@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Complex;
 
-public class DriverComplex : IDbItem
+public class DriverComplex : IEntity
 {
     public string Id { get; init; }
     public string SourceId { get; init; }

@@ -9,8 +9,8 @@ namespace Application.Repository.Services;
 /// <summary>
 ///     A generic repository service that manages data flow between an in-memory cache and the database.
 /// </summary>
-/// <typeparam name="TSimple">The simple model type representing the entity. Must implement <see cref="IDbItem" />.</typeparam>
-/// <typeparam name="TComplex">The complex model type representing the entity. Must implement <see cref="IDbItem" />.</typeparam>
+/// <typeparam name="TSimple">The simple model type representing the entity. Must implement <see cref="IEntity" />.</typeparam>
+/// <typeparam name="TComplex">The complex model type representing the entity. Must implement <see cref="IEntity" />.</typeparam>
 /// <param name="simpleCache">The cache service responsible for storing simple model representations.</param>
 /// <param name="complexCache">The cache service responsible for storing complex model representations.</param>
 /// <param name="dbService">The database persistence service handling direct SQL operations.</param>
@@ -18,7 +18,7 @@ public class RepositoryService<TSimple, TComplex>(
     CacheService<TSimple> simpleCache,
     CacheService<TComplex> complexCache,
     IDbService<TSimple, TComplex> dbService)
-    : IRepositoryService<TSimple, TComplex> where TSimple : IDbItem where TComplex : IDbItem
+    : IRepositoryService<TSimple, TComplex> where TSimple : IEntity where TComplex : IEntity
 {
     /// <summary>
     ///     Retrieves a list of all available IDs for this entity type.

@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Entity;
 
-public class HorseSexEntity : IDbItem
+public class HorseSexEntity : IEntity
 {
     public string Id { get; init; }
     public string Sex { get; init; }

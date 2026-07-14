@@ -1,6 +1,8 @@
+using Models.Interfaces;
+
 namespace Models.Entity;
 
-public class HorseEntity
+public class HorseEntity : ISourcedEntity
 {
     public string Id { get; init; }
     public string SourceId { get; init; }

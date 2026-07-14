@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Entity;
 
-public class DriverEntity : IDbItem
+public class DriverEntity : ISourcedEntity
 {
     public string Id { get; init; }
     public string SourceId { get; init; }

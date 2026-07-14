@@ -8,16 +8,16 @@ namespace API.Controllers;
 /// <summary>
 /// A generic base controller providing standard CRUD-like read operations for simple and complex model representations.
 /// </summary>
-/// <typeparam name="TSimple">The simple model type representing the entity. Must implement <see cref="IDbItem"/>.</typeparam>
-/// <typeparam name="TComplex">The complex model type representing the entity. Must implement <see cref="IDbItem"/>.</typeparam>
+/// <typeparam name="TSimple">The simple model type representing the entity. Must implement <see cref="IEntity"/>.</typeparam>
+/// <typeparam name="TComplex">The complex model type representing the entity. Must implement <see cref="IEntity"/>.</typeparam>
 /// <param name="repository">The repository service handling data flow and caching for the entities.</param>
 [ApiController]
 [Route("model/[controller]")]
 [Produces("application/json")] // Forteller Scalar at alle endepunkter returnerer JSON
 public abstract class ModelController<TSimple, TComplex>(IRepositoryService<TSimple, TComplex> repository)
     : ControllerBase 
-    where TSimple : IDbItem 
-    where TComplex : IDbItem
+    where TSimple : IEntity 
+    where TComplex : IEntity
 {
     /// <summary>
     /// Retrieves a list of all available unique identifiers (IDs) for this entity type.

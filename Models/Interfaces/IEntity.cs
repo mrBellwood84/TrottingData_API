@@ -1,6 +1,6 @@
 namespace Models.Interfaces;
 
-public interface IDbItem
+public interface IEntity
 {
     string Id { get; init; }
 }

@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Entity;
 
-public class DriverLicenseEntity : IDbItem
+public class DriverLicenseEntity : IEntity
 {
     public string Id { get; init; }
     public string Code { get; init; }

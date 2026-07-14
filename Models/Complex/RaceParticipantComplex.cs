@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Complex;
 
-public class RaceParticipantComplex : IDbItem
+public class RaceParticipantComplex : IEntity
 {
     public string Id { get; init; }
     public string TrainerSourceId { get; init; }

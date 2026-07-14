@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Models.Entity;
 
-public class RaceStartTypeEntity : IDbItem
+public class RaceStartTypeEntity : IEntity
 {
     public string Id { get; init; }
     public string Type { get; init; }
