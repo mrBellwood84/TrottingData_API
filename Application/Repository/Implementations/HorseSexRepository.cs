@@ -6,6 +6,7 @@ using Persistence.Interfaces;
 
 namespace Application.Repository.Implementations;
 
+/// <inheritdoc />
 public class HorseSexRepository(
     CacheService<HorseSexEntity> simpleCache,
     CacheService<HorseSexComplex> complexCache,

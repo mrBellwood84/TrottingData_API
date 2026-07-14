@@ -6,6 +6,7 @@ using Persistence.Interfaces;
 
 namespace Application.Repository.Implementations;
 
+/// <inheritdoc />
 public class DriverLicenseRepository(
     CacheService<DriverLicenseEntity> simpleCache,
     CacheService<DriverLicenseComplex> complexCache,

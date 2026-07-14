@@ -6,6 +6,7 @@ using Persistence.Interfaces;
 
 namespace Application.Repository.Implementations;
 
+/// <inheritdoc />
 public class RaceCourseRepository(
     CacheService<RaceCourseEntity> simpleCache,
     CacheService<RaceCourseComplex> complexCache,
