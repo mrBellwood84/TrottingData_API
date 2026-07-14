@@ -1,9 +1,11 @@
+using Models.Interfaces;
+
 namespace Models.Simple;
 
-public class RaceCourseEntity
+public class RaceCourseEntity : IDbItem
 {
-    public string Id { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public string Id { get; init; }
+    public string Name { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
 }

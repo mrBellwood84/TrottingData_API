@@ -1,9 +1,11 @@
+using Models.Interfaces;
+
 namespace Models.Simple;
 
-public class HorseSexEntity
+public class HorseSexEntity : IDbItem
 {
-    public string Id { get; set; } = string.Empty;
-    public string Sex { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public string Id { get; init; }
+    public string Sex { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
 }

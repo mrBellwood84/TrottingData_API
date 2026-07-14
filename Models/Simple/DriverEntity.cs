@@ -1,13 +1,15 @@
+using Models.Interfaces;
+
 namespace Models.Simple;
 
-public class DriverEntity
+public class DriverEntity : IDbItem
 {
-    public string Id { get; set; } = string.Empty;
-    public string SourceId { get; set; } = string.Empty;
-    public string DriverLicenseId { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public int YearOfBirth { get; set; }
-    public bool Monte { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public string Id { get; init; }
+    public string SourceId { get; init; }
+    public string DriverLicenseId { get; init; }
+    public string Name { get; init; }
+    public int YearOfBirth { get; init; }
+    public bool Monte { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
 }

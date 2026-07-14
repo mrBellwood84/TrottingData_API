@@ -1,18 +1,20 @@
+using Models.Interfaces;
+
 namespace Models.Simple;
 
-public class RaceParticipantEntity
+public class RaceParticipantEntity : IDbItem
 {
-    public string Id { get; set; } = string.Empty;
-    public string RaceId { get; set; } = string.Empty;
-    public string DriverSourceId { get; set; } = string.Empty;
-    public string HorseSourceId { get; set; } = string.Empty;
-    public string? TrainerSourceId { get; set; }
-    public string? CartTypeId { get; set; }
-    public short StartNumber { get; set; }
-    public short TrackNumber { get; set; }
-    public int TrackDistance { get; set; }
-    public bool? ForeShoe { get; set; }
-    public bool? HindShoe { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public string Id { get; init; }
+    public string RaceId { get; init; }
+    public string DriverSourceId { get; init; }
+    public string HorseSourceId { get; init; }
+    public string TrainerSourceId { get; init; }
+    public string CartTypeId { get; init; }
+    public short StartNumber { get; init; }
+    public short TrackNumber { get; init; }
+    public int TrackDistance { get; init; }
+    public bool? ForeShoe { get; init; }
+    public bool? HindShoe { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
 }

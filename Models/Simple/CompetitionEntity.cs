@@ -1,11 +1,13 @@
+using Models.Interfaces;
+
 namespace Models.Simple;
 
-public class CompetitionEntity
+public class CompetitionEntity : IDbItem
 {
-    public string Id { get; set; } = string.Empty;
-    public string RaceCourseId { get; set; } = string.Empty;
-    public DateTime Date { get; set; }
-    public bool FromDirectSource { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public string Id { get; init; }
+    public string RaceCourseId { get; init; }
+    public DateTime Date { get; init; }
+    public bool FromDirectSource { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
 }

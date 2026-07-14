@@ -2,16 +2,16 @@ namespace Models.Complex;
 
 public class RaceComplex
 {
-    public string Id { get; set; } = string.Empty;
-    public short RaceNumber { get; set; }
-    public DateTime? StartTime { get; set; }
-    public int? MainDistance { get; set; }
-    public bool? Monte { get; set; }
+    public string Id { get; init; }
+    public short RaceNumber { get; init; }
+    public DateTime StartTime { get; init; }
+    public int MainDistance { get; init; }
+    public bool Monte { get; init; }
 
-    public CompetitionComplex? Competition { get; set; }
-    public HorseTypeComplex? HorseType { get; set; }
-    public RaceStartTypeComplex? StartType { get; set; }
+    public CompetitionComplex Competition { get; init; }
+    public HorseTypeComplex HorseType { get; init; }
+    public RaceStartTypeComplex StartType { get; init; }
 
-    public List<RaceParticipantComplex> Participants { get; set; } = new();
-    public List<RaceGamblingTypeComplex> GamblingTypes { get; set; } = new();
+    public List<RaceParticipantComplex> Participants { get; init; }
+    public List<RaceGamblingTypeComplex> GamblingTypes { get; init; }
 }

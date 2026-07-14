@@ -1,7 +1,9 @@
+using Models.Interfaces;
+
 namespace Models.Complex;
 
-public class RaceCourseComplex
+public class RaceCourseComplex : IDbItem
 {
-    public string Id { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
+    public string Id { get; init; }
+    public string Name { get; init; }
 }

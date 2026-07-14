@@ -1,15 +1,17 @@
+using Models.Interfaces;
+
 namespace Models.Complex;
 
-public class RaceResultsComplex
+public class RaceResultsComplex : IDbItem
 {
-    public string Id { get; set; } = string.Empty;
-    public short? Place { get; set; }
-    public string? KmTime { get; set; }
-    public int? Odds { get; set; }
-    public int? Price { get; set; }
-    public bool Scratched { get; set; }
-    public bool Disqualified { get; set; }
-    public bool Broke { get; set; }
-    public bool RRemark { get; set; }
-    public bool GRemark { get; set; }
+    public string Id { get; init; }
+    public short Place { get; init; }
+    public string KmTime { get; init; }
+    public int Odds { get; init; }
+    public int Price { get; init; }
+    public bool Scratched { get; init; }
+    public bool Disqualified { get; init; }
+    public bool Broke { get; init; }
+    public bool RRemark { get; init; }
+    public bool GRemark { get; init; }
 }
