@@ -6,23 +6,24 @@ using Models.Shared;
 namespace API.Controllers;
 
 /// <summary>
-/// A generic base controller providing standard CRUD-like read operations for simple and complex model representations.
+///     A generic base controller providing standard CRUD-like read operations for simple and complex model
+///     representations.
 /// </summary>
-/// <typeparam name="TEntity">The simple model type representing the entity. Must implement <see cref="IEntity"/>.</typeparam>
-/// <typeparam name="TComplex">The complex model type representing the entity. Must implement <see cref="IEntity"/>.</typeparam>
+/// <typeparam name="TEntity">The simple model type representing the entity. Must implement <see cref="IEntity" />.</typeparam>
+/// <typeparam name="TComplex">The complex model type representing the entity. Must implement <see cref="IEntity" />.</typeparam>
 /// <param name="repository">The repository service handling data flow and caching for the entities.</param>
 [ApiController]
 [Route("model/[controller]")]
 [Produces("application/json")] // Forteller Scalar at alle endepunkter returnerer JSON
 public abstract class ModelController<TEntity, TComplex>(IRepositoryService<TEntity, TComplex> repository)
-    : ControllerBase 
-    where TEntity : IEntity 
+    : ControllerBase
+    where TEntity : IEntity
     where TComplex : IEntity
 {
     /// <summary>
-    /// Retrieves a list of all available unique identifiers (IDs) for this entity type.
+    ///     Retrieves a list of all available unique identifiers (IDs) for this entity type.
     /// </summary>
-    /// <returns>An <see cref="ActionResult"/> containing a list of <see cref="IdModel"/>s.</returns>
+    /// <returns>An <see cref="ActionResult" /> containing a list of <see cref="IdModel" />s.</returns>
     /// <response code="200">Successfully retrieved the list of IDs.</response>
     /// <response code="403">If the model policy restricts access to retrieving IDs for this entity type.</response>
     [HttpGet("id")]
@@ -35,7 +36,7 @@ public abstract class ModelController<TEntity, TComplex>(IRepositoryService<TEnt
     }
 
     /// <summary>
-    /// Retrieves all simple representations of the entity.
+    ///     Retrieves all simple representations of the entity.
     /// </summary>
     /// <returns>A list of simple entity models.</returns>
     /// <response code="200">Successfully retrieved all simple entities.</response>
@@ -45,12 +46,12 @@ public abstract class ModelController<TEntity, TComplex>(IRepositoryService<TEnt
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<List<TEntity>>> GetEntitiesAsync()
     {
-        var data = await repository.GetAllSimplesAsync();
+        var data = await repository.GetAllEntityAsync();
         return Ok(data);
     }
 
     /// <summary>
-    /// Retrieves a single simple entity representation by its unique identifier.
+    ///     Retrieves a single simple entity representation by its unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the entity.</param>
     /// <returns>The requested simple entity model.</returns>
@@ -63,13 +64,13 @@ public abstract class ModelController<TEntity, TComplex>(IRepositoryService<TEnt
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TEntity>> GetEntityAsync(string id)
     {
-        var data = await repository.GetSimpleByIdAsync(id);
+        var data = await repository.GetEntityByIdAsync(id);
         if (data is null) return NotFound();
         return Ok(data);
     }
 
     /// <summary>
-    /// Retrieves all complex representations of the entity.
+    ///     Retrieves all complex representations of the entity.
     /// </summary>
     /// <returns>A list of complex entity models.</returns>
     /// <response code="200">Successfully retrieved all complex entities.</response>
@@ -84,7 +85,7 @@ public abstract class ModelController<TEntity, TComplex>(IRepositoryService<TEnt
     }
 
     /// <summary>
-    /// Retrieves a single complex entity representation by its unique identifier.
+    ///     Retrieves a single complex entity representation by its unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the complex entity.</param>
     /// <returns>The requested complex entity model.</returns>

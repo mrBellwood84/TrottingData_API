@@ -18,8 +18,8 @@ public static class PolicyExtensions
         services.RegisterEntityPolicy<DriverEntity>(false, false);
         services.RegisterEntityPolicy<DriverLicenseEntity>(true, true);
         services.RegisterEntityPolicy<HorseEntity>(false, false);
-        services.RegisterEntityPolicy<HorseSexEntity>(false, false);
-        services.RegisterEntityPolicy<HorseTypeEntity>(false, false);
+        services.RegisterEntityPolicy<HorseSexEntity>(true, true);
+        services.RegisterEntityPolicy<HorseTypeEntity>(true, true);
         services.RegisterEntityPolicy<RaceCartTypeEntity>(true, true);
         services.RegisterEntityPolicy<RaceCourseEntity>(true, true);
         services.RegisterEntityPolicy<RaceGamblingTypeEntity>(true, true);

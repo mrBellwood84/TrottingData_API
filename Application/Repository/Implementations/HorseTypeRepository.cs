@@ -2,6 +2,7 @@ using Application.Cache.Services;
 using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
+using Models.Shared;
 using Persistence.Interfaces;
 
 namespace Application.Repository.Implementations;
@@ -10,7 +11,8 @@ namespace Application.Repository.Implementations;
 public class HorseTypeRepository(
     CacheService<HorseTypeEntity> simpleCache,
     CacheService<HorseTypeComplex> complexCache,
-    IDbService<HorseTypeEntity, HorseTypeComplex> dbService)
-    : RepositoryService<HorseTypeEntity, HorseTypeComplex>(simpleCache, complexCache, dbService)
+    IDbService<HorseTypeEntity, HorseTypeComplex> dbService,
+    ModelPolicy<HorseTypeEntity> modelPolicy)
+    : RepositoryService<HorseTypeEntity, HorseTypeComplex>(simpleCache, complexCache, dbService, modelPolicy)
 {
 }

@@ -1,11 +1,10 @@
 using Models.Interfaces;
-using Models.Shared;
 using Persistence.Exceptions;
 using Persistence.Services;
 
 namespace Persistence.Interfaces;
 
-public interface ISourcedDbService<TEntity, TComplex> : IDbService<TEntity, TComplex> 
+public interface ISourcedDbService<TEntity, TComplex> : IDbService<TEntity, TComplex>
     where TEntity : ISourcedEntity
     where TComplex : ISourcedEntity
 {

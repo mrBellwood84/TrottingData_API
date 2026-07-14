@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Models.Shared;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -15,9 +14,8 @@ public class HorseSexDbService : DbService<HorseSexEntity, HorseSexComplex>
     ///     and configures the specific SQL queries for Horse Sex entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
-    /// <param name="policy">The policy governing access to horse sex entities.</param>
-    public HorseSexDbService(IConfiguration configuration, ModelPolicy<HorseSexEntity> policy)
-        : base(configuration, policy)
+    public HorseSexDbService(IConfiguration configuration)
+        : base(configuration)
     {
         QueryIds = @"SELECT Id FROM HorseSex";
         QueryEntity = @"SELECT * FROM HorseSex";
@@ -39,7 +37,6 @@ public class HorseSexDbService : DbService<HorseSexEntity, HorseSexComplex>
     {
         await using var connection = await CreateConnection();
 
-        // OBS: Husk den generiske typen <HorseSexComplex> her!
         var data = await connection.QueryFirstOrDefaultAsync<HorseSexComplex>(QueryComplexById, new { Id = id });
         return data;
     }

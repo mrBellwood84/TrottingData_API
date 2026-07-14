@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Models.Shared;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -15,9 +14,8 @@ public class RaceGamblingTypeDbService : DbService<RaceGamblingTypeEntity, RaceG
     ///     and configures the specific SQL queries for Race Gambling Type entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
-    /// <param name="policy">The policy governing access to race gambling type entities.</param>
-    public RaceGamblingTypeDbService(IConfiguration configuration, ModelPolicy<RaceGamblingTypeEntity> policy)
-        : base(configuration, policy)
+    public RaceGamblingTypeDbService(IConfiguration configuration)
+        : base(configuration)
     {
         QueryIds = @"SELECT Id FROM RaceGamblingType";
         QueryEntity = @"SELECT * FROM RaceGamblingType";

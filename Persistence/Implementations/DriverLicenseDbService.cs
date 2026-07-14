@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Models.Shared;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -15,9 +14,8 @@ public class DriverLicenseDbService : DbService<DriverLicenseEntity, DriverLicen
     ///     and configures the specific SQL queries for Driver License entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
-    /// <param name="policy">The policy governing access to driver license entities.</param>
-    public DriverLicenseDbService(IConfiguration configuration, ModelPolicy<DriverLicenseEntity> policy)
-        : base(configuration, policy)
+    public DriverLicenseDbService(IConfiguration configuration)
+        : base(configuration)
     {
         QueryIds = @"SELECT Id FROM DriverLicense";
         QueryEntity = @"SELECT * FROM DriverLicense ORDER BY Code";

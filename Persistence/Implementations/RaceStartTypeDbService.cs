@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Models.Shared;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -15,9 +14,8 @@ public class RaceStartTypeDbService : DbService<RaceStartTypeEntity, RaceStartTy
     ///     and configures the specific SQL queries for Race Start Type entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
-    /// <param name="modelPolicy">The policy governing access to race start type entities.</param>
-    public RaceStartTypeDbService(IConfiguration configuration, ModelPolicy<RaceStartTypeEntity> modelPolicy)
-        : base(configuration, modelPolicy)
+    public RaceStartTypeDbService(IConfiguration configuration)
+        : base(configuration)
     {
         QueryIds = @"SELECT Id FROM RaceStartType";
         QueryEntity = @"SELECT * FROM RaceStartType";

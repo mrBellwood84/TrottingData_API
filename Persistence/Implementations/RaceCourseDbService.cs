@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Models.Shared;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -15,9 +14,8 @@ public class RaceCourseDbService : DbService<RaceCourseEntity, RaceCourseComplex
     ///     and configures the specific SQL queries for Race Course entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
-    /// <param name="policy">The policy governing access to race course entities.</param>
-    public RaceCourseDbService(IConfiguration configuration, ModelPolicy<RaceCourseEntity> policy)
-        : base(configuration, policy)
+    public RaceCourseDbService(IConfiguration configuration)
+        : base(configuration)
     {
         QueryIds = @"SELECT Id FROM RaceCourse";
         QueryEntity = @"SELECT * FROM RaceCourse ORDER BY Name";

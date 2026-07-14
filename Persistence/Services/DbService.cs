@@ -13,11 +13,7 @@ namespace Persistence.Services;
 /// <typeparam name="TEntity">The flat entity model mapping 1:1 with the database table.</typeparam>
 /// <typeparam name="TComplex">The aggregated/nested model used for API responses.</typeparam>
 /// <param name="configuration">The application configuration for retrieving database connection strings.</param>
-/// <param name="policy">
-///     The policy governing permissions (e.g., whether GetAll is allowed) for
-///     <typeparamref name="TEntity" />.
-/// </param>
-public class DbService<TEntity, TComplex>(IConfiguration configuration, ModelPolicy<TEntity> policy)
+public class DbService<TEntity, TComplex>(IConfiguration configuration)
     : DbConnection(configuration), IDbService<TEntity, TComplex>
 {
     /// <summary>
@@ -61,18 +57,12 @@ public class DbService<TEntity, TComplex>(IConfiguration configuration, ModelPol
     }
 
     /// <summary>
-    ///     Retrieves all flat entities from the database, provided that the model's policy allows it.
+    ///     Retrieves all flat entities from the database.
     /// </summary>
     /// <returns>A list of <typeparamref name="TEntity" /> entities.</returns>
-    /// <exception cref="PersistenceQueryNotAllowedException">Thrown when the query is disallowed by policy.</exception>
-    /// <exception cref="PersistenceMissingQueryException">
-    ///     Thrown when 'GetAll' is disallowed by policy, or the SQL query is
-    ///     empty.
-    /// </exception>
+    /// <exception cref="PersistenceMissingQueryException">Thrown when the SQL query is empty.</exception>
     public async Task<List<TEntity>> GetAllEntityAsync()
     {
-        if (!policy.AllowGetAll)
-            throw new PersistenceQueryNotAllowedException($"GetAllEntity for {typeof(TEntity).Name} is disallowed");
         if (string.IsNullOrEmpty(QueryEntity))
             throw new PersistenceMissingQueryException($"Missing QueryEntity for {typeof(TEntity).Name}");
 
@@ -101,12 +91,9 @@ public class DbService<TEntity, TComplex>(IConfiguration configuration, ModelPol
     ///     Retrieves all complex representation models. Relies on internal mapping logic.
     /// </summary>
     /// <returns>A list of populated <typeparamref name="TComplex" /> models.</returns>
-    /// <exception cref="PersistenceQueryNotAllowedException">Thrown when the query is disallowed by policy.</exception>
     /// <exception cref="PersistenceMissingQueryException">Thrown when <see cref="QueryComplex" /> has not been configured.</exception>
     public async Task<List<TComplex>> GetAllComplexAsync()
     {
-        if (!policy.AllowGetAll)
-            throw new PersistenceQueryNotAllowedException($"GetAllComplex for {typeof(TComplex).Name} is disallowed");
         if (string.IsNullOrEmpty(QueryComplex))
             throw new PersistenceMissingQueryException($"Missing QueryComplex for {typeof(TComplex).Name}");
 

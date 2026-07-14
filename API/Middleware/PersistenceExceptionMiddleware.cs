@@ -1,6 +1,6 @@
 using System.Text.Json;
+using Application.Repository.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Persistence.Exceptions;
 
 namespace API.Middleware;
 
@@ -22,9 +22,9 @@ public class PersistenceExceptionMiddleware(RequestDelegate next, ILogger<Persis
         {
             await next(context);
         }
-        catch (PersistenceQueryNotAllowedException ex)
+        catch (RepositoryPolicyViolationException ex)
         {
-            logger.LogWarning(ex, "Persistence query blocked by policy: {Message}", ex.Message);
+            logger.LogWarning($"Persistence query blocked by policy: {ex.Message}");
 
             await WriteProblemDetailsResponseAsync(
                 context,

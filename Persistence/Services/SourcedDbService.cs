@@ -1,7 +1,6 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Interfaces;
-using Models.Shared;
 using Persistence.Exceptions;
 using Persistence.Interfaces;
 
@@ -14,11 +13,8 @@ namespace Persistence.Services;
 /// <typeparam name="TEntity">The flat entity model, which must implement <see cref="ISourcedEntity" />.</typeparam>
 /// <typeparam name="TComplex">The aggregated/nested model used for API responses.</typeparam>
 /// <param name="configuration">The application configuration for retrieving database connection strings.</param>
-/// <param name="policy">The policy governing permissions for <typeparamref name="TEntity" />.</param>
-public class SourcedDbService<TEntity, TComplex>(
-    IConfiguration configuration,
-    ModelPolicy<TEntity> policy)
-    : DbService<TEntity, TComplex>(configuration, policy), ISourcedDbService<TEntity, TComplex>
+public class SourcedDbService<TEntity, TComplex>(IConfiguration configuration)
+    : DbService<TEntity, TComplex>(configuration), ISourcedDbService<TEntity, TComplex>
     where TEntity : ISourcedEntity where TComplex : ISourcedEntity
 {
     /// <summary>
@@ -37,8 +33,7 @@ public class SourcedDbService<TEntity, TComplex>(
     /// <param name="sourceId">The external unique identifier from the source system.</param>
     /// <returns>The matching <typeparamref name="TEntity" />, or <see langword="null" /> if not found.</returns>
     /// <exception cref="PersistenceMissingQueryException">
-    ///     Thrown when <see cref="QueryEntityBySourceId" /> has not been
-    ///     configured.
+    ///     Thrown when <see cref="QueryEntityBySourceId" /> has not been configured.
     /// </exception>
     public async Task<TEntity?> GetEntityBySourceIdAsync(string sourceId)
     {
@@ -58,8 +53,7 @@ public class SourcedDbService<TEntity, TComplex>(
     /// <param name="sourceId">The external unique identifier from the source system.</param>
     /// <returns>The populated <typeparamref name="TComplex" /> model, or <see langword="null" /> if not found.</returns>
     /// <exception cref="PersistenceMissingQueryException">
-    ///     Thrown when <see cref="QueryComplexBySourceId" /> has not been
-    ///     configured.
+    ///     Thrown when <see cref="QueryComplexBySourceId" /> has not been configured.
     /// </exception>
     public async Task<TComplex?> GetComplexBySourceIdAsync(string sourceId)
     {
@@ -77,7 +71,7 @@ public class SourcedDbService<TEntity, TComplex>(
     /// <param name="sourceId">The external unique identifier from the source system.</param>
     /// <returns>A task representing the asynchronous operation, containing the complex model or null.</returns>
     /// <exception cref="PersistenceNotImplementedException">Thrown if called without a concrete override in a subclass.</exception>
-    private protected virtual async Task<TComplex?> GetComplexBySourceIdLogicAsync(string sourceId)
+    private protected virtual Task<TComplex?> GetComplexBySourceIdLogicAsync(string sourceId)
     {
         throw new PersistenceNotImplementedException(
             $"GetComplexBySourceIdLogicAsync for {typeof(TComplex).Name} is not implemented");

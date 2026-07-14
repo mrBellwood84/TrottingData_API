@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Models.Shared;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -15,9 +14,8 @@ public class RaceCartTypeDbService : DbService<RaceCartTypeEntity, RaceCartTypeC
     ///     and configures the specific SQL queries for Race Cart Type entities.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
-    /// <param name="policy">The policy governing access to race cart type entities.</param>
-    public RaceCartTypeDbService(IConfiguration configuration, ModelPolicy<RaceCartTypeEntity> policy)
-        : base(configuration, policy)
+    public RaceCartTypeDbService(IConfiguration configuration)
+        : base(configuration)
     {
         QueryIds = @"SELECT Id FROM RaceCartType";
         QueryEntity = @"SELECT * FROM RaceCartType";
