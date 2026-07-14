@@ -10,7 +10,7 @@ public static class PersistenceExtensions
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
         services.AddScoped<IDbService<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseDbService>();
-        
+
         return services;
     }
 }

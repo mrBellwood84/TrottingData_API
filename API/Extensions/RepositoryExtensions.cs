@@ -10,7 +10,7 @@ public static class RepositoryExtensions
     public static IServiceCollection AddRepositoryServices(this IServiceCollection services)
     {
         services.AddScoped<IRepositoryService<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseRepository>();
-        
+
         return services;
     }
 }

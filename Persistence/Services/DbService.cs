@@ -6,7 +6,7 @@ using Persistence.Interfaces;
 
 namespace Persistence.Services;
 
-public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPolicy<TSimple> policy) 
+public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPolicy<TSimple> policy)
     : DbConnection(configuration), IDbService<TSimple, TComplex>
 {
     internal string QueryIds { get; init; } = string.Empty;
@@ -14,7 +14,7 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPol
     internal string QuerySimpleById { get; init; } = string.Empty;
     internal string QueryComplex { get; init; } = string.Empty;
     internal string QueryComplexById { get; init; } = string.Empty;
-    
+
     public async Task<List<IdModel>> GetIdsAsync()
     {
         if (string.IsNullOrEmpty(QueryIds))
@@ -39,14 +39,14 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPol
 
     public async Task<TSimple?> GetSimpleByIdAsync(string id)
     {
-        if  (string.IsNullOrEmpty(QuerySimpleById))
+        if (string.IsNullOrEmpty(QuerySimpleById))
             throw new PersistenceMissingQueryException($"Missing QuerySimpleById for {typeof(TSimple).Name})");
-        
+
         await using var connection = await CreateConnection();
         var data = await connection.QueryFirstOrDefaultAsync<TSimple>(QuerySimpleById, new { Id = id });
         return data;
     }
-    
+
     public async Task<List<TComplex>> GetAllComplexAsync()
     {
         if (!policy.AllowAllComplex)
@@ -62,18 +62,20 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPol
     {
         if (string.IsNullOrEmpty(QueryComplexById))
             throw new PersistenceMissingQueryException($"Missing QueryComplexById for {typeof(TComplex).Name})");
-        
+
         var data = GetComplexByIdLogicAsync(id);
         return await data;
     }
 
     private protected virtual Task<List<TComplex>> GetAllComplexLogicAsync()
     {
-        throw new PersistenceNotImplementedException($"GetAllComplex logic for {typeof(TComplex).Name} is not implemented");
+        throw new PersistenceNotImplementedException(
+            $"GetAllComplex logic for {typeof(TComplex).Name} is not implemented");
     }
 
     private protected virtual Task<TComplex?> GetComplexByIdLogicAsync(string id)
     {
-        throw new PersistenceNotImplementedException($"GetComplexByIdAsync logic for {typeof(TComplex).Name} is not implemented");
+        throw new PersistenceNotImplementedException(
+            $"GetComplexByIdAsync logic for {typeof(TComplex).Name} is not implemented");
     }
 }

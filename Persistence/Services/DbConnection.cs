@@ -5,7 +5,6 @@ namespace Persistence.Services;
 
 public class DbConnection(IConfiguration configuration)
 {
-
     internal async Task<MySqlConnection> CreateConnection()
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");

@@ -9,7 +9,7 @@ public class RaceParticipantComplex
     public int TrackDistance { get; set; }
     public bool? ForeShoe { get; set; }
     public bool? HindShoe { get; set; }
-    
+
     // Nested objects
     public DriverComplex? Driver { get; set; }
     public HorseComplex? Horse { get; set; }

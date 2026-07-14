@@ -7,7 +7,7 @@ public class DriverComplex
     public string Name { get; set; } = string.Empty;
     public int YearOfBirth { get; set; }
     public bool Monte { get; set; }
-    
+
     // Nested object
-    public DriverLicenseComplex? License { get; set; } 
+    public DriverLicenseComplex? License { get; set; }
 }

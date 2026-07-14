@@ -7,8 +7,8 @@ public static class PolicyExtensions
 {
     public static IServiceCollection AddModelPolicies(this IServiceCollection services)
     {
-        services.RegisterEntityPolicy<DriverLicenseEntity>(allowSimple: true, allowComplex: true);
-        
+        services.RegisterEntityPolicy<DriverLicenseEntity>(true, true);
+
         return services;
     }
 
@@ -17,7 +17,7 @@ public static class PolicyExtensions
         services.AddSingleton(new ModelPolicy<T>
         {
             AllowAllSimple = allowSimple,
-            AllowAllComplex = allowComplex,
+            AllowAllComplex = allowComplex
         });
     }
 }

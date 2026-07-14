@@ -7,9 +7,10 @@ using Persistence.Interfaces;
 namespace Application.Repository.Services;
 
 public class RepositoryService<TSimple, TComplex>(
-    CacheService<TSimple> simpleCache, 
+    CacheService<TSimple> simpleCache,
     CacheService<TComplex> complexCache,
-    IDbService<TSimple,TComplex> dbService) : IRepositoryService<TSimple, TComplex> where TSimple : IDbItem where TComplex : IDbItem
+    IDbService<TSimple, TComplex> dbService)
+    : IRepositoryService<TSimple, TComplex> where TSimple : IDbItem where TComplex : IDbItem
 {
     public async Task<List<IdModel>> GetIdsAsync()
     {
@@ -26,7 +27,7 @@ public class RepositoryService<TSimple, TComplex>(
             await simpleCache.Set(item.Id, item);
         return dbData;
     }
-    
+
     public async Task<TSimple?> GetSimpleByIdAsync(string id)
     {
         var cacheData = await simpleCache.Get(id);
@@ -55,7 +56,7 @@ public class RepositoryService<TSimple, TComplex>(
         if (cacheData is not null) return cacheData;
 
         var dbData = await dbService.GetComplexByIdAsync(id);
-        if  (dbData is null) return default;
+        if (dbData is null) return default;
         await complexCache.Set(dbData!.Id, dbData);
         return dbData;
     }

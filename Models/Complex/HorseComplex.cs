@@ -8,7 +8,7 @@ public class HorseComplex
     public int YearOfBirth { get; set; }
     public string? FatherSourceId { get; set; }
     public string? MotherSourceId { get; set; }
-    
+
     // Nested objects
     public HorseSexComplex? Sex { get; set; }
     public HorseTypeComplex? Type { get; set; }

@@ -5,7 +5,7 @@ public class PersistenceNotImplementedException : Exception
     public PersistenceNotImplementedException()
     {
     }
-    
+
     public PersistenceNotImplementedException(string message) : base(message)
     {
     }
