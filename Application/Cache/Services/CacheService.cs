@@ -18,7 +18,7 @@ public class CacheService<T>
         return Task.FromResult(_data.Values.ToList());
     }
 
-    public Task Set(string? key, T value)
+    public Task Set(string key, T value)
     {
         _data[key] = value;
         return Task.CompletedTask;

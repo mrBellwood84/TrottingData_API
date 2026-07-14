@@ -27,7 +27,7 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPol
 
     public async Task<List<TSimple>> GetAllSimpleAsync()
     {
-        if (!policy.AllowAllSimple)
+        if (!policy.AllowGetAll)
             throw new PersistenceMissingQueryException($"GetAllSimple for {typeof(TSimple).Name}) is disallowed");
         if (string.IsNullOrEmpty(QuerySimple))
             throw new PersistenceMissingQueryException($"Missing QuerySimple for {typeof(TSimple).Name})");
@@ -49,7 +49,7 @@ public class DbService<TSimple, TComplex>(IConfiguration configuration, ModelPol
 
     public async Task<List<TComplex>> GetAllComplexAsync()
     {
-        if (!policy.AllowAllComplex)
+        if (!policy.AllowGetAll)
             throw new PersistenceQueryNotAllowedException($"GetAllComplex for {typeof(TComplex).Name} is disallowed");
         if (string.IsNullOrEmpty(QueryComplex))
             throw new PersistenceMissingQueryException($"Missing QueryComplex for {typeof(TComplex).Name})");

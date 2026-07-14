@@ -1,7 +1,7 @@
 @API_HostAddress = http://localhost:5007
 
-### Get all Driver License IDs
-GET {{API_HostAddress}}/model/driverlicense/id
+### Get all Race Course IDs
+GET {{API_HostAddress}}/model/racecourse/id
 Accept: application/json
 
 > {%
@@ -10,13 +10,13 @@ Accept: application/json
         client.assert(response.body.length > 0, "Expected to find at least one ID");
 
         // Extract the first ID dynamically and save it for the subsequent requests
-        client.global.set("driver_license_id", response.body[0].id);
+        client.global.set("race_course_id", response.body[0].id);
     });
 %}
 
 
-### Get all simple Driver License entities
-GET {{API_HostAddress}}/model/driverlicense/entity
+### Get all simple Race Course entities
+GET {{API_HostAddress}}/model/racecourse/entity
 Accept: application/json
 
 > {%
@@ -27,20 +27,20 @@ Accept: application/json
 %}
 
 
-### Get simple Driver License entity by ID
-GET {{API_HostAddress}}/model/driverlicense/entity/{{driver_license_id}}
+### Get simple Race Course entity by ID
+GET {{API_HostAddress}}/model/racecourse/entity/{{race_course_id}}
 Accept: application/json
 
 > {%
     client.test("Request should return simple entity", function () {
         client.assert(response.status === 200, "Expected HTTP 200");
-        client.assert(response.body.id === client.global.get("driver_license_id"), "ID mismatch");
+        client.assert(response.body.id === client.global.get("race_course_id"), "ID mismatch");
     });
 %}
 
 
-### Get all complex Driver License entities
-GET {{API_HostAddress}}/model/driverlicense/complex
+### Get all complex Race Course entities
+GET {{API_HostAddress}}/model/racecourse/complex
 Accept: application/json
 
 > {%
@@ -51,20 +51,20 @@ Accept: application/json
 %}
 
 
-### Get complex Driver License entity by ID
-GET {{API_HostAddress}}/model/driverlicense/complex/{{driver_license_id}}
+### Get complex Race Course entity by ID
+GET {{API_HostAddress}}/model/racecourse/complex/{{race_course_id}}
 Accept: application/json
 
 > {%
     client.test("Request should return complex entity", function () {
         client.assert(response.status === 200, "Expected HTTP 200");
-        client.assert(response.body.id === client.global.get("driver_license_id"), "ID mismatch");
+        client.assert(response.body.id === client.global.get("race_course_id"), "ID mismatch");
     });
 %}
 
 
 ### Test 404 behavior for non-existing entity
-GET {{API_HostAddress}}/model/driverlicense/complex/00000000-0000-0000-0000-000000000000
+GET {{API_HostAddress}}/model/racecourse/complex/00000000-0000-0000-0000-000000000000
 Accept: application/json
 
 > {%

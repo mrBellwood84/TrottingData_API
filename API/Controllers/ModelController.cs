@@ -22,7 +22,7 @@ public class ModelController<TSimple, TComplex>(
     [HttpGet("entity")]
     public async Task<ActionResult<List<TSimple>>> GetEntitiesAsync()
     {
-        if (!modelPolicy.AllowAllSimple)
+        if (!modelPolicy.AllowGetAll)
             return StatusCode(StatusCodes.Status405MethodNotAllowed,
                 $"Bulk retrieval of {typeof(TSimple).Name} is disabled due to dataset size.");
 
@@ -41,7 +41,7 @@ public class ModelController<TSimple, TComplex>(
     [HttpGet("complex")]
     public async Task<ActionResult<List<TComplex>>> GetComplexEntitiesAsync()
     {
-        if (!modelPolicy.AllowAllComplex)
+        if (!modelPolicy.AllowGetAll)
             return StatusCode(StatusCodes.Status405MethodNotAllowed,
                 $"Bulk retrieval of complex {typeof(TComplex).Name} is disabled due to dataset size.");
 
