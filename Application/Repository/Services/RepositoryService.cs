@@ -48,7 +48,7 @@ public class RepositoryService<TSimple, TComplex>(
 
         var dbData = await dbService.GetAllEntityAsync();
         foreach (var item in dbData)
-            await simpleCache.Set(item.Id, item);
+            await simpleCache.Set(item);
 
         return dbData;
     }
@@ -70,7 +70,7 @@ public class RepositoryService<TSimple, TComplex>(
         var dbData = await dbService.GetEntityByIdAsync(id);
         if (dbData is null) return default;
 
-        await simpleCache.Set(dbData.Id, dbData);
+        await simpleCache.Set(dbData);
         return dbData;
     }
 
@@ -89,7 +89,7 @@ public class RepositoryService<TSimple, TComplex>(
 
         var dbData = await dbService.GetAllComplexAsync();
         foreach (var item in dbData)
-            await complexCache.Set(item.Id, item);
+            await complexCache.Set(item);
 
         return dbData;
     }
@@ -111,7 +111,7 @@ public class RepositoryService<TSimple, TComplex>(
         var dbData = await dbService.GetComplexByIdAsync(id);
         if (dbData is null) return default;
 
-        await complexCache.Set(dbData.Id, dbData);
+        await complexCache.Set(dbData);
         return dbData;
     }
 }

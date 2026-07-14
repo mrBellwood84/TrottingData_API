@@ -1,51 +1,53 @@
 using System.Collections.Concurrent;
+using Models.Interfaces;
 
 namespace Application.Cache.Services;
 
 /// <summary>
-///     A thread-safe, in-memory cache service for storing and retrieving data of type <typeparamref name="T" />.
+///     A generic, thread-safe in-memory cache service for storing and retrieving entities.
 /// </summary>
-/// <typeparam name="T">The type of data to be cached.</typeparam>
-/// <remarks>
-///     This service uses a <see cref="ConcurrentDictionary{TKey,TValue}" /> to ensure thread safety
-///     when accessed by multiple concurrent HTTP requests. The methods return <see cref="Task" />
-///     to allow for seamless transition to distributed caching (like Redis) in the future.
-/// </remarks>
-public class CacheService<T>
+/// <typeparam name="T">The entity type to be cached, which must implement <see cref="IEntity"/>.</typeparam>
+public class CacheService<T> where T : IEntity
 {
+    /// <summary>
+    ///     The thread-safe dictionary holding the cached items, keyed by their unique identifier.
+    /// </summary>
     private readonly ConcurrentDictionary<string, T> _data = [];
 
     /// <summary>
-    ///     Retrieves a cached item by its key.
+    ///     Retrieves a cached entity by its unique database identifier.
     /// </summary>
-    /// <param name="key">The unique identifier for the cached item.</param>
+    /// <param name="key">The unique ID of the entity to retrieve.</param>
     /// <returns>
-    ///     A task containing the cached item of type <typeparamref name="T" /> if found;
-    ///     otherwise, <see langword="default" /> (null for reference types).
+    ///     A task containing the matching entity, or <see langword="null"/> if the entity is not in the cache.
     /// </returns>
     public Task<T?> Get(string key)
     {
+        // Task.FromResult is used to satisfy the asynchronous signature 
+        // while performing an instantaneous in-memory lookup.
         return Task.FromResult(_data.GetValueOrDefault(key));
     }
 
     /// <summary>
-    ///     Retrieves all cached items currently stored in the cache.
+    ///     Retrieves all currently cached entities as a flat list.
     /// </summary>
-    /// <returns>A task containing a list of all cached items.</returns>
+    /// <returns>A task containing a list of all cached entities.</returns>
     public Task<List<T>> GetAll()
     {
+        // .Values.ToList() creates a point-in-time snapshot of the dictionary values.
         return Task.FromResult(_data.Values.ToList());
     }
-
+    
     /// <summary>
-    ///     Adds or updates an item in the cache with the specified key.
+    ///     Adds an entity to the cache, or updates it if it already exists.
+    ///     Uses the entity's internal ID as the lookup key.
     /// </summary>
-    /// <param name="key">The unique identifier for the item.</param>
-    /// <param name="value">The item to be cached.</param>
-    /// <returns>A completed task representing the asynchronous operation.</returns>
-    public Task Set(string key, T value)
+    /// <param name="item">The entity instance to cache.</param>
+    /// <returns>A completed task representing the synchronous write operation.</returns>
+    public Task Set(T item)
     {
-        _data[key] = value;
+        // ConcurrentDictionary indexer behaves as an "Add or Update" operation.
+        _data[item.Id] = item;
         return Task.CompletedTask;
     }
 }
