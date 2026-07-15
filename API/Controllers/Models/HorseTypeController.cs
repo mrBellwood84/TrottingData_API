@@ -10,6 +10,6 @@ namespace API.Controllers.Models;
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
 public class HorseTypeController(IReadAllRepository<HorseTypeEntity, HorseTypeComplex> repository)
-    : ReadFullModelController<HorseTypeEntity, HorseTypeComplex>(repository)
+    : ReadAllModelController<HorseTypeEntity, HorseTypeComplex>(repository)
 {
 }

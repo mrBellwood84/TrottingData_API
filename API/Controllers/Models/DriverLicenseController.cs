@@ -10,6 +10,6 @@ namespace API.Controllers.Models;
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
 public class DriverLicenseController(IReadAllRepository<DriverLicenseEntity, DriverLicenseComplex> repository)
-    : ReadFullModelController<DriverLicenseEntity, DriverLicenseComplex>(repository)
+    : ReadAllModelController<DriverLicenseEntity, DriverLicenseComplex>(repository)
 {
 }

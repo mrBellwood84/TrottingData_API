@@ -10,6 +10,6 @@ namespace API.Controllers.Models;
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
 public class RaceCourseController(IReadAllRepository<RaceCourseEntity, RaceCourseComplex> repository)
-    : ReadFullModelController<RaceCourseEntity, RaceCourseComplex>(repository)
+    : ReadAllModelController<RaceCourseEntity, RaceCourseComplex>(repository)
 {
 }
