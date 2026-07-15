@@ -21,12 +21,16 @@ public class ReadAllRepository<TEntity, TComplex>(
         IReadAllRepository<TEntity, TComplex> where TComplex : IEntity
     where TEntity : IEntity
 {
+    private readonly CacheService<TEntity> _entityCache = entityCache;
+    private readonly CacheService<TComplex> _complexCache = complexCache;
+    private readonly ModelPolicy<TEntity> _modelPolicy = modelPolicy;
+
     /// <summary>
     ///     Retrieves a list of all identity models, subject to policy restrictions.
     /// </summary>
     public Task<List<IdModel>> GetAllIdsAsync()
     {
-        if (!modelPolicy.AllowIdList)
+        if (!_modelPolicy.AllowIdList)
             throw new RepositoryPolicyViolationException(
                 $"Retrieving IDs for {typeof(TEntity).Name} is disallowed by policy.");
 
@@ -39,14 +43,14 @@ public class ReadAllRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<List<TEntity>> GetAllEntitiesAsync()
     {
-        if (!modelPolicy.AllowGetAll)
+        if (!_modelPolicy.AllowGetAll)
             throw new RepositoryPolicyViolationException(
                 $"Retrieving all flat entities for {typeof(TEntity).Name} is disallowed by policy.");
 
-        if (entityCache.Loaded) return await entityCache.GetAll();
+        if (_entityCache.Loaded) return await _entityCache.GetAll();
 
         var dbData = await dbService.GetEntitiesAsync();
-        await entityCache.Set(dbData);
+        await _entityCache.Set(dbData);
         return dbData;
     }
 
@@ -56,14 +60,14 @@ public class ReadAllRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<List<TComplex>> GetAllComplexAsync()
     {
-        if (!modelPolicy.AllowGetAll)
+        if (!_modelPolicy.AllowGetAll)
             throw new RepositoryPolicyViolationException(
                 $"Retrieving all complex models for {typeof(TComplex).Name} is disallowed by policy.");
 
-        if (complexCache.Loaded) return await complexCache.GetAll();
+        if (_complexCache.Loaded) return await _complexCache.GetAll();
 
         var dbData = await dbService.GetComplexAsync();
-        await complexCache.Set(dbData);
+        await _complexCache.Set(dbData);
         return dbData;
     }
 }
