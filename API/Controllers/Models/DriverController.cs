@@ -5,7 +5,11 @@ using Models.Entity;
 
 namespace API.Controllers.Models;
 
-public class DriverController(ISourcedRepositoryService<DriverEntity, DriverComplex> repository)
+/// <summary>
+///     Provides read-only endpoints for managing and retrieving driver data, 
+///     supporting lookups by both internal identifiers and external source identifiers.
+/// </summary>
+public class DriverController(IReadSourcedRepository<DriverEntity, DriverComplex> repository)
     : ReadSourceModelController<DriverEntity, DriverComplex>(repository)
 {
 }

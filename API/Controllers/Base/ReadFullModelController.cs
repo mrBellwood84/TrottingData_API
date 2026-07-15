@@ -6,70 +6,59 @@ using Models.Shared;
 namespace API.Controllers.Base;
 
 /// <summary>
-///     An extended base controller providing read-only endpoints for retrieving both single instances
-///     and complete collections (IDs, flat entities, and complex models) of data.
+///     A base controller providing read-only endpoints for retrieving collections of identity models,
+///     flat entities, and complex models.
 /// </summary>
-/// <typeparam name="TEntity">The flat entity model type.</typeparam>
-/// <typeparam name="TComplex">The aggregated complex model type.</typeparam>
-/// <param name="repository">The repository service responsible for data flow and policy enforcement.</param>
-public class ReadFullModelController<TEntity, TComplex>(IRepositoryService<TEntity, TComplex> repository)
+/// <typeparam name="TEntity">The flat entity model type, implementing <see cref="IEntity"/>.</typeparam>
+/// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="IEntity"/>.</typeparam>
+/// <param name="repository">The bulk read repository service responsible for data flow and policy enforcement.</param>
+public class ReadFullModelController<TEntity, TComplex>(IReadAllRepository<TEntity, TComplex> repository)
     : ReadSingleModelController<TEntity, TComplex>(repository)
     where TEntity : IEntity
     where TComplex : IEntity
 {
-    private readonly IRepositoryService<TEntity, TComplex> _repository = repository;
-
     /// <summary>
-    ///     Retrieves a list of all available record IDs.
+    ///     Retrieves a list of all identity models, containing basic ID and identification data.
     /// </summary>
-    /// <returns>A list of available <see cref="IdModel" />s.</returns>
-    /// <response code="200">Returns the list of available record IDs.</response>
-    /// <response code="403">
-    ///     Forbidden if retrieving the ID list is restricted by active model policies (exceptional cases
-    ///     only).
-    /// </response>
+    /// <returns>A list of identity models.</returns>
+    /// <response code="200">Returns the list of identity models.</response>
+    /// <response code="403">If the request fails policy restrictions or authorization checks for listing identifiers.</response>
     [HttpGet("id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<List<IdModel>>> GetIdListAsync()
     {
-        var data = await _repository.GetIdsAsync();
+        var data = await repository.GetAllIdsAsync();
         return Ok(data);
     }
 
     /// <summary>
-    ///     Retrieves all flat entities from the cache or database.
+    ///     Retrieves all flat entities, utilizing the fully loaded cache if available.
     /// </summary>
     /// <returns>A list of all flat entities.</returns>
-    /// <response code="200">Returns the list of flat entities.</response>
-    /// <response code="403">
-    ///     Forbidden if bulk retrieval of flat entities is restricted by active model policies (exceptional
-    ///     cases only).
-    /// </response>
+    /// <response code="200">Returns the requested list of flat entities.</response>
+    /// <response code="403">If the request fails policy restrictions or authorization checks for bulk entity retrieval.</response>
     [HttpGet("entity")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<List<TEntity>>> GetEntityListAsync()
     {
-        var data = await _repository.GetAllEntityAsync();
+        var data = await repository.GetAllEntitiesAsync();
         return Ok(data);
     }
 
     /// <summary>
-    ///     Retrieves all complex models from the cache or database.
+    ///     Retrieves all complex domain models, utilizing the fully loaded cache if available.
     /// </summary>
-    /// <returns>A list of all complex models.</returns>
-    /// <response code="200">Returns the list of complex models.</response>
-    /// <response code="403">
-    ///     Forbidden if bulk retrieval of complex models is restricted by active model policies (exceptional
-    ///     cases only).
-    /// </response>
+    /// <returns>A list of all complex domain models.</returns>
+    /// <response code="200">Returns the requested list of complex models.</response>
+    /// <response code="403">If the request fails policy restrictions or authorization checks for bulk complex model retrieval.</response>
     [HttpGet("complex")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<List<TComplex>>> GetAllComplex()
+    public async Task<ActionResult<List<TComplex>>> GetAllComplexAsync()
     {
-        var data = await _repository.GetAllComplexAsync();
+        var data = await repository.GetAllComplexAsync();
         return Ok(data);
     }
 }

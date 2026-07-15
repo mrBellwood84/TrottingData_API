@@ -5,7 +5,11 @@ using Models.Entity;
 
 namespace API.Controllers.Models;
 
-public class HorseSexController(IRepositoryService<HorseSexEntity, HorseSexComplex> repository)
+/// <summary>
+///     Provides read-only endpoints for managing and retrieving horse sex data,
+///     supporting identity lookups, flat entity lists, and complex domain models.
+/// </summary>
+public class HorseSexController(IReadAllRepository<HorseSexEntity, HorseSexComplex> repository)
     : ReadFullModelController<HorseSexEntity, HorseSexComplex>(repository)
 {
 }

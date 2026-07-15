@@ -5,7 +5,11 @@ using Models.Entity;
 
 namespace API.Controllers.Models;
 
-public class RaceStartTypeController(IRepositoryService<RaceStartTypeEntity, RaceStartTypeComplex> repository)
+/// <summary>
+///     Provides read-only endpoints for managing and retrieving race start type data,
+///     supporting identity lookups, flat entity lists, and complex domain models.
+/// </summary>
+public class RaceStartTypeController(IReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex> repository)
     : ReadFullModelController<RaceStartTypeEntity, RaceStartTypeComplex>(repository)
 {
 }

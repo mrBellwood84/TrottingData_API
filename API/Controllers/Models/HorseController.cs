@@ -5,7 +5,11 @@ using Models.Entity;
 
 namespace API.Controllers.Models;
 
-public class HorseController(ISourcedRepositoryService<HorseEntity, HorseComplex> repository)
+/// <summary>
+///     Provides read-only endpoints for managing and retrieving horse data, 
+///     supporting lookups by both internal identifiers and external source identifiers.
+/// </summary>
+public class HorseController(IReadSourcedRepository<HorseEntity, HorseComplex> repository)
     : ReadSourceModelController<HorseEntity, HorseComplex>(repository)
 {
 }

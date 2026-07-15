@@ -5,7 +5,11 @@ using Models.Entity;
 
 namespace API.Controllers.Models;
 
-public class RaceCourseController(IRepositoryService<RaceCourseEntity, RaceCourseComplex> repository)
+/// <summary>
+///     Provides read-only endpoints for managing and retrieving race course data,
+///     supporting identity lookups, flat entity lists, and complex domain models.
+/// </summary>
+public class RaceCourseController(IReadAllRepository<RaceCourseEntity, RaceCourseComplex> repository)
     : ReadFullModelController<RaceCourseEntity, RaceCourseComplex>(repository)
 {
 }
