@@ -1,74 +1,75 @@
 @API_HostAddress = http://localhost:5007
 
-### Get all Horse Type IDs
+### 1. Get all Horse Type IDs (Expected: 200 OK)
+# Retrieves all available IDs and stores the first one dynamically for subsequent tests
 GET {{API_HostAddress}}/model/horsetype/id
 Accept: application/json
 
 > {%
-    client.test("Request should be successful", function () {
-        client.assert(response.status === 200, "Expected HTTP 200");
+    client.test("Should retrieve all horse type IDs successfully", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.length > 0, "Expected to find at least one ID");
 
-        // Extract the first ID dynamically and save it for the subsequent requests
+        // Extract and set global ID dynamically
         client.global.set("horse_type_id", response.body[0].id);
     });
 %}
 
 
-### Get all simple Horse Type entities
+### 2. Get all simple Horse Type entities (Expected: 200 OK)
 GET {{API_HostAddress}}/model/horsetype/entity
 Accept: application/json
 
 > {%
-    client.test("Request should return all simple entities", function () {
-        client.assert(response.status === 200, "Expected HTTP 200");
-        client.assert(Array.isArray(response.body), "Expected response to be an array");
+    client.test("Should retrieve all simple horse type entities successfully", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(Array.isArray(response.body), "Expected response body to be an array");
     });
 %}
 
 
-### Get simple Horse Type entity by ID
+### 3. Get simple Horse Type entity by ID (Expected: 200 OK)
 GET {{API_HostAddress}}/model/horsetype/entity/{{horse_type_id}}
 Accept: application/json
 
 > {%
-    client.test("Request should return simple entity", function () {
-        client.assert(response.status === 200, "Expected HTTP 200");
+    client.test("Should retrieve single simple horse type by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.id === client.global.get("horse_type_id"), "ID mismatch");
     });
 %}
 
 
-### Get all complex Horse Type entities
+### 4. Get all complex Horse Type entities (Expected: 200 OK)
 GET {{API_HostAddress}}/model/horsetype/complex
 Accept: application/json
 
 > {%
-    client.test("Request should return all complex entities", function () {
-        client.assert(response.status === 200, "Expected HTTP 200");
-        client.assert(Array.isArray(response.body), "Expected response to be an array");
+    client.test("Should retrieve all complex horse type entities successfully", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(Array.isArray(response.body), "Expected response body to be an array");
     });
 %}
 
 
-### Get complex Horse Type entity by ID
+### 5. Get complex Horse Type entity by ID (Expected: 200 OK)
 GET {{API_HostAddress}}/model/horsetype/complex/{{horse_type_id}}
 Accept: application/json
 
 > {%
-    client.test("Request should return complex entity", function () {
-        client.assert(response.status === 200, "Expected HTTP 200");
+    client.test("Should retrieve single complex horse type by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
         client.assert(response.body.id === client.global.get("horse_type_id"), "ID mismatch");
     });
 %}
 
 
-### Test 404 behavior for non-existing entity
+### 6. Test 404 behavior for non-existing ID
 GET {{API_HostAddress}}/model/horsetype/complex/00000000-0000-0000-0000-000000000000
 Accept: application/json
 
 > {%
     client.test("Request should return 404 NotFound", function () {
-        client.assert(response.status === 404, "Expected HTTP 404");
+        client.assert(response.status === 404, "Expected HTTP 404 NotFound");
     });
 %}

@@ -1,13 +1,13 @@
 @API_HostAddress = http://localhost:5007
 
-### 1. Get all Driver IDs (Expected: 403 Forbidden)
-# Blocked by model policy
+### 1. Get all Driver IDs (Expected: 404 Not Found)
+# Verified: Route does not exist on this controller
 GET {{API_HostAddress}}/model/driver/id
 Accept: application/json
 
 > {%
-    client.test("Should block bulk ID retrieval", function () {
-        client.assert(response.status === 403, "Expected HTTP 403 Forbidden due to security policy");
+    client.test("Should return 404 as bulk ID retrieval route does not exist", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 Not Found");
     });
 %}
 
@@ -72,26 +72,26 @@ Accept: application/json
 %}
 
 
-### 6. Get all simple Driver entities (Expected: 403 Forbidden)
-# Blocked by model policy
+### 6. Get all simple Driver entities (Expected: 404 Not Found)
+# Verified: Route does not exist on this controller
 GET {{API_HostAddress}}/model/driver/entity
 Accept: application/json
 
 > {%
-    client.test("Should block bulk simple entities retrieval", function () {
-        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    client.test("Should return 404 as bulk simple entities route does not exist", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 Not Found");
     });
 %}
 
 
-### 7. Get all complex Driver entities (Expected: 403 Forbidden)
-# Blocked by model policy
+### 7. Get all complex Driver entities (Expected: 404 Not Found)
+# Verified: Route does not exist on this controller
 GET {{API_HostAddress}}/model/driver/complex
 Accept: application/json
 
 > {%
-    client.test("Should block bulk complex entities retrieval", function () {
-        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    client.test("Should return 404 as bulk complex entities route does not exist", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 Not Found");
     });
 %}
 

@@ -92,26 +92,26 @@ Accept: application/json
 %}
 
 
-### 7. Get all simple Horse entities (Expected: 403 Forbidden)
-# Blocked by model policy
+### 7. Get all simple Horse entities (Expected: 404 Not Found)
+# Verified: Route does not exist on this controller
 GET {{API_HostAddress}}/model/horse/entity
 Accept: application/json
 
 > {%
-    client.test("Should block bulk simple entities retrieval", function () {
-        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    client.test("Should return 404 as bulk simple entities route does not exist", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 Not Found");
     });
 %}
 
 
-### 8. Get all complex Horse entities (Expected: 403 Forbidden)
-# Blocked by model policy
+### 8. Get all complex Horse entities (Expected: 404 Not Found)
+# Verified: Route does not exist on this controller
 GET {{API_HostAddress}}/model/horse/complex
 Accept: application/json
 
 > {%
-    client.test("Should block bulk complex entities retrieval", function () {
-        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    client.test("Should return 404 as bulk complex entities route does not exist", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 Not Found");
     });
 %}
 
