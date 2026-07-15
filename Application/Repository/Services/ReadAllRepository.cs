@@ -20,10 +20,10 @@ public class ReadAllRepository<TEntity, TComplex>(
         IReadAllRepository<TEntity, TComplex> where TComplex : IEntity
     where TEntity : IEntity
 {
-    private readonly CacheService<TEntity> _entityCache = entityCache;
     private readonly CacheService<TComplex> _complexCache = complexCache;
+    private readonly CacheService<TEntity> _entityCache = entityCache;
 
-    protected virtual ModelPolicy ModelPolicy => new ModelPolicy { AllowGetAll = true,  AllowIdList = true };
+    protected virtual ModelPolicy ModelPolicy => new() { AllowGetAll = true, AllowIdList = true };
 
     /// <summary>
     ///     Retrieves a list of all identity models, subject to policy restrictions.

@@ -8,8 +8,8 @@ namespace API.Controllers.Base;
 ///     A base controller extending single read operations to support lookups by external source identifiers
 ///     for both flat entities and complex models.
 /// </summary>
-/// <typeparam name="TEntity">The flat entity model type, implementing <see cref="ISourcedEntity"/>.</typeparam>
-/// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="ISourcedEntity"/>.</typeparam>
+/// <typeparam name="TEntity">The flat entity model type, implementing <see cref="ISourcedEntity" />.</typeparam>
+/// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="ISourcedEntity" />.</typeparam>
 /// <param name="repository">The sourced repository service responsible for data retrieval using external identifiers.</param>
 public class ReadSourceModelController<TEntity, TComplex>(IReadSourcedRepository<TEntity, TComplex> repository)
     : ReadSingleModelController<TEntity, TComplex>(repository)

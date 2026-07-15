@@ -6,7 +6,7 @@ using Models.Entity;
 namespace API.Controllers.Models;
 
 /// <summary>
-///     Provides read-only endpoints for managing and retrieving horse data, 
+///     Provides read-only endpoints for managing and retrieving horse data,
 ///     supporting lookups by both internal identifiers and external source identifiers.
 /// </summary>
 public class HorseController(IReadSourcedRepository<HorseEntity, HorseComplex> repository)

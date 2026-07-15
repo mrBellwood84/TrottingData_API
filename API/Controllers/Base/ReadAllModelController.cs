@@ -9,8 +9,8 @@ namespace API.Controllers.Base;
 ///     A base controller providing read-only endpoints for retrieving collections of identity models,
 ///     flat entities, and complex models.
 /// </summary>
-/// <typeparam name="TEntity">The flat entity model type, implementing <see cref="IEntity"/>.</typeparam>
-/// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="IEntity"/>.</typeparam>
+/// <typeparam name="TEntity">The flat entity model type, implementing <see cref="IEntity" />.</typeparam>
+/// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="IEntity" />.</typeparam>
 /// <param name="repository">The bulk read repository service responsible for data flow and policy enforcement.</param>
 public class ReadAllModelController<TEntity, TComplex>(IReadAllRepository<TEntity, TComplex> repository)
     : ReadSingleModelController<TEntity, TComplex>(repository)

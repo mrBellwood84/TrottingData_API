@@ -5,10 +5,11 @@ using Models.Interfaces;
 namespace API.Controllers.Base;
 
 /// <summary>
-///     A base controller providing read-only endpoints for retrieving single instances of flat entities and complex models by their unique identifier.
+///     A base controller providing read-only endpoints for retrieving single instances of flat entities and complex models
+///     by their unique identifier.
 /// </summary>
-/// <typeparam name="TEntity">The flat entity model type, implementing <see cref="IEntity"/>.</typeparam>
-/// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="IEntity"/>.</typeparam>
+/// <typeparam name="TEntity">The flat entity model type, implementing <see cref="IEntity" />.</typeparam>
+/// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="IEntity" />.</typeparam>
 /// <param name="repository">The repository service responsible for data retrieval and policy enforcement.</param>
 [ApiController]
 [Route("model/[controller]")]

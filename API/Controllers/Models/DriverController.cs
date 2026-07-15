@@ -6,7 +6,7 @@ using Models.Entity;
 namespace API.Controllers.Models;
 
 /// <summary>
-///     Provides read-only endpoints for managing and retrieving driver data, 
+///     Provides read-only endpoints for managing and retrieving driver data,
 ///     supporting lookups by both internal identifiers and external source identifiers.
 /// </summary>
 public class DriverController(IReadSourcedRepository<DriverEntity, DriverComplex> repository)
