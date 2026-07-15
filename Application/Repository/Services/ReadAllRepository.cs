@@ -3,6 +3,7 @@ using Application.Repository.Exceptions;
 using Application.Repository.Interfaces;
 using Models.Interfaces;
 using Models.Shared;
+using Persistence.Interfaces;
 using Persistence.Services;
 
 namespace Application.Repository.Services;

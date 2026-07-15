@@ -1,7 +1,8 @@
 using Models.Shared;
 using Persistence.Exceptions;
+using Persistence.Services;
 
-namespace Persistence.Services;
+namespace Persistence.Interfaces;
 
 public interface IReadAllDbService<TEntity, TComplex> : IReadSingleDbService<TEntity, TComplex>
 {

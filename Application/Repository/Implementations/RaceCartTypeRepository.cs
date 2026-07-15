@@ -3,6 +3,7 @@ using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
 using Models.Shared;
+using Persistence.Interfaces;
 using Persistence.Services;
 
 namespace Application.Repository.Implementations;

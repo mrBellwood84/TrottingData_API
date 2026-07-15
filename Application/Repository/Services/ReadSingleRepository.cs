@@ -1,6 +1,7 @@
 using Application.Cache.Services;
 using Application.Repository.Interfaces;
 using Models.Interfaces;
+using Persistence.Interfaces;
 using Persistence.Services;
 
 namespace Application.Repository.Services;

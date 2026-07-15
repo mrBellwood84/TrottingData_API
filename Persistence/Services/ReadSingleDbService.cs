@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Persistence.Exceptions;
+using Persistence.Interfaces;
 
 namespace Persistence.Services;
 

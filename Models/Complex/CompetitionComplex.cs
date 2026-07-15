@@ -10,4 +10,5 @@ public class CompetitionComplex : IEntity
 
     // Nested object
     public RaceCourseComplex Course { get; init; }
+    public List<RaceComplex> Races { get; init; }
 }

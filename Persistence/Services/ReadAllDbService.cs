@@ -2,6 +2,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Shared;
 using Persistence.Exceptions;
+using Persistence.Interfaces;
 
 namespace Persistence.Services;
 

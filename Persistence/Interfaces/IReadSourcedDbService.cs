@@ -1,6 +1,7 @@
 using Persistence.Exceptions;
+using Persistence.Services;
 
-namespace Persistence.Services;
+namespace Persistence.Interfaces;
 
 public interface IReadSourcedDbService<TEntity, TComplex> : IReadSingleDbService<TEntity, TComplex>
 {
