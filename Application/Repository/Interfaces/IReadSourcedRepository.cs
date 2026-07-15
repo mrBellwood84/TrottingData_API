@@ -15,5 +15,5 @@ public interface IReadSourcedRepository<TEntity, TComplex>
     /// <summary>
     ///     Retrieves a complex model by its external source identifier, checking the sourced cache first.
     /// </summary>
-    Task<TComplex?> GetComplexEntityBySourceIdAsync(string sourceId);
+    Task<TComplex?> GetComplexBySourceIdAsync(string sourceId);
 }

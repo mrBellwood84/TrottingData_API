@@ -54,7 +54,7 @@ public class ReadAllRepository<TEntity, TComplex>(
     ///     Retrieves all complex domain models, returning the fully loaded cache if available,
     ///     otherwise fetching from the database and populating the cache.
     /// </summary>
-    public async Task<List<TComplex>> GetAllComplexEntitiesAsync()
+    public async Task<List<TComplex>> GetAllComplexAsync()
     {
         if (!modelPolicy.AllowGetAll)
             throw new RepositoryPolicyViolationException(

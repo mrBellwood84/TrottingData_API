@@ -23,5 +23,5 @@ public interface IReadAllRepository<TEntity, TComplex>
     ///     Retrieves all complex domain models, returning the fully loaded cache if available,
     ///     otherwise fetching from the database and populating the cache.
     /// </summary>
-    Task<List<TComplex>> GetAllComplexEntitiesAsync();
+    Task<List<TComplex>> GetAllComplexAsync();
 }

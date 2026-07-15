@@ -14,5 +14,5 @@ public interface IReadSingleRepository<TEntity, TComplex>
     /// <summary>
     ///     Retrieves a complex model by its identifier, checking the cache first before querying the database.
     /// </summary>
-    Task<TComplex?> GetComplexEntityByIdAsync(string id);
+    Task<TComplex?> GetComplexByIdAsync(string id);
 }

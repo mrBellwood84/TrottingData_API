@@ -36,7 +36,7 @@ public class ReadSourcedRepository<TEntity, TComplex>(
     /// <summary>
     ///     Retrieves a complex model by its external source identifier, checking the sourced cache first.
     /// </summary>
-    public async Task<TComplex?> GetComplexEntityBySourceIdAsync(string sourceId)
+    public async Task<TComplex?> GetComplexBySourceIdAsync(string sourceId)
     {
         var cacheData = await sourcedComplexCache.Get(sourceId);
         if (cacheData is not null) return cacheData;

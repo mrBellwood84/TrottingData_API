@@ -32,7 +32,7 @@ public class ReadSingleRepository<TEntity, TComplex>(
     /// <summary>
     ///     Retrieves a complex model by its identifier, checking the cache first before querying the database.
     /// </summary>
-    public async Task<TComplex?> GetComplexEntityByIdAsync(string id)
+    public async Task<TComplex?> GetComplexByIdAsync(string id)
     {
         var cacheData = await complexCache.Get(id);
         if (cacheData is not null) return cacheData;
