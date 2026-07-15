@@ -1,4 +1,3 @@
-using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
@@ -6,37 +5,27 @@ using Persistence.Services;
 
 namespace Persistence.Implementations;
 
-/// <inheritdoc />
-public class DriverLicenseDbService : DbService<DriverLicenseEntity, DriverLicenseComplex>
+/// <summary>
+///     Provides database access operations for driver licenses, handling both flat
+///     <see cref="DriverLicenseEntity" /> structures and rich <see cref="DriverLicenseComplex" /> models.
+///     Data is consistently ordered by the license code.
+/// </summary>
+/// <param name="configuration">The application configuration containing connection string definitions.</param>
+public sealed class DriverLicenseDbService(IConfiguration configuration)
+    : ReadAllDbService<DriverLicenseEntity, DriverLicenseComplex>(configuration)
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="DriverLicenseDbService" /> class
-    ///     and configures the specific SQL queries for Driver License entities.
-    /// </summary>
-    /// <param name="configuration">The application configuration.</param>
-    public DriverLicenseDbService(IConfiguration configuration)
-        : base(configuration)
-    {
-        QueryIds = @"SELECT Id FROM DriverLicense";
-        QueryEntity = @"SELECT * FROM DriverLicense ORDER BY Code";
-        QueryEntityById = @"SELECT * FROM DriverLicense WHERE Id = @Id ORDER BY Code";
-        QueryComplex = @"SELECT Id, Code, Description FROM DriverLicense ORDER BY Code";
-        QueryComplexById = @"SELECT Id, Code, Description FROM DriverLicense WHERE Id = @Id ORDER BY Code";
-    }
+    protected override string SqlSelectIds =>
+        @"SELECT Id FROM DriverLicense";
 
-    /// <inheritdoc />
-    private protected override async Task<List<DriverLicenseComplex>> GetAllComplexLogicAsync()
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryAsync<DriverLicenseComplex>(QueryComplex);
-        return data.ToList();
-    }
+    protected override string SqlSelectEntities =>
+        @"SELECT * FROM DriverLicense ORDER BY Code";
 
-    /// <inheritdoc />
-    private protected override async Task<DriverLicenseComplex?> GetComplexByIdLogicAsync(string id)
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryFirstOrDefaultAsync<DriverLicenseComplex>(QueryComplexById, new { Id = id });
-        return data;
-    }
+    protected override string SqlSelectEntityById =>
+        @"SELECT * FROM DriverLicense WHERE Id = @Id ORDER BY Code";
+
+    protected override string SqlSelectComplex =>
+        @"SELECT Id, Code, Description FROM DriverLicense ORDER BY Code";
+
+    protected override string SqlSelectComplexById =>
+        @"SELECT Id, Code, Description FROM DriverLicense WHERE Id = @Id ORDER BY Code";
 }

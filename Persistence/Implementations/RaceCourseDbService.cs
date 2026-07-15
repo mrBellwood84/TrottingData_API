@@ -1,4 +1,3 @@
-using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
@@ -6,37 +5,26 @@ using Persistence.Services;
 
 namespace Persistence.Implementations;
 
-/// <inheritdoc />
-public class RaceCourseDbService : DbService<RaceCourseEntity, RaceCourseComplex>
+/// <summary>
+///     Provides database access operations for race courses, handling both flat
+///     <see cref="RaceCourseEntity" /> structures and rich <see cref="RaceCourseComplex" /> models.
+///     Data is consistently ordered by the course name.
+/// </summary>
+public sealed class RaceCourseDbService(IConfiguration configuration)
+    : ReadAllDbService<RaceCourseEntity, RaceCourseComplex>(configuration)
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="RaceCourseDbService" /> class
-    ///     and configures the specific SQL queries for Race Course entities.
-    /// </summary>
-    /// <param name="configuration">The application configuration.</param>
-    public RaceCourseDbService(IConfiguration configuration)
-        : base(configuration)
-    {
-        QueryIds = @"SELECT Id FROM RaceCourse";
-        QueryEntity = @"SELECT * FROM RaceCourse ORDER BY Name";
-        QueryEntityById = @"SELECT * FROM RaceCourse WHERE Id = @Id ORDER BY Name";
-        QueryComplex = @"SELECT Id, Name FROM RaceCourse ORDER BY Name";
-        QueryComplexById = @"SELECT Id, Name FROM RaceCourse WHERE Id = @Id ORDER BY Name";
-    }
+    protected override string SqlSelectIds =>
+        @"SELECT Id FROM RaceCourse";
 
-    /// <inheritdoc />
-    private protected override async Task<List<RaceCourseComplex>> GetAllComplexLogicAsync()
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryAsync<RaceCourseComplex>(QueryComplex);
-        return data.ToList();
-    }
+    protected override string SqlSelectEntities =>
+        @"SELECT * FROM RaceCourse ORDER BY Name";
 
-    /// <inheritdoc />
-    private protected override async Task<RaceCourseComplex?> GetComplexByIdLogicAsync(string id)
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryFirstOrDefaultAsync<RaceCourseComplex>(QueryComplexById, new { Id = id });
-        return data;
-    }
+    protected override string SqlSelectEntityById =>
+        @"SELECT * FROM RaceCourse WHERE Id = @Id ORDER BY Name";
+
+    protected override string SqlSelectComplex =>
+        @"SELECT Id, Name FROM RaceCourse ORDER BY Name";
+
+    protected override string SqlSelectComplexById =>
+        @"SELECT Id, Name FROM RaceCourse WHERE Id = @Id ORDER BY Name";
 }

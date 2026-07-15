@@ -1,4 +1,3 @@
-using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
@@ -6,38 +5,25 @@ using Persistence.Services;
 
 namespace Persistence.Implementations;
 
-/// <inheritdoc />
-public class RaceGamblingTypeDbService : DbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>
+/// <summary>
+///     Provides database access operations for race gambling types, handling both flat
+///     <see cref="RaceGamblingTypeEntity" /> structures and rich <see cref="RaceGamblingTypeComplex" /> models.
+/// </summary>
+public sealed class RaceGamblingTypeDbService(IConfiguration configuration)
+    : ReadAllDbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>(configuration)
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="RaceGamblingTypeDbService" /> class
-    ///     and configures the specific SQL queries for Race Gambling Type entities.
-    /// </summary>
-    /// <param name="configuration">The application configuration.</param>
-    public RaceGamblingTypeDbService(IConfiguration configuration)
-        : base(configuration)
-    {
-        QueryIds = @"SELECT Id FROM RaceGamblingType";
-        QueryEntity = @"SELECT * FROM RaceGamblingType";
-        QueryEntityById = @"SELECT * FROM RaceGamblingType WHERE Id = @Id";
-        QueryComplex = @"SELECT Id, Type FROM RaceGamblingType";
-        QueryComplexById = @"SELECT Id, Type FROM RaceGamblingType WHERE Id = @Id";
-    }
+    protected override string SqlSelectIds =>
+        @"SELECT Id FROM RaceGamblingType";
 
-    /// <inheritdoc />
-    private protected override async Task<List<RaceGamblingTypeComplex>> GetAllComplexLogicAsync()
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryAsync<RaceGamblingTypeComplex>(QueryComplex);
-        return data.ToList();
-    }
+    protected override string SqlSelectEntities =>
+        @"SELECT * FROM RaceGamblingType";
 
-    /// <inheritdoc />
-    private protected override async Task<RaceGamblingTypeComplex?> GetComplexByIdLogicAsync(string id)
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryFirstOrDefaultAsync<RaceGamblingTypeComplex>(QueryComplexById,
-            new { Id = id });
-        return data;
-    }
+    protected override string SqlSelectEntityById =>
+        @"SELECT * FROM RaceGamblingType WHERE Id = @Id";
+
+    protected override string SqlSelectComplex =>
+        @"SELECT Id, Type FROM RaceGamblingType";
+
+    protected override string SqlSelectComplexById =>
+        @"SELECT Id, Type FROM RaceGamblingType WHERE Id = @Id";
 }

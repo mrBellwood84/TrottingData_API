@@ -1,4 +1,3 @@
-using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
@@ -6,37 +5,25 @@ using Persistence.Services;
 
 namespace Persistence.Implementations;
 
-/// <inheritdoc />
-public class RaceCartTypeDbService : DbService<RaceCartTypeEntity, RaceCartTypeComplex>
+/// <summary>
+///     Provides database access operations for race cart types, handling both flat
+///     <see cref="RaceCartTypeEntity" /> structures and rich <see cref="RaceCartTypeComplex" /> models.
+/// </summary>
+public sealed class RaceCartTypeDbService(IConfiguration configuration)
+    : ReadAllDbService<RaceCartTypeEntity, RaceCartTypeComplex>(configuration)
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="RaceCartTypeDbService" /> class
-    ///     and configures the specific SQL queries for Race Cart Type entities.
-    /// </summary>
-    /// <param name="configuration">The application configuration.</param>
-    public RaceCartTypeDbService(IConfiguration configuration)
-        : base(configuration)
-    {
-        QueryIds = @"SELECT Id FROM RaceCartType";
-        QueryEntity = @"SELECT * FROM RaceCartType";
-        QueryEntityById = @"SELECT * FROM RaceCartType WHERE Id = @Id";
-        QueryComplex = @"SELECT Id, Type FROM RaceCartType";
-        QueryComplexById = @"SELECT Id, Type FROM RaceCartType WHERE Id = @Id";
-    }
+    protected override string SqlSelectIds =>
+        @"SELECT Id FROM RaceCartType";
 
-    /// <inheritdoc />
-    private protected override async Task<List<RaceCartTypeComplex>> GetAllComplexLogicAsync()
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryAsync<RaceCartTypeComplex>(QueryComplex);
-        return data.ToList();
-    }
+    protected override string SqlSelectEntities =>
+        @"SELECT * FROM RaceCartType";
 
-    /// <inheritdoc />
-    private protected override async Task<RaceCartTypeComplex?> GetComplexByIdLogicAsync(string id)
-    {
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryFirstOrDefaultAsync<RaceCartTypeComplex>(QueryComplexById, new { Id = id });
-        return data;
-    }
+    protected override string SqlSelectEntityById =>
+        @"SELECT * FROM RaceCartType WHERE Id = @Id";
+
+    protected override string SqlSelectComplex =>
+        @"SELECT Id, Type FROM RaceCartType";
+
+    protected override string SqlSelectComplexById =>
+        @"SELECT Id, Type FROM RaceCartType WHERE Id = @Id";
 }

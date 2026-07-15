@@ -1,7 +1,7 @@
 using Models.Complex;
 using Models.Entity;
 using Persistence.Implementations;
-using Persistence.Interfaces;
+using Persistence.Services;
 
 namespace API.Extensions;
 
@@ -11,23 +11,23 @@ namespace API.Extensions;
 public static class PersistenceExtensions
 {
     /// <summary>
-    ///     Registers all database services (IDbService) in the Dependency Injection container.
+    ///     Registers all database services in the Dependency Injection container.
     /// </summary>
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        // adding the flat data models <3
-        services.AddScoped<IDbService<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseDbService>();
-        services.AddScoped<IDbService<HorseSexEntity, HorseSexComplex>, HorseSexDbService>();
-        services.AddScoped<IDbService<HorseTypeEntity, HorseTypeComplex>, HorseTypeDbService>();
-        services.AddScoped<IDbService<RaceCartTypeEntity, RaceCartTypeComplex>, RaceCartTypeDbService>();
-        services.AddScoped<IDbService<RaceCourseEntity, RaceCourseComplex>, RaceCourseDbService>();
-        services.AddScoped<IDbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeDbService>();
-        services.AddScoped<IDbService<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeDbService>();
-        
-        // add sourced entity db services
-        services.AddScoped<ISourcedDbService<DriverEntity, DriverComplex>, DriverDbService>();
-        services.AddScoped<ISourcedDbService<HorseEntity, HorseComplex>, HorseDbService>();
-        
+        // Bulk read and lookup services
+        services.AddScoped<IReadAllDbService<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseDbService>();
+        services.AddScoped<IReadAllDbService<HorseSexEntity, HorseSexComplex>, HorseSexDbService>();
+        services.AddScoped<IReadAllDbService<HorseTypeEntity, HorseTypeComplex>, HorseTypeDbService>();
+        services.AddScoped<IReadAllDbService<RaceCartTypeEntity, RaceCartTypeComplex>, RaceCartTypeDbService>();
+        services.AddScoped<IReadAllDbService<RaceCourseEntity, RaceCourseComplex>, RaceCourseDbService>();
+        services
+            .AddScoped<IReadAllDbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeDbService>();
+        services.AddScoped<IReadAllDbService<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeDbService>();
+
+        // Sourced services supporting external identifier lookups
+        services.AddScoped<IReadSourcedDbService<DriverEntity, DriverComplex>, DriverDbService>();
+        services.AddScoped<IReadSourcedDbService<HorseEntity, HorseComplex>, HorseDbService>();
 
         return services;
     }
