@@ -25,5 +25,5 @@ public interface IReadSourcedDbService<TEntity, TComplex> : IReadSingleDbService
     ///     Thrown when
     ///     <see cref="ReadSourcedDbService{TEntity,TComplex}.SqlSelectComplexBySourceId" /> is not defined by the subclass.
     /// </exception>
-    Task<TComplex?> GetComplexEntityBySourceIdAsync(string sourceId);
+    Task<TComplex?> GetComplexBySourceIdAsync(string sourceId);
 }

@@ -55,7 +55,7 @@ public class ReadSourcedDbService<TEntity, TComplex>(IConfiguration config)
     ///     Thrown when <see cref="SqlSelectComplexBySourceId" /> is not defined
     ///     by the subclass.
     /// </exception>
-    public Task<TComplex?> GetComplexEntityBySourceIdAsync(string sourceId)
+    public Task<TComplex?> GetComplexBySourceIdAsync(string sourceId)
     {
         if (string.IsNullOrEmpty(SqlSelectComplexBySourceId))
             throw new PersistenceMissingQueryException(

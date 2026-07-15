@@ -34,5 +34,5 @@ public interface IReadAllDbService<TEntity, TComplex> : IReadSingleDbService<TEn
     ///     Thrown when
     ///     <see cref="ReadAllDbService{TEntity,TComplex}.SqlSelectComplex" /> is not defined by the subclass.
     /// </exception>
-    Task<List<TComplex>> GetComplexEntitiesAsync();
+    Task<List<TComplex>> GetComplexAsync();
 }

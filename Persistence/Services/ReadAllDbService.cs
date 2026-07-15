@@ -80,7 +80,7 @@ public class ReadAllDbService<TEntity, TComplex>(IConfiguration config)
     ///     Thrown when <see cref="SqlSelectComplex" /> is not defined by the
     ///     subclass.
     /// </exception>
-    public Task<List<TComplex>> GetComplexEntitiesAsync()
+    public Task<List<TComplex>> GetComplexAsync()
     {
         if (string.IsNullOrEmpty(SqlSelectComplex))
             throw new PersistenceMissingQueryException(
