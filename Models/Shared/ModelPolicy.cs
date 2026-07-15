@@ -1,7 +1,7 @@
 namespace Models.Shared;
 
-public class ModelPolicy<T>
+public class ModelPolicy
 {
-    public bool AllowIdList { get; init; } = false;
-    public bool AllowGetAll { get; init; } = false;
+    public bool AllowIdList { get; init; }
+    public bool AllowGetAll { get; init; }
 }

@@ -15,8 +15,7 @@ namespace Application.Repository.Implementations;
 public sealed class RaceCartTypeRepository(
     CacheService<RaceCartTypeEntity> entityCache,
     CacheService<RaceCartTypeComplex> complexCache,
-    IReadAllDbService<RaceCartTypeEntity, RaceCartTypeComplex> dbService,
-    ModelPolicy<RaceCartTypeEntity> modelPolicy)
-    : ReadAllRepository<RaceCartTypeEntity, RaceCartTypeComplex>(entityCache, complexCache, dbService, modelPolicy)
+    IReadAllDbService<RaceCartTypeEntity, RaceCartTypeComplex> dbService)
+    : ReadAllRepository<RaceCartTypeEntity, RaceCartTypeComplex>(entityCache, complexCache, dbService)
 {
 }

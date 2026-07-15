@@ -15,8 +15,7 @@ namespace Application.Repository.Implementations;
 public sealed class HorseTypeRepository(
     CacheService<HorseTypeEntity> entityCache,
     CacheService<HorseTypeComplex> complexCache,
-    IReadAllDbService<HorseTypeEntity, HorseTypeComplex> dbService,
-    ModelPolicy<HorseTypeEntity> modelPolicy)
-    : ReadAllRepository<HorseTypeEntity, HorseTypeComplex>(entityCache, complexCache, dbService, modelPolicy)
+    IReadAllDbService<HorseTypeEntity, HorseTypeComplex> dbService)
+    : ReadAllRepository<HorseTypeEntity, HorseTypeComplex>(entityCache, complexCache, dbService)
 {
 }

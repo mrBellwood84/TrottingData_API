@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApiServices()
     .AddCache()
-    .AddModelPolicies()
     .AddPersistence()
     .AddRepositoryServices();
 

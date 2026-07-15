@@ -15,8 +15,7 @@ namespace Application.Repository.Implementations;
 public sealed class DriverLicenseRepository(
     CacheService<DriverLicenseEntity> entityCache,
     CacheService<DriverLicenseComplex> complexCache,
-    IReadAllDbService<DriverLicenseEntity, DriverLicenseComplex> dbService,
-    ModelPolicy<DriverLicenseEntity> modelPolicy)
-    : ReadAllRepository<DriverLicenseEntity, DriverLicenseComplex>(entityCache, complexCache, dbService, modelPolicy)
+    IReadAllDbService<DriverLicenseEntity, DriverLicenseComplex> dbService)
+    : ReadAllRepository<DriverLicenseEntity, DriverLicenseComplex>(entityCache, complexCache, dbService)
 {
 }

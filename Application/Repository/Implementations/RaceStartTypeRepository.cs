@@ -15,8 +15,7 @@ namespace Application.Repository.Implementations;
 public sealed class RaceStartTypeRepository(
     CacheService<RaceStartTypeEntity> entityCache,
     CacheService<RaceStartTypeComplex> complexCache,
-    IReadAllDbService<RaceStartTypeEntity, RaceStartTypeComplex> dbService,
-    ModelPolicy<RaceStartTypeEntity> modelPolicy)
-    : ReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex>(entityCache, complexCache, dbService, modelPolicy)
+    IReadAllDbService<RaceStartTypeEntity, RaceStartTypeComplex> dbService)
+    : ReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex>(entityCache, complexCache, dbService)
 {
 }

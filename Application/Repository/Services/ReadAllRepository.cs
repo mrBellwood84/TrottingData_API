@@ -4,7 +4,6 @@ using Application.Repository.Interfaces;
 using Models.Interfaces;
 using Models.Shared;
 using Persistence.Interfaces;
-using Persistence.Services;
 
 namespace Application.Repository.Services;
 
@@ -16,22 +15,22 @@ namespace Application.Repository.Services;
 public class ReadAllRepository<TEntity, TComplex>(
     CacheService<TEntity> entityCache,
     CacheService<TComplex> complexCache,
-    IReadAllDbService<TEntity, TComplex> dbService,
-    ModelPolicy<TEntity> modelPolicy)
+    IReadAllDbService<TEntity, TComplex> dbService)
     : ReadSingleRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
         IReadAllRepository<TEntity, TComplex> where TComplex : IEntity
     where TEntity : IEntity
 {
     private readonly CacheService<TEntity> _entityCache = entityCache;
     private readonly CacheService<TComplex> _complexCache = complexCache;
-    private readonly ModelPolicy<TEntity> _modelPolicy = modelPolicy;
+
+    protected virtual ModelPolicy ModelPolicy => new ModelPolicy { AllowGetAll = true,  AllowIdList = true };
 
     /// <summary>
     ///     Retrieves a list of all identity models, subject to policy restrictions.
     /// </summary>
     public Task<List<IdModel>> GetAllIdsAsync()
     {
-        if (!_modelPolicy.AllowIdList)
+        if (!ModelPolicy.AllowIdList)
             throw new RepositoryPolicyViolationException(
                 $"Retrieving IDs for {typeof(TEntity).Name} is disallowed by policy.");
 
@@ -44,7 +43,7 @@ public class ReadAllRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<List<TEntity>> GetAllEntitiesAsync()
     {
-        if (!_modelPolicy.AllowGetAll)
+        if (!ModelPolicy.AllowGetAll)
             throw new RepositoryPolicyViolationException(
                 $"Retrieving all flat entities for {typeof(TEntity).Name} is disallowed by policy.");
 
@@ -61,7 +60,7 @@ public class ReadAllRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<List<TComplex>> GetAllComplexAsync()
     {
-        if (!_modelPolicy.AllowGetAll)
+        if (!ModelPolicy.AllowGetAll)
             throw new RepositoryPolicyViolationException(
                 $"Retrieving all complex models for {typeof(TComplex).Name} is disallowed by policy.");
 
