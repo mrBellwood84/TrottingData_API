@@ -33,13 +33,20 @@ public sealed class RaceParticipantDbService(IConfiguration configuration)
 
     /// <summary>
     ///     Base query to fetch complex participant objects.
-    ///     Uses LEFT JOINs to hydrate the participant with its nested objects
-    ///     (Driver, Horse, CartType, and Result).
+    ///     Updated to select and join Trainer (t.*) as well.
     /// </summary>
     private const string SqlSelectComplexBase = @"
-        SELECT * FROM RaceParticipant rp
+        SELECT 
+            rp.*, 
+            d.*, 
+            h.*, 
+            t.*, 
+            ct.*, 
+            rr.*
+        FROM RaceParticipant rp
         LEFT JOIN Driver d ON rp.DriverSourceId = d.SourceId
         LEFT JOIN Horse h ON rp.HorseSourceId = h.SourceId
+        LEFT JOIN Driver t ON rp.TrainerSourceId = t.SourceId
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
         LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId";
 
@@ -137,22 +144,24 @@ public sealed class RaceParticipantDbService(IConfiguration configuration)
     }
 
     /// <summary>
-    ///     Executes the multi-mapping SQL query to hydrate nested Driver, Horse,
+    ///     Executes the multi-mapping SQL query to hydrate nested Driver, Horse, Trainer,
     ///     CartType, and RaceResults complexes into a newly instanced RaceParticipantComplex.
     /// </summary>
     private async Task<IEnumerable<RaceParticipantComplex>> QueryComplexListInternalAsync(string sql, object param)
     {
         await using var connection = await CreateConnection();
 
+        // Mapped to match: rp.*, d.*, h.*, t.*, ct.*, rr.*
         return await connection.QueryAsync<
             RaceParticipantComplex,
             DriverComplex,
             HorseComplex,
+            DriverComplex, // Added Trainer (t.*)
             RaceCartTypeComplex,
             RaceResultsComplex,
             RaceParticipantComplex>(
             sql,
-            (participant, driver, horse, cartType, result) => new RaceParticipantComplex
+            (participant, driver, horse, trainer, cartType, result) => new RaceParticipantComplex
             {
                 Id = participant.Id,
                 TrainerSourceId = participant.TrainerSourceId,
@@ -163,10 +172,11 @@ public sealed class RaceParticipantDbService(IConfiguration configuration)
                 HindShoe = participant.HindShoe,
                 Driver = driver,
                 Horse = horse,
+                Trainer = trainer, // Properly assigned to the new Trainer property!
                 CartType = cartType,
                 Result = result
             },
             param,
-            splitOn: "Id"); // Splits columns at each "Id" sequence to map to the respective types
+            splitOn: "Id"); // Automatically splits on every "Id" column across the selected tables
     }
 }

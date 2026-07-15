@@ -1,0 +1,80 @@
+@API_HostAddress = http://localhost:5007
+@competition_id = 2830cf1c-eaad-4f08-98f7-3302b75567e9
+
+### 1. Get all Competition IDs (Expected: 200 OK)
+# Henter alle tilgjengelige ID-er. Åpen for alle.
+GET {{API_HostAddress}}/model/competition/id
+Accept: application/json
+
+> {%
+    client.test("Should retrieve all competition IDs successfully", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one ID");
+
+        // Siden vi vil teste på den spesifikke GUID-en med mange deltakere, 
+        // lar vi denne linjen være kommentert ut. Avkommenter om du vil kjøre 100% dynamisk:
+        // client.global.set("competition_id", response.body[0].id);
+    });
+%}
+
+
+### 2. Get all simple Competition entities (Expected: 403 Forbidden)
+# Blokkeres av modell-policyen i klassen
+GET {{API_HostAddress}}/model/competition/entity
+Accept: application/json
+
+> {%
+    client.test("Should return 403 Forbidden for getting all simple entities", function () {
+        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    });
+%}
+
+
+### 3. Get simple Competition entity by ID (Expected: 200 OK)
+# Henter den spesifikke, deltaker-rike konkurransen vår direkte på ID
+GET {{API_HostAddress}}/model/competition/entity/{{competition_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single simple competition by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "2830cf1c-eaad-4f08-98f7-3302b75567e9", "ID mismatch");
+    });
+%}
+
+
+### 4. Get all complex Competition entities (Expected: 403 Forbidden)
+# Blokkeres av modell-policyen i klassen
+GET {{API_HostAddress}}/model/competition/complex
+Accept: application/json
+
+> {%
+    client.test("Should return 403 Forbidden for getting all complex entities", function () {
+        client.assert(response.status === 403, "Expected HTTP 403 Forbidden");
+    });
+%}
+
+
+### 5. Get complex Competition entity by ID (Expected: 200 OK)
+# Henter den rike datamodellen med flust av løp og deltakere
+GET {{API_HostAddress}}/model/competition/complex/{{competition_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single complex competition by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "2830cf1c-eaad-4f08-98f7-3302b75567e9", "ID mismatch");
+        client.assert(response.body.races !== undefined, "Expected to find races under competition");
+    });
+%}
+
+
+### 6. Test 404 behavior for non-existing ID
+GET {{API_HostAddress}}/model/competition/complex/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+> {%
+    client.test("Request should return 404 NotFound", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 NotFound");
+    });
+%}

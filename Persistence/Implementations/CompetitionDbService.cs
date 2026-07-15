@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Persistence.Interfaces;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -13,22 +12,15 @@ namespace Persistence.Implementations;
 ///     of deep, complex object trees spanning across 11 related tables.
 /// </summary>
 public sealed class CompetitionDbService(IConfiguration configuration)
-    : ReadAllDbService<CompetitionEntity, CompetitionComplex>(configuration), ICompetitionDbService
+    : ReadAllDbService<CompetitionEntity, CompetitionComplex>(configuration)
 {
-    // Query to retrieve only a list of all available IDs
-    private const string SqlSelectAllIds =
-        "SELECT Id FROM Competition";
+    protected override string SqlSelectIds => @"SELECT Id FROM Competition";
 
-    // Query for fast retrieval of flat entities based on a list of IDs
-    private const string SqlSelectEntitiesByIds =
-        "SELECT * FROM Competition WHERE Id IN @Ids";
+    protected override string SqlSelectEntities => @"SELECT * FROM Competition";
+    protected override string SqlSelectEntityById => "SELECT * FROM Competition WHERE Id = @Id";
 
-    /// <summary>
-    ///     Base query that gathers all related data to build the complex object tree.
-    ///     The link table 'Race_RaceGamblingType' is included in the JOIN to connect the tables,
-    ///     but omitted from the SELECT list to keep Dapper's type mapping clean and uncomplicated.
-    /// </summary>
-    private const string SqlSelectComplexBase = @"
+    // todo : Add driver license to driver, add sex and type to horse!
+    protected override string SqlSelectComplex => @"
         SELECT 
             c.*, 
             rc.*,
@@ -38,6 +30,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
             rp.*, 
             d.*, 
             h.*, 
+            t.*,
             ct.*, 
             rr.*, 
             rgt.*
@@ -49,44 +42,13 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         LEFT JOIN RaceParticipant rp ON r.Id = rp.RaceId
         LEFT JOIN Driver d ON rp.DriverSourceId = d.SourceId
         LEFT JOIN Horse h ON rp.HorseSourceId = h.SourceId
+        LEFT JOIN Driver t ON rp.TrainerSourceId = t.SourceId
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
         LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId
         LEFT JOIN Race_RaceGamblingType r_rgt ON r.Id = r_rgt.RaceId
         LEFT JOIN RaceGamblingType rgt ON r_rgt.RaceGamblingTypeId = rgt.Id";
 
-    // Simple query to retrieve a flat entity by ID
-    protected override string SqlSelectEntityById =>
-        "SELECT * FROM Competition WHERE Id = @Id";
-
-    // Reuses the base query to retrieve a specific complex competition by ID
-    protected override string SqlSelectComplexById => $"{SqlSelectComplexBase} WHERE c.Id = @Id";
-
-    /// <summary>
-    ///     Retrieves a list of all competition IDs in the database.
-    /// </summary>
-    public async Task<IEnumerable<string>> GetAllIdsAsync()
-    {
-        await using var connection = await CreateConnection();
-        return await connection.QueryAsync<string>(SqlSelectAllIds);
-    }
-
-    /// <summary>
-    ///     Retrieves flat entities based on a list of specific IDs.
-    /// </summary>
-    public async Task<IEnumerable<CompetitionEntity>> GetEntitiesByIdsAsync(IEnumerable<string> ids)
-    {
-        await using var connection = await CreateConnection();
-        return await connection.QueryAsync<CompetitionEntity>(SqlSelectEntitiesByIds, new { Ids = ids });
-    }
-
-    /// <summary>
-    ///     Retrieves complete, deep object trees based on a list of specific IDs.
-    /// </summary>
-    public async Task<IEnumerable<CompetitionComplex>> GetComplexesByIdsAsync(IEnumerable<string> ids)
-    {
-        var query = $"{SqlSelectComplexBase} WHERE c.Id IN @Ids";
-        return await QueryComplexListInternalAsync(query, new { Ids = ids });
-    }
+    protected override string SqlSelectComplexById => $"{SqlSelectComplex} WHERE c.Id = @Id";
 
     /// <summary>
     ///     Helper method for ReadAllDbService to retrieve a single complex model.
@@ -97,6 +59,12 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         return results.FirstOrDefault();
     }
 
+    protected override async Task<List<CompetitionComplex>> QueryComplexListAsync(string query)
+    {
+        var result = await QueryComplexListInternalAsync(query, new { });
+        return result.ToList();
+    }
+
     /// <summary>
     ///     Executes the heavy query, maps the flat rows over to temporary FlatCompetitionRow
     ///     objects, and groups them together into correct, hierarchical object trees.
@@ -105,7 +73,6 @@ public sealed class CompetitionDbService(IConfiguration configuration)
     {
         await using var connection = await CreateConnection();
 
-        // The order of types must match the chronological order of columns returned in the SELECT statement
         var types = new[]
         {
             typeof(CompetitionEntity),
@@ -116,6 +83,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
             typeof(RaceParticipantComplex),
             typeof(DriverComplex),
             typeof(HorseComplex),
+            typeof(DriverComplex),
             typeof(RaceCartTypeComplex),
             typeof(RaceResultsComplex),
             typeof(RaceGamblingTypeComplex)
@@ -135,32 +103,18 @@ public sealed class CompetitionDbService(IConfiguration configuration)
                 Participant = objects[5] as RaceParticipantComplex,
                 ParticipantDriver = objects[6] as DriverComplex,
                 ParticipantHorse = objects[7] as HorseComplex,
-                ParticipantCartType = objects[8] as RaceCartTypeComplex,
-                ParticipantResult = objects[9] as RaceResultsComplex,
-                GamblingType = objects[10] as RaceGamblingTypeComplex
+                ParticipantTrainer = objects[8] as DriverComplex,
+                ParticipantCartType = objects[9] as RaceCartTypeComplex,
+                ParticipantResult = objects[10] as RaceResultsComplex,
+                GamblingType = objects[11] as RaceGamblingTypeComplex
             },
             param,
-            splitOn: "Id"); // Dapper automatically splits on every occurrence of "Id" across the columns
+            splitOn: "Id");
 
         // Step 2: Group flat rows per Competition to construct the hierarchy
         return flatRows.GroupBy(row => row.Competition.Id).Select(g =>
         {
             var first = g.First();
-
-            /*
-             * CIRCULAR REFERENCE HANDLING:
-             * CompetitionComplex refers to a list of RaceComplex, and each RaceComplex
-             * refers back to its CompetitionComplex. Since the models use "init" properties,
-             * we instantiate a "shallow parent" (a basic copy without the races) to pass to the children.
-             */
-            var shallowParent = new CompetitionComplex
-            {
-                Id = first.Competition.Id,
-                Date = first.Competition.Date,
-                FromDirectSource = first.Competition.FromDirectSource,
-                Course = first.Course!,
-                Races = null! // Left unassigned here to avoid infinite loops during initialization
-            };
 
             // Step 3: Group rows per race within this competition
             var races = g
@@ -185,6 +139,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
                             HindShoe = r.Participant.HindShoe,
                             Driver = r.ParticipantDriver!,
                             Horse = r.ParticipantHorse!,
+                            Trainer = r.ParticipantTrainer!,
                             CartType = r.ParticipantCartType!,
                             Result = r.ParticipantResult!
                         })
@@ -197,7 +152,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
                         .Select(r => r.GamblingType!)
                         .ToList();
 
-                    // Return fully constructed RaceComplex linked to the shallow parent
+                    // Return fully constructed RaceComplex matching your model exactly
                     return new RaceComplex
                     {
                         Id = firstRaceRow.Race!.Id,
@@ -205,7 +160,6 @@ public sealed class CompetitionDbService(IConfiguration configuration)
                         StartTime = firstRaceRow.Race.StartTime,
                         MainDistance = firstRaceRow.Race.MainDistance,
                         Monte = firstRaceRow.Race.Monte,
-                        Competition = shallowParent, // Securely passing the circular reference here
                         HorseType = firstRaceRow.HorseType!,
                         StartType = firstRaceRow.StartType!,
                         Participants = participants,
@@ -228,7 +182,6 @@ public sealed class CompetitionDbService(IConfiguration configuration)
 
     /// <summary>
     ///     Private helper class representing a flat row returned from the SQL query.
-    ///     Used exclusively internally to hold mapped objects before applying the LINQ grouping.
     /// </summary>
     private sealed class FlatCompetitionRow
     {
@@ -240,6 +193,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         public RaceParticipantComplex? Participant { get; init; }
         public DriverComplex? ParticipantDriver { get; init; }
         public HorseComplex? ParticipantHorse { get; init; }
+        public DriverComplex? ParticipantTrainer { get; init; } // Added Trainer property
         public RaceCartTypeComplex? ParticipantCartType { get; init; }
         public RaceResultsComplex? ParticipantResult { get; init; }
         public RaceGamblingTypeComplex? GamblingType { get; init; }

@@ -2,7 +2,6 @@ using Models.Complex;
 using Models.Entity;
 using Persistence.Implementations;
 using Persistence.Interfaces;
-using Persistence.Services;
 
 namespace API.Extensions;
 
@@ -28,9 +27,9 @@ public static class PersistenceExtensions
         // Sourced services supporting external identifier lookups
         services.AddScoped<IReadSourcedDbService<DriverEntity, DriverComplex>, DriverDbService>();
         services.AddScoped<IReadSourcedDbService<HorseEntity, HorseComplex>, HorseDbService>();
-        
+
         // The advanced ones  ^^
-        services.AddScoped<ICompetitionDbService, CompetitionDbService>();
+        services.AddScoped<IReadAllDbService<CompetitionEntity, CompetitionComplex>, CompetitionDbService>();
         services.AddScoped<IRaceDbService, RaceDbService>();
         services.AddScoped<IRaceParticipantDbService, RaceParticipantDbService>();
         services.AddScoped<IRaceResultDbService, RaceResultDbService>();

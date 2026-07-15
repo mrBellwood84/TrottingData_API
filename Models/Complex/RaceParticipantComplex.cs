@@ -15,6 +15,7 @@ public class RaceParticipantComplex : IEntity
     // Nested objects
     public DriverComplex Driver { get; init; }
     public HorseComplex Horse { get; init; }
+    public DriverComplex Trainer { get; init; }
     public RaceCartTypeComplex CartType { get; init; }
     public RaceResultsComplex Result { get; init; }
 }

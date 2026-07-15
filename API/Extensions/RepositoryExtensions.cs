@@ -23,12 +23,17 @@ public static class RepositoryExtensions
         services.AddScoped<IReadAllRepository<HorseTypeEntity, HorseTypeComplex>, HorseTypeRepository>();
         services.AddScoped<IReadAllRepository<RaceCartTypeEntity, RaceCartTypeComplex>, RaceCartTypeRepository>();
         services.AddScoped<IReadAllRepository<RaceCourseEntity, RaceCourseComplex>, RaceCourseRepository>();
-        services.AddScoped<IReadAllRepository<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeRepository>();
+        services
+            .AddScoped<IReadAllRepository<RaceGamblingTypeEntity, RaceGamblingTypeComplex>,
+                RaceGamblingTypeRepository>();
         services.AddScoped<IReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeRepository>();
 
         // The sourced ones ^^
         services.AddScoped<IReadSourcedRepository<DriverEntity, DriverComplex>, DriverRepository>();
         services.AddScoped<IReadSourcedRepository<HorseEntity, HorseComplex>, HorseRepository>();
+
+        // the advanced repositories ;)
+        services.AddScoped<IReadAllRepository<CompetitionEntity, CompetitionComplex>, CompetitionRepository>();
 
         return services;
     }

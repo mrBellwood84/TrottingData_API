@@ -21,28 +21,28 @@ public sealed class RaceDbService(IConfiguration configuration)
 
     /// <summary>
     ///     Base query for complex race objects.
-    ///     r_rgt (Race_RaceGamblingType) is omitted from the SELECT list to keep
-    ///     Dapper's multi-mapping clean, but is used in the JOIN to link 'rgt'.
+    ///     Competition (c.*) is completely removed since RaceComplex no longer
+    ///     references its parent competition.
     /// </summary>
     private const string SqlSelectComplexBase = @"
         SELECT 
             r.*, 
-            c.*, 
             ht.*, 
             rst.*, 
             rp.*, 
             d.*, 
             h.*, 
+            t.*,
             ct.*, 
             rr.*, 
             rgt.*
         FROM Race r
-        LEFT JOIN Competition c ON r.CompetitionId = c.Id
         LEFT JOIN HorseType ht ON r.HorseTypeId = ht.Id
         LEFT JOIN RaceStartType rst ON r.RaceStartTypeId = rst.Id
         LEFT JOIN RaceParticipant rp ON r.Id = rp.RaceId
         LEFT JOIN Driver d ON rp.DriverSourceId = d.SourceId
         LEFT JOIN Horse h ON rp.HorseSourceId = h.SourceId
+        LEFT JOIN Driver t ON rp.TrainerSourceId = t.SourceId
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
         LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId
         LEFT JOIN Race_RaceGamblingType r_rgt ON r.Id = r_rgt.RaceId
@@ -91,55 +91,54 @@ public sealed class RaceDbService(IConfiguration configuration)
     }
 
     /// <summary>
-    ///     Executes the SQL query and performs the heavy lifting of mapping 10 tables
-    ///     into a structured, hierarchical C# object tree using Dapper and LINQ.
+    ///     Executes the SQL query and maps the 10 remaining tables into a
+    ///     structured, hierarchical C# object tree using Dapper and LINQ.
     /// </summary>
     private async Task<IEnumerable<RaceComplex>> QueryComplexListInternalAsync(string sql, object param)
     {
         await using var connection = await CreateConnection();
 
-        // 10 types matching the chronological order of the columns in SqlSelectComplexBase
+        // 10 types matching the chronological order of the columns in SqlSelectComplexBase (no CompetitionComplex anymore!)
         var types = new[]
         {
             typeof(RaceEntity),
-            typeof(CompetitionComplex),
             typeof(HorseTypeComplex),
             typeof(RaceStartTypeComplex),
             typeof(RaceParticipantComplex),
             typeof(DriverComplex),
             typeof(HorseComplex),
+            typeof(DriverComplex),
             typeof(RaceCartTypeComplex),
             typeof(RaceResultsComplex),
             typeof(RaceGamblingTypeComplex)
         };
 
         // Fetch raw data and map directly to the flat helper class FlatRaceRow.
-        // splitOn tells Dapper where the transition to the next C# object begins in the column sequence.
         var flatRows = await connection.QueryAsync<FlatRaceRow>(
             sql,
             types,
             objects => new FlatRaceRow
             {
                 Race = (RaceEntity)objects[0],
-                Competition = objects[1] as CompetitionComplex,
-                HorseType = objects[2] as HorseTypeComplex,
-                StartType = objects[3] as RaceStartTypeComplex,
-                Participant = objects[4] as RaceParticipantComplex,
-                ParticipantDriver = objects[5] as DriverComplex,
-                ParticipantHorse = objects[6] as HorseComplex,
+                HorseType = objects[1] as HorseTypeComplex,
+                StartType = objects[2] as RaceStartTypeComplex,
+                Participant = objects[3] as RaceParticipantComplex,
+                ParticipantDriver = objects[4] as DriverComplex,
+                ParticipantHorse = objects[5] as HorseComplex,
+                ParticipantTrainer = objects[6] as DriverComplex,
                 ParticipantCartType = objects[7] as RaceCartTypeComplex,
                 ParticipantResult = objects[8] as RaceResultsComplex,
                 GamblingType = objects[9] as RaceGamblingTypeComplex
             },
             param,
-            splitOn: "Id,Id,Id,Id,Id,Id,Id,Id,Id"); // 9 splits for the 10 objects in the sequence
+            splitOn: "Id"); // Dapper splits beautifully on every "Id" column
 
         // Group rows by Race.Id to aggregate lists of participants and gambling types per unique race
         return flatRows.GroupBy(row => row.Race.Id).Select(g =>
         {
             var first = g.First();
 
-            // Filter and map unique participants for this race (including driver, horse, cart, and result)
+            // Filter and map unique participants for this race
             var participants = g
                 .Where(r => r.Participant != null)
                 .DistinctBy(r => r.Participant!.Id)
@@ -154,19 +153,20 @@ public sealed class RaceDbService(IConfiguration configuration)
                     HindShoe = r.Participant.HindShoe,
                     Driver = r.ParticipantDriver!,
                     Horse = r.ParticipantHorse!,
+                    Trainer = r.ParticipantTrainer!,
                     CartType = r.ParticipantCartType!,
                     Result = r.ParticipantResult!
                 })
                 .ToList();
 
-            // Filter and map unique gambling types (V75, V5, etc.) associated with this race
+            // Filter and map unique gambling types associated with this race
             var gamblingTypes = g
                 .Where(r => r.GamblingType != null)
                 .DistinctBy(r => r.GamblingType!.Id)
                 .Select(r => r.GamblingType!)
                 .ToList();
 
-            // Return the fully assembled RaceComplex object
+            // Return the fully assembled RaceComplex object according to your new model structure
             return new RaceComplex
             {
                 Id = first.Race.Id,
@@ -174,7 +174,6 @@ public sealed class RaceDbService(IConfiguration configuration)
                 StartTime = first.Race.StartTime,
                 MainDistance = first.Race.MainDistance,
                 Monte = first.Race.Monte,
-                Competition = first.Competition!, // Reference back to the parent competition
                 HorseType = first.HorseType!,
                 StartType = first.StartType!,
                 Participants = participants,
@@ -185,17 +184,16 @@ public sealed class RaceDbService(IConfiguration configuration)
 
     /// <summary>
     ///     Private helper class representing a flat row returned from the Dapper query.
-    ///     Used exclusively internally to hold mapped objects before running the LINQ grouping.
     /// </summary>
     private sealed class FlatRaceRow
     {
         public RaceEntity Race { get; init; } = null!;
-        public CompetitionComplex? Competition { get; init; }
         public HorseTypeComplex? HorseType { get; init; }
         public RaceStartTypeComplex? StartType { get; init; }
         public RaceParticipantComplex? Participant { get; init; }
         public DriverComplex? ParticipantDriver { get; init; }
         public HorseComplex? ParticipantHorse { get; init; }
+        public DriverComplex? ParticipantTrainer { get; init; }
         public RaceCartTypeComplex? ParticipantCartType { get; init; }
         public RaceResultsComplex? ParticipantResult { get; init; }
         public RaceGamblingTypeComplex? GamblingType { get; init; }

@@ -8,7 +8,6 @@ public class RaceComplex
     public int MainDistance { get; init; }
     public bool Monte { get; init; }
 
-    public CompetitionComplex Competition { get; init; }
     public HorseTypeComplex HorseType { get; init; }
     public RaceStartTypeComplex StartType { get; init; }
 
