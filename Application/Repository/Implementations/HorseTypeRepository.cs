@@ -3,16 +3,19 @@ using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
 using Models.Shared;
-using Persistence.Interfaces;
+using Persistence.Services;
 
 namespace Application.Repository.Implementations;
 
-/// <inheritdoc />
-public class HorseTypeRepository(
-    CacheService<HorseTypeEntity> simpleCache,
+/// <summary>
+///     Provides repository operations for horse types, handling caching and policy
+///     checks for both flat entities and complex domain models.
+/// </summary>
+public sealed class HorseTypeRepository(
+    CacheService<HorseTypeEntity> entityCache,
     CacheService<HorseTypeComplex> complexCache,
-    IDbService<HorseTypeEntity, HorseTypeComplex> dbService,
+    IReadAllDbService<HorseTypeEntity, HorseTypeComplex> dbService,
     ModelPolicy<HorseTypeEntity> modelPolicy)
-    : RepositoryService<HorseTypeEntity, HorseTypeComplex>(simpleCache, complexCache, dbService, modelPolicy)
+    : ReadAllRepository<HorseTypeEntity, HorseTypeComplex>(entityCache, complexCache, dbService, modelPolicy)
 {
 }

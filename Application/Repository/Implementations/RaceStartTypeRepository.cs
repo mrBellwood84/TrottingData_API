@@ -3,16 +3,19 @@ using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
 using Models.Shared;
-using Persistence.Interfaces;
+using Persistence.Services;
 
 namespace Application.Repository.Implementations;
 
-/// <inheritdoc />
-public class RaceStartTypeRepository(
-    CacheService<RaceStartTypeEntity> simpleCache,
+/// <summary>
+///     Provides repository operations for race start types, handling caching and policy
+///     checks for both flat entities and complex domain models.
+/// </summary>
+public sealed class RaceStartTypeRepository(
+    CacheService<RaceStartTypeEntity> entityCache,
     CacheService<RaceStartTypeComplex> complexCache,
-    IDbService<RaceStartTypeEntity, RaceStartTypeComplex> dbService,
+    IReadAllDbService<RaceStartTypeEntity, RaceStartTypeComplex> dbService,
     ModelPolicy<RaceStartTypeEntity> modelPolicy)
-    : RepositoryService<RaceStartTypeEntity, RaceStartTypeComplex>(simpleCache, complexCache, dbService, modelPolicy)
+    : ReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex>(entityCache, complexCache, dbService, modelPolicy)
 {
 }

@@ -14,7 +14,7 @@ public static class CacheExtensions
     {
         services.AddSingleton(typeof(CacheService<>));
         services.AddSingleton(typeof(SourcedCacheService<>));
-        
+
         return services;
     }
 }

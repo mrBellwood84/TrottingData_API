@@ -11,26 +11,24 @@ namespace API.Extensions;
 public static class RepositoryExtensions
 {
     /// <summary>
-    ///     Registers all repository services (IRepositoryService) in the Dependency Injection container.
+    ///     Registers all repository services using generic read interfaces in the Dependency Injection container.
     /// </summary>
     /// <param name="services">The service collection to add the repository services to.</param>
     /// <returns>The updated <see cref="IServiceCollection" />.</returns>
     public static IServiceCollection AddRepositoryServices(this IServiceCollection services)
     {
-        // the flat ones ones <3
-        services.AddScoped<IRepositoryService<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseRepository>();
-        services.AddScoped<IRepositoryService<HorseSexEntity, HorseSexComplex>, HorseSexRepository>();
-        services.AddScoped<IRepositoryService<HorseTypeEntity, HorseTypeComplex>, HorseTypeRepository>();
-        services.AddScoped<IRepositoryService<RaceCartTypeEntity, RaceCartTypeComplex>, RaceCartTypeRepository>();
-        services.AddScoped<IRepositoryService<RaceCourseEntity, RaceCourseComplex>, RaceCourseRepository>();
-        services
-            .AddScoped<IRepositoryService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>,
-                RaceGamblingTypeRepository>();
-        services.AddScoped<IRepositoryService<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeRepository>();
-        
-        // the sourced ones ^^
-        services.AddScoped<ISourcedRepositoryService<DriverEntity, DriverComplex>, DriverRepository>();
-        services.AddScoped<ISourcedRepositoryService<HorseEntity, HorseComplex>, HorseRepository>();
+        // The flat ones <3
+        services.AddScoped<IReadAllRepository<DriverLicenseEntity, DriverLicenseComplex>, DriverLicenseRepository>();
+        services.AddScoped<IReadAllRepository<HorseSexEntity, HorseSexComplex>, HorseSexRepository>();
+        services.AddScoped<IReadAllRepository<HorseTypeEntity, HorseTypeComplex>, HorseTypeRepository>();
+        services.AddScoped<IReadAllRepository<RaceCartTypeEntity, RaceCartTypeComplex>, RaceCartTypeRepository>();
+        services.AddScoped<IReadAllRepository<RaceCourseEntity, RaceCourseComplex>, RaceCourseRepository>();
+        services.AddScoped<IReadAllRepository<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeRepository>();
+        services.AddScoped<IReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeRepository>();
+
+        // The sourced ones ^^
+        services.AddScoped<IReadSourcedRepository<DriverEntity, DriverComplex>, DriverRepository>();
+        services.AddScoped<IReadSourcedRepository<HorseEntity, HorseComplex>, HorseRepository>();
 
         return services;
     }

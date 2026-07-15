@@ -2,19 +2,26 @@ using Application.Cache.Services;
 using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
-using Models.Shared;
-using Persistence.Interfaces;
+using Persistence.Services;
 
 namespace Application.Repository.Implementations;
 
-public class DriverRepository(
+/// <summary>
+///     Provides repository operations for drivers, handling specialized caching
+///     and lookups for both flat entities and complex domain models using internal
+///     identifiers or external source identifiers.
+/// </summary>
+public sealed class DriverRepository(
     CacheService<DriverEntity> entityCache,
     CacheService<DriverComplex> complexCache,
-    SourcedCacheService<DriverEntity> sourceEntityCache,
-    SourcedCacheService<DriverComplex> sourceComplexCache,
-    ISourcedDbService<DriverEntity, DriverComplex> dbService,
-    ModelPolicy<DriverEntity> modelPolicy)
-    : SourcedRepositoryService<DriverEntity, DriverComplex>(entityCache, complexCache, sourceEntityCache,
-        sourceComplexCache, dbService, modelPolicy)
+    SourcedCacheService<DriverEntity> sourcedEntityCache,
+    SourcedCacheService<DriverComplex> sourcedComplexCache,
+    IReadSourcedDbService<DriverEntity, DriverComplex> dbService)
+    : ReadSourcedRepository<DriverEntity, DriverComplex>(
+        entityCache,
+        complexCache,
+        sourcedEntityCache,
+        sourcedComplexCache,
+        dbService)
 {
 }
