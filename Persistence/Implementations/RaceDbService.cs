@@ -2,28 +2,20 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Persistence.Interfaces;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
 
-/// <summary>
-///     Database service for handling races.
-///     Handles retrieval of flat race entities and deep, complex object trees
-///     spanning across 10 related tables.
-/// </summary>
 public sealed class RaceDbService(IConfiguration configuration)
-    : ReadSingleDbService<RaceEntity, RaceComplex>(configuration), IRaceDbService
+    : ReadSingleDbService<RaceEntity, RaceComplex>(configuration)
 {
-    // Retrieves all flat races associated with a specific competition
-    private const string SqlSelectEntitiesByCompetitionId =
-        "SELECT * FROM Race WHERE CompetitionId = @CompetitionId";
-
-    /// <summary>
-    ///     Base query for complex race objects.
-    ///     Competition (c.*) is completely removed since RaceComplex no longer
-    ///     references its parent competition.
-    /// </summary>
+    
+    protected override string SqlSelectEntityById => @"SELECT * FROM Race WHERE Id = @Id";
+    private string SqlSelectEntityByCompetitionId => @"SELECT * FROM Race WHERE CompetitionId = @Id";
+    
+    protected override string SqlSelectComplexById => $"{SqlSelectComplexBase} WHERE r.Id = @Id";
+    private string SqlSelectComplexByCompetitionId => $"{SqlSelectComplexBase} WHERE r.CompetitionId = @Id";
+    
     private const string SqlSelectComplexBase = @"
         SELECT 
             r.*, 
@@ -48,57 +40,28 @@ public sealed class RaceDbService(IConfiguration configuration)
         LEFT JOIN Race_RaceGamblingType r_rgt ON r.Id = r_rgt.RaceId
         LEFT JOIN RaceGamblingType rgt ON r_rgt.RaceGamblingTypeId = rgt.Id";
 
-    // Retrieves a flat race entity by ID
-    protected override string SqlSelectEntityById =>
-        "SELECT * FROM Race WHERE Id = @Id";
 
-    // Reuses the base query to retrieve a specific complex race by ID
-    protected override string SqlSelectComplexById => $"{SqlSelectComplexBase} WHERE r.Id = @Id";
-
-    /// <summary>
-    ///     Retrieves a list of flat race entities belonging to a competition.
-    /// </summary>
-    public Task<IEnumerable<RaceEntity>> GetEntitiesByCompetitionIdAsync(string competitionId)
+    public Task<RaceEntity?> GetEntityByCompetitionIdAsync(string competitionId)
     {
-        return QueryEntityListAsync(SqlSelectEntitiesByCompetitionId, new { CompetitionId = competitionId });
+        return QueryEntityAsync(SqlSelectEntityByCompetitionId, new { Id = competitionId });
     }
 
-    /// <summary>
-    ///     Retrieves deep, complex object trees for all races in a specific competition.
-    /// </summary>
-    public Task<IEnumerable<RaceComplex>> GetComplexesByCompetitionIdAsync(string competitionId)
+    public Task<RaceComplex?> GetComplexesByCompetitionIdAsync(string competitionId)
     {
-        return QueryComplexListInternalAsync($"{SqlSelectComplexBase} WHERE r.CompetitionId = @CompetitionId",
-            new { CompetitionId = competitionId });
+        var param = new { Id = competitionId };
+        return QueryComplexAsync(SqlSelectComplexByCompetitionId, param);
     }
 
-    /// <summary>
-    ///     Helper method for ReadSingleDbService to retrieve and return the first match of a complex model.
-    /// </summary>
     protected override async Task<RaceComplex?> QueryComplexAsync(string query, object param)
     {
         var results = await QueryComplexListInternalAsync(query, param);
         return results.FirstOrDefault();
     }
-
-    /// <summary>
-    ///     Helper method to retrieve a list of simple, flat race entities.
-    /// </summary>
-    private async Task<IEnumerable<RaceEntity>> QueryEntityListAsync(string sql, object param)
-    {
-        await using var connection = await CreateConnection();
-        return await connection.QueryAsync<RaceEntity>(sql, param);
-    }
-
-    /// <summary>
-    ///     Executes the SQL query and maps the 10 remaining tables into a
-    ///     structured, hierarchical C# object tree using Dapper and LINQ.
-    /// </summary>
+    
     private async Task<IEnumerable<RaceComplex>> QueryComplexListInternalAsync(string sql, object param)
     {
         await using var connection = await CreateConnection();
 
-        // 10 types matching the chronological order of the columns in SqlSelectComplexBase (no CompetitionComplex anymore!)
         var types = new[]
         {
             typeof(RaceEntity),
@@ -113,7 +76,6 @@ public sealed class RaceDbService(IConfiguration configuration)
             typeof(RaceGamblingTypeComplex)
         };
 
-        // Fetch raw data and map directly to the flat helper class FlatRaceRow.
         var flatRows = await connection.QueryAsync<FlatRaceRow>(
             sql,
             types,
@@ -131,14 +93,12 @@ public sealed class RaceDbService(IConfiguration configuration)
                 GamblingType = objects[9] as RaceGamblingTypeComplex
             },
             param,
-            splitOn: "Id"); // Dapper splits beautifully on every "Id" column
+            splitOn: "Id");
 
-        // Group rows by Race.Id to aggregate lists of participants and gambling types per unique race
         return flatRows.GroupBy(row => row.Race.Id).Select(g =>
         {
             var first = g.First();
 
-            // Filter and map unique participants for this race
             var participants = g
                 .Where(r => r.Participant != null)
                 .DistinctBy(r => r.Participant!.Id)
@@ -159,14 +119,12 @@ public sealed class RaceDbService(IConfiguration configuration)
                 })
                 .ToList();
 
-            // Filter and map unique gambling types associated with this race
             var gamblingTypes = g
                 .Where(r => r.GamblingType != null)
                 .DistinctBy(r => r.GamblingType!.Id)
                 .Select(r => r.GamblingType!)
                 .ToList();
 
-            // Return the fully assembled RaceComplex object according to your new model structure
             return new RaceComplex
             {
                 Id = first.Race.Id,
@@ -182,9 +140,6 @@ public sealed class RaceDbService(IConfiguration configuration)
         }).ToList();
     }
 
-    /// <summary>
-    ///     Private helper class representing a flat row returned from the Dapper query.
-    /// </summary>
     private sealed class FlatRaceRow
     {
         public RaceEntity Race { get; init; } = null!;

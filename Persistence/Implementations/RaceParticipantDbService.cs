@@ -2,7 +2,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
-using Persistence.Interfaces;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
@@ -13,28 +12,8 @@ namespace Persistence.Implementations;
 ///     specialized queries for both flat entities and complex nested structures.
 /// </summary>
 public sealed class RaceParticipantDbService(IConfiguration configuration)
-    : ReadSingleDbService<RaceParticipantEntity, RaceParticipantComplex>(configuration), IRaceParticipantDbService
+    : ReadSingleDbService<RaceParticipantEntity, RaceParticipantComplex>(configuration)
 {
-    // Query to retrieve flat entities belonging to a specific race
-    private const string SqlSelectEntitiesByRaceId =
-        "SELECT * FROM RaceParticipant WHERE RaceId = @RaceId";
-
-    // Query to retrieve flat entities belonging to a specific driver source ID
-    private const string SqlSelectEntitiesByDriverSourceId =
-        "SELECT * FROM RaceParticipant WHERE DriverSourceId = @DriverSourceId";
-
-    // Query to retrieve flat entities belonging to a specific horse source ID
-    private const string SqlSelectEntitiesByHorseSourceId =
-        "SELECT * FROM RaceParticipant WHERE HorseSourceId = @HorseSourceId";
-
-    // Query to retrieve flat entities belonging to a specific trainer source ID
-    private const string SqlSelectEntitiesByTrainerSourceId =
-        "SELECT * FROM RaceParticipant WHERE TrainerSourceId = @TrainerSourceId";
-
-    /// <summary>
-    ///     Base query to fetch complex participant objects.
-    ///     Updated to select and join Trainer (t.*) as well.
-    /// </summary>
     private const string SqlSelectComplexBase = @"
         SELECT 
             rp.*, 
@@ -50,113 +29,87 @@ public sealed class RaceParticipantDbService(IConfiguration configuration)
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
         LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId";
 
-    // Simple query to retrieve a flat participant entity by its primary ID
-    protected override string SqlSelectEntityById =>
-        "SELECT * FROM RaceParticipant WHERE Id = @Id";
+    private readonly string _sqlSelectEntityBase = "SELECT * FROM RaceParticipant";
 
-    // Reuses the base query to retrieve a specific complex participant by ID
-    protected override string SqlSelectComplexById => $"{SqlSelectComplexBase} WHERE rp.Id = @Id";
 
-    /// <summary>
-    ///     Retrieves flat participant entities belonging to a specific race.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantEntity>> GetEntitiesByRaceIdAsync(string raceId)
+    protected override string SqlSelectEntityById => $"{_sqlSelectEntityBase} WHERE Id = @Id";
+    private string SqlSelectEntityByRaceId => $"{_sqlSelectEntityBase} WHERE RaceId = @Id";
+    private string SqlSelectEntityByDriverSourceId => $"{_sqlSelectEntityBase} WHERE DriverSourceId = @Id";
+    private string SqlSelectEntityByHorseSourceId => $"{_sqlSelectEntityBase} WHERE HorseSourceId = @Id";
+    private string SqlSelectEntityByTrainerSourceId => $"{_sqlSelectEntityBase} WHERE TrainerSourceId = @Id";
+
+    protected override string SqlSelectComplexById => $"{SqlSelectComplexBase} WHERE Id = @Id";
+    private string SqlSelectComplexByRaceId => $"{SqlSelectComplexBase} WHERE RaceId = @Id";
+    private string SqlSelectComplexByDriverSourceId => $"{SqlSelectComplexBase} WHERE DriverSourceId = @Id";
+    private string SqlSelectComplexByHorseSourceId => $"{SqlSelectComplexBase} WHERE HorseSourceId = @Id";
+    private string SqlSelectComplexByTrainerSourceId => $"{SqlSelectComplexBase} WHERE TrainerSourceId = @Id";
+
+
+    public Task<RaceParticipantEntity?> GetEntityByRaceId(string raceId)
     {
-        return QueryEntityListAsync(SqlSelectEntitiesByRaceId, new { RaceId = raceId });
+        var param = new { Id = raceId };
+        return QueryEntityAsync(SqlSelectEntityByRaceId, param);
     }
 
-    /// <summary>
-    ///     Retrieves complex participant models belonging to a specific race.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantComplex>> GetComplexesByRaceIdAsync(string raceId)
+    public Task<RaceParticipantEntity?> GetEntityByDriverSourceId(string driverSourceId)
     {
-        return QueryComplexListInternalAsync($"{SqlSelectComplexBase} WHERE rp.RaceId = @RaceId",
-            new { RaceId = raceId });
+        var param = new { Id = driverSourceId };
+        return QueryEntityAsync(SqlSelectEntityByDriverSourceId, param);
     }
 
-    /// <summary>
-    ///     Retrieves flat participant entities associated with a driver's source ID.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantEntity>> GetEntitiesByDriverSourceIdAsync(string driverSourceId)
+    public Task<RaceParticipantEntity?> GetEntityByHorseSourceId(string horseSourceId)
     {
-        return QueryEntityListAsync(SqlSelectEntitiesByDriverSourceId, new { DriverSourceId = driverSourceId });
+        var param = new { Id = horseSourceId };
+        return QueryEntityAsync(SqlSelectEntityByHorseSourceId, param);
     }
 
-    /// <summary>
-    ///     Retrieves complex participant models associated with a driver's source ID.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantComplex>> GetComplexesByDriverSourceIdAsync(string driverSourceId)
+    public Task<RaceParticipantEntity?> GetEntityByTrainerSourceId(string trainerSourceId)
     {
-        return QueryComplexListInternalAsync($"{SqlSelectComplexBase} WHERE rp.DriverSourceId = @DriverSourceId",
-            new { DriverSourceId = driverSourceId });
+        var param = new { Id = trainerSourceId };
+        return QueryEntityAsync(SqlSelectEntityByTrainerSourceId, param);
     }
 
-    /// <summary>
-    ///     Retrieves flat participant entities associated with a horse's source ID.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantEntity>> GetEntitiesByHorseSourceIdAsync(string horseSourceId)
+    
+    public Task<RaceParticipantComplex?> GetComplexByRaceId(string raceId)
     {
-        return QueryEntityListAsync(SqlSelectEntitiesByHorseSourceId, new { HorseSourceId = horseSourceId });
+        var param = new { Id = raceId };
+        return QueryComplexAsync(SqlSelectComplexByRaceId, param);
     }
 
-    /// <summary>
-    ///     Retrieves complex participant models associated with a horse's source ID.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantComplex>> GetComplexesByHorseSourceIdAsync(string horseSourceId)
+    public Task<RaceParticipantComplex?> GetComplexByDriverSourceId(string driverSourceId)
     {
-        return QueryComplexListInternalAsync($"{SqlSelectComplexBase} WHERE rp.HorseSourceId = @HorseSourceId",
-            new { HorseSourceId = horseSourceId });
+        var param = new { Id = driverSourceId };
+        return QueryComplexAsync(SqlSelectComplexByDriverSourceId, param);
     }
 
-    /// <summary>
-    ///     Retrieves flat participant entities associated with a trainer's source ID.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantEntity>> GetEntitiesByTrainerSourceIdAsync(string trainerSourceId)
+    public Task<RaceParticipantComplex?> GetComplexByHorseSourceId(string horseSourceId)
     {
-        return QueryEntityListAsync(SqlSelectEntitiesByTrainerSourceId, new { TrainerSourceId = trainerSourceId });
+        var param = new { Id = horseSourceId };
+        return QueryComplexAsync(SqlSelectComplexByHorseSourceId, param);
     }
 
-    /// <summary>
-    ///     Retrieves complex participant models associated with a trainer's source ID.
-    /// </summary>
-    public Task<IEnumerable<RaceParticipantComplex>> GetComplexesByTrainerSourceIdAsync(string trainerSourceId)
+    public Task<RaceParticipantComplex?> GetComplexByTrainerSourceId(string trainerSourceId)
     {
-        return QueryComplexListInternalAsync($"{SqlSelectComplexBase} WHERE rp.TrainerSourceId = @TrainerSourceId",
-            new { TrainerSourceId = trainerSourceId });
+        var param = new { Id = trainerSourceId };
+        return QueryComplexAsync(SqlSelectComplexByTrainerSourceId, param);
     }
 
-    /// <summary>
-    ///     Helper method for ReadSingleDbService to retrieve and return the first match of a complex model.
-    /// </summary>
+
     protected override async Task<RaceParticipantComplex?> QueryComplexAsync(string query, object param)
     {
         var results = await QueryComplexListInternalAsync(query, param);
         return results.FirstOrDefault();
     }
 
-    /// <summary>
-    ///     Helper method to retrieve a list of simple, flat participant entities.
-    /// </summary>
-    private async Task<IEnumerable<RaceParticipantEntity>> QueryEntityListAsync(string sql, object param)
-    {
-        await using var connection = await CreateConnection();
-        return await connection.QueryAsync<RaceParticipantEntity>(sql, param);
-    }
-
-    /// <summary>
-    ///     Executes the multi-mapping SQL query to hydrate nested Driver, Horse, Trainer,
-    ///     CartType, and RaceResults complexes into a newly instanced RaceParticipantComplex.
-    /// </summary>
     private async Task<IEnumerable<RaceParticipantComplex>> QueryComplexListInternalAsync(string sql, object param)
     {
         await using var connection = await CreateConnection();
 
-        // Mapped to match: rp.*, d.*, h.*, t.*, ct.*, rr.*
         return await connection.QueryAsync<
             RaceParticipantComplex,
             DriverComplex,
             HorseComplex,
-            DriverComplex, // Added Trainer (t.*)
+            DriverComplex,
             RaceCartTypeComplex,
             RaceResultsComplex,
             RaceParticipantComplex>(
@@ -172,11 +125,11 @@ public sealed class RaceParticipantDbService(IConfiguration configuration)
                 HindShoe = participant.HindShoe,
                 Driver = driver,
                 Horse = horse,
-                Trainer = trainer, // Properly assigned to the new Trainer property!
+                Trainer = trainer,
                 CartType = cartType,
                 Result = result
             },
             param,
-            splitOn: "Id"); // Automatically splits on every "Id" column across the selected tables
+            splitOn: "Id");
     }
 }
