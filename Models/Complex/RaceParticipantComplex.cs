@@ -9,8 +9,8 @@ public class RaceParticipantComplex : IEntity
     public short StartNumber { get; init; }
     public short TrackNumber { get; init; }
     public int TrackDistance { get; init; }
-    public bool ForeShoe { get; init; }
-    public bool HindShoe { get; init; }
+    public bool? ForeShoe { get; init; }
+    public bool? HindShoe { get; init; }
 
     // Nested objects
     public DriverComplex Driver { get; init; }

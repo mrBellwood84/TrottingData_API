@@ -2,18 +2,20 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Models.Complex;
 using Models.Entity;
+using Persistence.Interfaces;
 using Persistence.Services;
 
 namespace Persistence.Implementations;
 
 /// <summary>
 ///     Database service for handling race participants.
-///     Inherits read-only capabilities from ReadSingleDbService and implements
-///     specialized queries for both flat entities and complex nested structures.
+///     Manages operations for both simple flat database entities and deep, complex models
+///     by hydrating related records (Drivers, Horses, Trainers, Carts, and Results) via Dapper multi-mapping.
 /// </summary>
-public sealed class RaceParticipantDbService(IConfiguration configuration)
-    : ReadSingleDbService<RaceParticipantEntity, RaceParticipantComplex>(configuration)
+public class RaceParticipantDbService(IConfiguration configuration)
+    : ReadSingleDbService<RaceParticipantEntity, RaceParticipantComplex>(configuration), IRaceParticipantDbService
 {
+    // todo : add depth to driver and horse entities
     private const string SqlSelectComplexBase = @"
         SELECT 
             rp.*, 
@@ -31,98 +33,129 @@ public sealed class RaceParticipantDbService(IConfiguration configuration)
 
     private readonly string _sqlSelectEntityBase = "SELECT * FROM RaceParticipant";
 
-
     protected override string SqlSelectEntityById => $"{_sqlSelectEntityBase} WHERE Id = @Id";
     private string SqlSelectEntityByRaceId => $"{_sqlSelectEntityBase} WHERE RaceId = @Id";
     private string SqlSelectEntityByDriverSourceId => $"{_sqlSelectEntityBase} WHERE DriverSourceId = @Id";
     private string SqlSelectEntityByHorseSourceId => $"{_sqlSelectEntityBase} WHERE HorseSourceId = @Id";
     private string SqlSelectEntityByTrainerSourceId => $"{_sqlSelectEntityBase} WHERE TrainerSourceId = @Id";
 
-    protected override string SqlSelectComplexById => $"{SqlSelectComplexBase} WHERE Id = @Id";
-    private string SqlSelectComplexByRaceId => $"{SqlSelectComplexBase} WHERE RaceId = @Id";
-    private string SqlSelectComplexByDriverSourceId => $"{SqlSelectComplexBase} WHERE DriverSourceId = @Id";
-    private string SqlSelectComplexByHorseSourceId => $"{SqlSelectComplexBase} WHERE HorseSourceId = @Id";
-    private string SqlSelectComplexByTrainerSourceId => $"{SqlSelectComplexBase} WHERE TrainerSourceId = @Id";
+    protected override string SqlSelectComplexById => $"{SqlSelectComplexBase} WHERE rp.Id = @Id";
+    private string SqlSelectComplexByRaceId => $"{SqlSelectComplexBase} WHERE rp.RaceId = @Id";
+    private string SqlSelectComplexByDriverSourceId => $"{SqlSelectComplexBase} WHERE rp.DriverSourceId = @Id";
+    private string SqlSelectComplexByHorseSourceId => $"{SqlSelectComplexBase} WHERE rp.HorseSourceId = @Id";
+    private string SqlSelectComplexByTrainerSourceId => $"{SqlSelectComplexBase} WHERE rp.TrainerSourceId = @Id";
 
-
-    public Task<RaceParticipantEntity?> GetEntityByRaceId(string raceId)
+    /// <summary>
+    ///     Retrieves a list of flat participant entities registered for a specific race.
+    /// </summary>
+    public Task<List<RaceParticipantEntity>> GetEntitiesByRaceIdAsync(string raceId)
     {
-        var param = new { Id = raceId };
-        return QueryEntityAsync(SqlSelectEntityByRaceId, param);
+        return QueryEntityListInternalAsync(SqlSelectEntityByRaceId, new { Id = raceId });
     }
 
-    public Task<RaceParticipantEntity?> GetEntityByDriverSourceId(string driverSourceId)
+    /// <summary>
+    ///     Retrieves a list of flat participant entities associated with a specific driver source ID.
+    /// </summary>
+    public Task<List<RaceParticipantEntity>> GetEntitiesByDriverSourceIdAsync(string driverSourceId)
     {
-        var param = new { Id = driverSourceId };
-        return QueryEntityAsync(SqlSelectEntityByDriverSourceId, param);
+        return QueryEntityListInternalAsync(SqlSelectEntityByDriverSourceId, new { Id = driverSourceId });
     }
 
-    public Task<RaceParticipantEntity?> GetEntityByHorseSourceId(string horseSourceId)
+    /// <summary>
+    ///     Retrieves a list of flat participant entities associated with a specific horse source ID.
+    /// </summary>
+    public Task<List<RaceParticipantEntity>> GetEntitiesByHorseSourceIdAsync(string horseSourceId)
     {
-        var param = new { Id = horseSourceId };
-        return QueryEntityAsync(SqlSelectEntityByHorseSourceId, param);
+        return QueryEntityListInternalAsync(SqlSelectEntityByHorseSourceId, new { Id = horseSourceId });
     }
 
-    public Task<RaceParticipantEntity?> GetEntityByTrainerSourceId(string trainerSourceId)
+    /// <summary>
+    ///     Retrieves a list of flat participant entities associated with a specific trainer source ID.
+    /// </summary>
+    public Task<List<RaceParticipantEntity>> GetEntitiesByTrainerSourceIdAsync(string trainerSourceId)
     {
-        var param = new { Id = trainerSourceId };
-        return QueryEntityAsync(SqlSelectEntityByTrainerSourceId, param);
+        return QueryEntityListInternalAsync(SqlSelectEntityByTrainerSourceId, new { Id = trainerSourceId });
     }
 
-    
-    public Task<RaceParticipantComplex?> GetComplexByRaceId(string raceId)
+    /// <summary>
+    ///     Retrieves all participants for a specific race, fully hydrated with drivers, horses, trainers, and results.
+    /// </summary>
+    public Task<List<RaceParticipantComplex>> GetComplexesByRaceIdAsync(string raceId)
     {
-        var param = new { Id = raceId };
-        return QueryComplexAsync(SqlSelectComplexByRaceId, param);
+        return QueryComplexListInternalAsync(SqlSelectComplexByRaceId, new { Id = raceId });
     }
 
-    public Task<RaceParticipantComplex?> GetComplexByDriverSourceId(string driverSourceId)
+    /// <summary>
+    ///     Retrieves all race appearances for a driver, fully hydrated with related domain complexes.
+    /// </summary>
+    public Task<List<RaceParticipantComplex>> GetComplexesByDriverSourceIdAsync(string driverSourceId)
     {
-        var param = new { Id = driverSourceId };
-        return QueryComplexAsync(SqlSelectComplexByDriverSourceId, param);
+        return QueryComplexListInternalAsync(SqlSelectComplexByDriverSourceId, new { Id = driverSourceId });
     }
 
-    public Task<RaceParticipantComplex?> GetComplexByHorseSourceId(string horseSourceId)
+    /// <summary>
+    ///     Retrieves all race appearances for a specific horse, fully hydrated with related domain complexes.
+    /// </summary>
+    public Task<List<RaceParticipantComplex>> GetComplexesByHorseSourceIdAsync(string horseSourceId)
     {
-        var param = new { Id = horseSourceId };
-        return QueryComplexAsync(SqlSelectComplexByHorseSourceId, param);
+        return QueryComplexListInternalAsync(SqlSelectComplexByHorseSourceId, new { Id = horseSourceId });
     }
 
-    public Task<RaceParticipantComplex?> GetComplexByTrainerSourceId(string trainerSourceId)
+    /// <summary>
+    ///     Retrieves all race entries managed by a specific trainer, fully hydrated with related domain complexes.
+    /// </summary>
+    public Task<List<RaceParticipantComplex>> GetComplexesByTrainerSourceIdAsync(string trainerSourceId)
     {
-        var param = new { Id = trainerSourceId };
-        return QueryComplexAsync(SqlSelectComplexByTrainerSourceId, param);
+        return QueryComplexListInternalAsync(SqlSelectComplexByTrainerSourceId, new { Id = trainerSourceId });
     }
 
-
+    /// <summary>
+    ///     Overrides the base method to reuse the unified multi-mapping pipeline for a single identifier lookup.
+    /// </summary>
     protected override async Task<RaceParticipantComplex?> QueryComplexAsync(string query, object param)
     {
         var results = await QueryComplexListInternalAsync(query, param);
         return results.FirstOrDefault();
     }
 
-    private async Task<IEnumerable<RaceParticipantComplex>> QueryComplexListInternalAsync(string sql, object param)
+    /// <summary>
+    ///     Executes flat table reads for baseline entity lists.
+    /// </summary>
+    private async Task<List<RaceParticipantEntity>> QueryEntityListInternalAsync(string sql, object param)
+    {
+        await using var connection = await CreateConnection();
+        var data = await connection.QueryAsync<RaceParticipantEntity>(sql, param);
+        return data.ToList();
+    }
+
+    /// <summary>
+    ///     Performs multi-mapping over the tabular result rows. Maps via the flat database representation
+    ///     into the targeted rich domain complexes to ensure predictable object lifecycle binding.
+    /// </summary>
+    private async Task<List<RaceParticipantComplex>> QueryComplexListInternalAsync(string sql, object param)
     {
         await using var connection = await CreateConnection();
 
-        return await connection.QueryAsync<
-            RaceParticipantComplex,
+        // Performs a single-pass hydration across 6 mapping boundaries.
+        // Dapper seamlessly splits on every new encounter of the 'Id' column.
+        var rows = await connection.QueryAsync<
+            RaceParticipantEntity,
             DriverComplex,
             HorseComplex,
-            DriverComplex,
+            DriverComplex, // Maps Driver twin alias (t.*) to Trainer
             RaceCartTypeComplex,
             RaceResultsComplex,
             RaceParticipantComplex>(
             sql,
-            (participant, driver, horse, trainer, cartType, result) => new RaceParticipantComplex
+            (entity, driver, horse, trainer, cartType, result) => new RaceParticipantComplex
             {
-                Id = participant.Id,
-                TrainerSourceId = participant.TrainerSourceId,
-                StartNumber = participant.StartNumber,
-                TrackNumber = participant.TrackNumber,
-                TrackDistance = participant.TrackDistance,
-                ForeShoe = participant.ForeShoe,
-                HindShoe = participant.HindShoe,
+                Id = entity.Id,
+                TrainerSourceId = entity.TrainerSourceId,
+                StartNumber = entity.StartNumber,
+                TrackNumber = entity.TrackNumber,
+                TrackDistance = entity.TrackDistance,
+                ForeShoe = entity.ForeShoe,
+                HindShoe = entity.HindShoe,
                 Driver = driver,
                 Horse = horse,
                 Trainer = trainer,
@@ -131,5 +164,7 @@ public sealed class RaceParticipantDbService(IConfiguration configuration)
             },
             param,
             splitOn: "Id");
+
+        return rows.ToList();
     }
 }
