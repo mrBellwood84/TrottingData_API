@@ -9,7 +9,7 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving race course data,
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
-public class RaceCourseController(IListItemsRepository<RaceCourseEntity, RaceCourseComplex> repository)
+public class RaceCourseController(IReadAllRepository<RaceCourseEntity, RaceCourseComplex> repository)
     : ReadAllModelController<RaceCourseEntity, RaceCourseComplex>(repository)
 {
 }

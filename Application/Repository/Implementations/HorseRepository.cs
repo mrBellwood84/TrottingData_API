@@ -12,9 +12,9 @@ namespace Application.Repository.Implementations;
 ///     identifiers or external source identifiers.
 /// </summary>
 public sealed class HorseRepository(
-    ISourceItemCache<HorseEntity> entityCache,
-    ISourceItemCache<HorseComplex> complexCache,
+    IReadSourceCache<HorseEntity> entityCache,
+    IReadSourceCache<HorseComplex> complexCache,
     IReadSourcedDbService<HorseEntity, HorseComplex> dbService)
-    : SourceItemRepository<HorseEntity, HorseComplex>(entityCache, complexCache, dbService)
+    : ReadReadSourceRepository<HorseEntity, HorseComplex>(entityCache, complexCache, dbService)
 {
 }

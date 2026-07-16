@@ -12,9 +12,9 @@ namespace Application.Repository.Implementations;
 ///     identifiers or external source identifiers.
 /// </summary>
 public sealed class DriverRepository(
-    ISourceItemCache<DriverEntity> entityCache,
-    ISourceItemCache<DriverComplex> complexCache,
+    IReadSourceCache<DriverEntity> entityCache,
+    IReadSourceCache<DriverComplex> complexCache,
     IReadSourcedDbService<DriverEntity, DriverComplex> dbService)
-    : SourceItemRepository<DriverEntity, DriverComplex>(entityCache, complexCache, dbService)
+    : ReadReadSourceRepository<DriverEntity, DriverComplex>(entityCache, complexCache, dbService)
 {
 }

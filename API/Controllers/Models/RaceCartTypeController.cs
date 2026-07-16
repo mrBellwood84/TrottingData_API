@@ -9,7 +9,7 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving race cart type data,
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
-public class RaceCartTypeController(IListItemsRepository<RaceCartTypeEntity, RaceCartTypeComplex> repository)
+public class RaceCartTypeController(IReadAllRepository<RaceCartTypeEntity, RaceCartTypeComplex> repository)
     : ReadAllModelController<RaceCartTypeEntity, RaceCartTypeComplex>(repository)
 {
 }

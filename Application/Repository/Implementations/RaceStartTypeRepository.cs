@@ -11,9 +11,9 @@ namespace Application.Repository.Implementations;
 ///     checks for both flat entities and complex domain models.
 /// </summary>
 public sealed class RaceStartTypeRepository(
-    IListItemCache<RaceStartTypeEntity> entityCache,
-    IListItemCache<RaceStartTypeComplex> complexCache,
+    IReadAllCache<RaceStartTypeEntity> entityCache,
+    IReadAllCache<RaceStartTypeComplex> complexCache,
     IReadAllDbService<RaceStartTypeEntity, RaceStartTypeComplex> dbService)
-    : ListItemsRepository<RaceStartTypeEntity, RaceStartTypeComplex>(entityCache, complexCache, dbService)
+    : ReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex>(entityCache, complexCache, dbService)
 {
 }

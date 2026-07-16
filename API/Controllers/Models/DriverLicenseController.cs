@@ -9,7 +9,7 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving driver license data,
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
-public class DriverLicenseController(IListItemsRepository<DriverLicenseEntity, DriverLicenseComplex> repository)
+public class DriverLicenseController(IReadAllRepository<DriverLicenseEntity, DriverLicenseComplex> repository)
     : ReadAllModelController<DriverLicenseEntity, DriverLicenseComplex>(repository)
 {
 }

@@ -8,7 +8,7 @@ namespace Application.Cache.Implementations;
 ///     In-memory cache implementation optimized for handling collections of entities.
 ///     Tracks initialization state via a loaded flag to support conditional bulk operations.
 /// </summary>
-public class ListItemCache<T> : IListItemCache<T> where T : IEntity
+public class ReadAllCache<T> : IReadAllCache<T> where T : IEntity
 {
     private readonly CacheService<T> _master = new();
 

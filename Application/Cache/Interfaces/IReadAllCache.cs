@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Application.Cache.Interfaces;
 
-public interface IListItemCache<T> : ISingleItemCache<T> where T : IEntity
+public interface IReadAllCache<T> : IReadSingleCache<T> where T : IEntity
 {
     /// <summary>
     ///     Gets a value indicating whether the full dataset has been loaded into the cache.

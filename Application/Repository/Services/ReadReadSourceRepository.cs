@@ -10,12 +10,12 @@ namespace Application.Repository.Services;
 ///     from an external source, enabling lookups via their external source identifier
 ///     with dedicated cache-aside management.
 /// </summary>
-public class SourceItemRepository<TEntity, TComplex>(
-    ISourceItemCache<TEntity> entityCache,
-    ISourceItemCache<TComplex> complexCache,
+public class ReadReadSourceRepository<TEntity, TComplex>(
+    IReadSourceCache<TEntity> entityCache,
+    IReadSourceCache<TComplex> complexCache,
     IReadSourcedDbService<TEntity, TComplex> dbService)
-    : SinglesItemRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
-        ISourceItemRepository<TEntity, TComplex> where TEntity : ISourcedEntity
+    : ReadSingleRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
+        IReadSourceRepository<TEntity, TComplex> where TEntity : ISourcedEntity
     where TComplex : ISourcedEntity
 {
     /// <summary>

@@ -11,9 +11,9 @@ namespace Application.Repository.Implementations;
 ///     checks for both flat entities and complex domain models.
 /// </summary>
 public sealed class DriverLicenseRepository(
-    IListItemCache<DriverLicenseEntity> entityCache,
-    IListItemCache<DriverLicenseComplex> complexCache,
+    IReadAllCache<DriverLicenseEntity> entityCache,
+    IReadAllCache<DriverLicenseComplex> complexCache,
     IReadAllDbService<DriverLicenseEntity, DriverLicenseComplex> dbService)
-    : ListItemsRepository<DriverLicenseEntity, DriverLicenseComplex>(entityCache, complexCache, dbService)
+    : ReadAllRepository<DriverLicenseEntity, DriverLicenseComplex>(entityCache, complexCache, dbService)
 {
 }

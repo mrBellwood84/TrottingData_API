@@ -9,7 +9,7 @@ namespace Application.Cache.Implementations;
 ///     Maps entities by both their primary identifier and their external source identifier
 ///     to ensure fast O(1) resolutions across different query vectors.
 /// </summary>
-public class SourceItemCache<T> : ISourceItemCache<T> where T : ISourcedEntity
+public class ReadSourceCache<T> : IReadSourceCache<T> where T : ISourcedEntity
 {
     private readonly CacheService<T> _master = new();
     private readonly CacheService<T> _source = new();

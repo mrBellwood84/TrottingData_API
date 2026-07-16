@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace Application.Cache.Interfaces;
 
-public interface ISingleItemCache<T> where T : IEntity
+public interface IReadSingleCache<T> where T : IEntity
 {
     /// <summary>
     ///     Retrieves a cached item by its unique identifier.

@@ -12,12 +12,12 @@ namespace Application.Repository.Services;
 ///     to support bulk operations for both flat entities and complex domain models,
 ///     governed by application-defined model policies.
 /// </summary>
-public class ListItemsRepository<TEntity, TComplex>(
-    IListItemCache<TEntity> entityCache,
-    IListItemCache<TComplex> complexCache,
+public class ReadAllRepository<TEntity, TComplex>(
+    IReadAllCache<TEntity> entityCache,
+    IReadAllCache<TComplex> complexCache,
     IReadAllDbService<TEntity, TComplex> dbService)
-    : SinglesItemRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
-        IListItemsRepository<TEntity, TComplex> where TEntity : IEntity
+    : ReadSingleRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
+        IReadAllRepository<TEntity, TComplex> where TEntity : IEntity
     where TComplex : IEntity
 {
     protected virtual ModelPolicy ModelPolicy => new() { AllowGetAll = true, AllowIdList = true };

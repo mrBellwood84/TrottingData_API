@@ -9,7 +9,7 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving horse type data,
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
-public class HorseTypeController(IListItemsRepository<HorseTypeEntity, HorseTypeComplex> repository)
+public class HorseTypeController(IReadAllRepository<HorseTypeEntity, HorseTypeComplex> repository)
     : ReadAllModelController<HorseTypeEntity, HorseTypeComplex>(repository)
 {
 }

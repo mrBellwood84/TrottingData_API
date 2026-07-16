@@ -9,7 +9,7 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving horse data,
 ///     supporting lookups by both internal identifiers and external source identifiers.
 /// </summary>
-public class HorseController(ISourceItemRepository<HorseEntity, HorseComplex> repository)
+public class HorseController(IReadSourceRepository<HorseEntity, HorseComplex> repository)
     : ReadSourceModelController<HorseEntity, HorseComplex>(repository)
 {
 }

@@ -2,8 +2,8 @@ using Models.Interfaces;
 
 namespace Application.Repository.Interfaces;
 
-public interface ISourceItemRepository<TEntity, TComplex>
-    : ISinglesItemRepository<TEntity, TComplex>
+public interface IReadSourceRepository<TEntity, TComplex>
+    : IReadSingleRepository<TEntity, TComplex>
     where TEntity : ISourcedEntity
     where TComplex : ISourcedEntity
 {

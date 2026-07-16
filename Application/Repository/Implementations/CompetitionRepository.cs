@@ -8,10 +8,10 @@ using Persistence.Interfaces;
 namespace Application.Repository.Implementations;
 
 public class CompetitionRepository(
-    IListItemCache<CompetitionEntity> entityCache,
-    IListItemCache<CompetitionComplex> complexCache,
+    IReadAllCache<CompetitionEntity> entityCache,
+    IReadAllCache<CompetitionComplex> complexCache,
     IReadAllDbService<CompetitionEntity, CompetitionComplex> dbService)
-    : ListItemsRepository<CompetitionEntity, CompetitionComplex>(entityCache, complexCache, dbService)
+    : ReadAllRepository<CompetitionEntity, CompetitionComplex>(entityCache, complexCache, dbService)
 {
     protected override ModelPolicy ModelPolicy { get; } = new() { AllowIdList = true, AllowGetAll = false };
 }

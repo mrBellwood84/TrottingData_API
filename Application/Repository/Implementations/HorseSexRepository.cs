@@ -11,9 +11,9 @@ namespace Application.Repository.Implementations;
 ///     checks for both flat entities and complex domain models.
 /// </summary>
 public sealed class HorseSexRepository(
-    IListItemCache<HorseSexEntity> entityCache,
-    IListItemCache<HorseSexComplex> complexCache,
+    IReadAllCache<HorseSexEntity> entityCache,
+    IReadAllCache<HorseSexComplex> complexCache,
     IReadAllDbService<HorseSexEntity, HorseSexComplex> dbService)
-    : ListItemsRepository<HorseSexEntity, HorseSexComplex>(entityCache, complexCache, dbService)
+    : ReadAllRepository<HorseSexEntity, HorseSexComplex>(entityCache, complexCache, dbService)
 {
 }

@@ -8,7 +8,7 @@ namespace Application.Cache.Implementations;
 ///     In-memory cache implementation for managing single entities.
 ///     Provides baseline lookup and storage using the entity's primary identifier.
 /// </summary>
-public class SingleItemCache<T> : ISingleItemCache<T> where T : IEntity
+public class ReadReadSingleCache<T> : IReadSingleCache<T> where T : IEntity
 {
     private readonly CacheService<T> _master = new();
 

@@ -9,11 +9,11 @@ namespace Application.Repository.Services;
 ///     Provides a generic repository base that implements the cache-aside pattern
 ///     for retrieving single flat entities and complex domain models by their identifier.
 /// </summary>
-public class SinglesItemRepository<TEntity, TComplex>(
-    ISingleItemCache<TEntity> entityCache,
-    ISingleItemCache<TComplex> complexCache,
+public class ReadSingleRepository<TEntity, TComplex>(
+    IReadSingleCache<TEntity> entityCache,
+    IReadSingleCache<TComplex> complexCache,
     IReadSingleDbService<TEntity, TComplex> dbService)
-    : ISinglesItemRepository<TEntity, TComplex>
+    : IReadSingleRepository<TEntity, TComplex>
     where TEntity : IEntity
     where TComplex : IEntity
 {

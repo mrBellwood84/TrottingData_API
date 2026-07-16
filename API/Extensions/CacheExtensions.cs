@@ -10,9 +10,9 @@ public static class CacheExtensions
     /// </summary>
     public static IServiceCollection AddCache(this IServiceCollection services)
     {
-        services.AddSingleton(typeof(ISingleItemCache<>), typeof(SingleItemCache<>));
-        services.AddSingleton(typeof(IListItemCache<>), typeof(ListItemCache<>));
-        services.AddSingleton(typeof(ISourceItemCache<>), typeof(SourceItemCache<>));
+        services.AddSingleton(typeof(IReadSingleCache<>), typeof(ReadReadSingleCache<>));
+        services.AddSingleton(typeof(IReadAllCache<>), typeof(ReadAllCache<>));
+        services.AddSingleton(typeof(IReadSourceCache<>), typeof(ReadSourceCache<>));
 
         return services;
     }
