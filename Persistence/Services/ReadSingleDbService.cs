@@ -26,6 +26,8 @@ public class ReadSingleDbService<TEntity, TComplex>(IConfiguration config)
     /// </summary>
     protected virtual string SqlSelectComplexById { get; } = string.Empty;
 
+
+    // todo : rename to GetEntityById
     /// <summary>
     ///     Retrieves a single simple entity by its unique identifier.
     /// </summary>
@@ -45,6 +47,7 @@ public class ReadSingleDbService<TEntity, TComplex>(IConfiguration config)
         return QueryEntityAsync(SqlSelectEntityById, param);
     }
 
+    // todo : rename to GetComplexById
     /// <summary>
     ///     Retrieves a single complex model by its unique identifier.
     /// </summary>

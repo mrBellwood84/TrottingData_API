@@ -1,0 +1,77 @@
+@API_HostAddress = http://localhost:5007
+@result_id = 7380c93f-0c0c-436c-b1a4-c2c54d25895f
+@participant_id = 1b19c1ea-4646-4cfe-8a5c-78bde8487372
+
+### 1. Get simple RaceResult entity by ID (Expected: 200 OK)
+# Arvet fra ReadSingleModelController. Henter en flatt resultat-entitet på ID.
+GET {{API_HostAddress}}/model/raceresult/entity/{{result_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single flat race result entity by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "7380c93f-0c0c-436c-b1a4-c2c54d25895f", "Result ID mismatch");
+        client.assert(response.body.raceParticipantId === "1b19c1ea-4646-4cfe-8a5c-78bde8487372", "Participant ID mismatch in entity");
+    });
+%}
+
+
+### 2. Get complex RaceResult model by ID (Expected: 200 OK)
+# Arvet fra ReadSingleModelController. Henter den rike, aggregerte resultatsmodellen på ID.
+GET {{API_HostAddress}}/model/raceresult/complex/{{result_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single complex race result model by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "7380c93f-0c0c-436c-b1a4-c2c54d25895f", "Result ID mismatch");
+    });
+%}
+
+
+### 3. Get simple RaceResult entity by Participant ID (Expected: 200 OK)
+# Spesifikt endepunkt i RaceResultController. Henter flatt resultat via deltaker-indeksen.
+GET {{API_HostAddress}}/model/raceresult/entity/participant/{{participant_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve flat race result by Participant ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.raceParticipantId === "1b19c1ea-4646-4cfe-8a5c-78bde8487372", "Participant ID mismatch");
+    });
+%}
+
+
+### 4. Get complex RaceResult model by Participant ID (Expected: 200 OK)
+# Spesifikt endepunkt i RaceResultController. Henter den rike modellen via deltaker-indeksen.
+GET {{API_HostAddress}}/model/raceresult/complex/participant/{{participant_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve complex race result by Participant ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "7380c93f-0c0c-436c-b1a4-c2c54d25895f", "Result ID mismatch in complex model");
+    });
+%}
+
+
+### 5. Test 404 behavior for non-existing Result ID
+GET {{API_HostAddress}}/model/raceresult/complex/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+> {%
+    client.test("Request with dummy Result ID should return 404 NotFound", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 NotFound");
+    });
+%}
+
+
+### 6. Test 404 behavior for non-existing Participant ID
+GET {{API_HostAddress}}/model/raceresult/complex/participant/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+> {%
+    client.test("Request with dummy Participant ID should return 404 NotFound", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 NotFound");
+    });
+%}

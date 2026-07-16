@@ -1,21 +1,21 @@
-using Models.Complex;
+using Models.Interfaces;
 
-namespace Application.Cache.Implementations;
+namespace Application.Cache.Interfaces;
 
-public interface IRaceResultCache
+public interface IRaceResultCache<T> where T : IEntity
 {
     /// <summary>
     ///     Retrieves a cached race result by its unique identifier.
     /// </summary>
-    Task<RaceResultsComplex?> GetAsync(string key);
+    Task<T?> GetAsync(string key);
 
     /// <summary>
     ///     Retrieves a cached race result by the associated participant identifier.
     /// </summary>
-    Task<RaceResultsComplex?> GetByParticipantAsync(string participantId);
+    Task<T?> GetByParticipantAsync(string participantId);
 
     /// <summary>
     ///     Caches a race result in both the master store and the participant index.
     /// </summary>
-    Task SetAsync(RaceResultsComplex item, string participantId);
+    Task SetAsync(string participantId, T? item);
 }

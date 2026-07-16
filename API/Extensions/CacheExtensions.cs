@@ -14,11 +14,11 @@ public static class CacheExtensions
         services.AddSingleton(typeof(IReadSingleCache<>), typeof(ReadReadSingleCache<>));
         services.AddSingleton(typeof(IReadAllCache<>), typeof(ReadAllCache<>));
         services.AddSingleton(typeof(IReadSourceCache<>), typeof(ReadSourceCache<>));
-        
+
         // advanced cache services :)
         services.AddSingleton(typeof(IRaceCache<>), typeof(RaceCache<>));
-        services.AddSingleton(typeof(IRaceParticipantCache),  typeof(RaceParticipantCache));
-        services.AddSingleton(typeof(IRaceResultCache), typeof(RaceResultCache));
+        services.AddSingleton(typeof(IRaceParticipantCache), typeof(RaceParticipantCache));
+        services.AddSingleton(typeof(IRaceResultCache<>), typeof(RaceResultCache<>));
 
         return services;
     }
