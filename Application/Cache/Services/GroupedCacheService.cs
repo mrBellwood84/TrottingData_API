@@ -18,11 +18,9 @@ public class GroupedCacheService<T> where T : IEntity
     public Task<List<T>?> GetAsync(string key)
     {
         if (_data.TryGetValue(key, out var innerDict))
-        {
             // Thread-safe conversion to list even if the collection is actively being modified
             return Task.FromResult<List<T>?>(innerDict.Values.ToList());
-        }
-        
+
         return Task.FromResult<List<T>?>(null);
     }
 
@@ -32,12 +30,9 @@ public class GroupedCacheService<T> where T : IEntity
     public Task SetAsync(string key, List<T> data)
     {
         var innerDict = _data.GetOrAdd(key, _ => []);
-        
-        foreach (var item in data)
-        {
-            innerDict[item.Id] = item;
-        }
-        
+
+        foreach (var item in data) innerDict[item.Id] = item;
+
         return Task.CompletedTask;
     }
 }

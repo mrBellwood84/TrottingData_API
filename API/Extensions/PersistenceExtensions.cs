@@ -21,7 +21,8 @@ public static class PersistenceExtensions
         services.AddScoped<IReadAllDbService<HorseTypeEntity, HorseTypeComplex>, HorseTypeDbService>();
         services.AddScoped<IReadAllDbService<RaceCartTypeEntity, RaceCartTypeComplex>, RaceCartTypeDbService>();
         services.AddScoped<IReadAllDbService<RaceCourseEntity, RaceCourseComplex>, RaceCourseDbService>();
-        services.AddScoped<IReadAllDbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeDbService>();
+        services
+            .AddScoped<IReadAllDbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex>, RaceGamblingTypeDbService>();
         services.AddScoped<IReadAllDbService<RaceStartTypeEntity, RaceStartTypeComplex>, RaceStartTypeDbService>();
 
         // Sourced services supporting external identifier lookups

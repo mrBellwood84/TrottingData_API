@@ -6,7 +6,7 @@ using Models.Entity;
 
 namespace API.Controllers.Models;
 
-public class RaceController(IRaceRepository repository) 
+public class RaceController(IRaceRepository repository)
     : ReadSingleModelController<RaceEntity, RaceComplex>(repository)
 {
     [HttpGet("entity/competition/{competitionId}")]
@@ -28,5 +28,4 @@ public class RaceController(IRaceRepository repository)
         if (data == null) return NotFound();
         return Ok(data);
     }
-    
 }

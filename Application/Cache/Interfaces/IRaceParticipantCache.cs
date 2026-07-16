@@ -1,6 +1,6 @@
 using Models.Complex;
 
-namespace Application.Cache.Implementations;
+namespace Application.Cache.Interfaces;
 
 public interface IRaceParticipantCache
 {

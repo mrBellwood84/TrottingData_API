@@ -1,3 +1,4 @@
+using Application.Cache.Interfaces;
 using Application.Cache.Services;
 using Models.Complex;
 
@@ -10,10 +11,10 @@ namespace Application.Cache.Implementations;
 /// </summary>
 public class RaceParticipantCache : IRaceParticipantCache
 {
-    private readonly CacheService<RaceParticipantComplex> _master = new();
-    private readonly GroupedCacheService<RaceParticipantComplex> _raceIndex = new();
     private readonly GroupedCacheService<RaceParticipantComplex> _driverIndex = new();
     private readonly GroupedCacheService<RaceParticipantComplex> _horseIndex = new();
+    private readonly CacheService<RaceParticipantComplex> _master = new();
+    private readonly GroupedCacheService<RaceParticipantComplex> _raceIndex = new();
     private readonly GroupedCacheService<RaceParticipantComplex> _trainerIndex = new();
 
     /// <summary>
@@ -69,10 +70,7 @@ public class RaceParticipantCache : IRaceParticipantCache
     /// </summary>
     public async Task SetRaceAsync(string raceId, List<RaceParticipantComplex> items)
     {
-        foreach (var item in items)
-        {
-            await _master.SetAsync(item.Id, item);
-        }
+        foreach (var item in items) await _master.SetAsync(item.Id, item);
         await _raceIndex.SetAsync(raceId, items);
     }
 
@@ -81,10 +79,7 @@ public class RaceParticipantCache : IRaceParticipantCache
     /// </summary>
     public async Task SetDriverAsync(string driverId, List<RaceParticipantComplex> items)
     {
-        foreach (var item in items)
-        {
-            await _master.SetAsync(item.Id, item);
-        }
+        foreach (var item in items) await _master.SetAsync(item.Id, item);
         await _driverIndex.SetAsync(driverId, items);
     }
 
@@ -93,10 +88,7 @@ public class RaceParticipantCache : IRaceParticipantCache
     /// </summary>
     public async Task SetHorseAsync(string horseId, List<RaceParticipantComplex> items)
     {
-        foreach (var item in items)
-        {
-            await _master.SetAsync(item.Id, item);
-        }
+        foreach (var item in items) await _master.SetAsync(item.Id, item);
         await _horseIndex.SetAsync(horseId, items);
     }
 
@@ -105,10 +97,7 @@ public class RaceParticipantCache : IRaceParticipantCache
     /// </summary>
     public async Task SetTrainerAsync(string trainerId, List<RaceParticipantComplex> items)
     {
-        foreach (var item in items)
-        {
-            await _master.SetAsync(item.Id, item);
-        }
+        foreach (var item in items) await _master.SetAsync(item.Id, item);
         await _trainerIndex.SetAsync(trainerId, items);
     }
 }

@@ -1,6 +1,6 @@
 using Models.Interfaces;
 
-namespace Application.Cache.Implementations;
+namespace Application.Cache.Interfaces;
 
 public interface IRaceCache<T> where T : IEntity
 {

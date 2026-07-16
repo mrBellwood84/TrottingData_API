@@ -1,3 +1,4 @@
+using Application.Cache.Interfaces;
 using Application.Cache.Services;
 using Models.Interfaces;
 
@@ -9,8 +10,8 @@ namespace Application.Cache.Implementations;
 /// </summary>
 public class RaceCache<T> : IRaceCache<T> where T : IEntity
 {
-    private readonly CacheService<T> _master = new();
     private readonly GroupedCacheService<T> _competitionIndex = new();
+    private readonly CacheService<T> _master = new();
 
     /// <summary>
     ///     Retrieves a race by its unique identifier.
@@ -41,10 +42,7 @@ public class RaceCache<T> : IRaceCache<T> where T : IEntity
     /// </summary>
     public async Task SetCompetitionAsync(string competitionId, List<T> items)
     {
-        foreach (var item in items)
-        {
-            await _master.SetAsync(item.Id, item);
-        }
+        foreach (var item in items) await _master.SetAsync(item.Id, item);
         await _competitionIndex.SetAsync(competitionId, items);
     }
 }

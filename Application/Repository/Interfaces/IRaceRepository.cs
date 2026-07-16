@@ -1,4 +1,3 @@
-using Application.Cache.Interfaces;
 using Models.Complex;
 using Models.Entity;
 

@@ -1,4 +1,5 @@
 using Application.Cache.Implementations;
+using Application.Cache.Interfaces;
 using Application.Repository.Interfaces;
 using Models.Complex;
 using Models.Entity;
@@ -7,12 +8,12 @@ using Persistence.Interfaces;
 namespace Application.Repository.Implementations;
 
 /// <summary>
-///     Orchestrates race data operations by coordinating lookups between 
+///     Orchestrates race data operations by coordinating lookups between
 ///     the database services and the in-memory cache (Cache-Aside pattern).
 /// </summary>
 public class RaceRepository(
-    IRaceDbService dbService, 
-    IRaceCache<RaceEntity> entityCache, 
+    IRaceDbService dbService,
+    IRaceCache<RaceEntity> entityCache,
     IRaceCache<RaceComplex> complexCache) : IRaceRepository
 {
     /// <summary>
@@ -22,11 +23,11 @@ public class RaceRepository(
     {
         var cached = await entityCache.GetAsync(id);
         if (cached is not null) return cached;
-        
-        var dbData = await dbService.GetSingleEntityByIdAsync(id);
+
+        var dbData = await dbService.GetEntityByIdAsync(id);
         if (dbData is not null) await entityCache.SetAsync(dbData);
-        
-        return dbData; 
+
+        return dbData;
     }
 
     /// <summary>
@@ -36,7 +37,7 @@ public class RaceRepository(
     {
         var cached = await entityCache.GetByCompetitionAsync(competitionId);
         if (cached is not null && cached.Count > 0) return cached;
-        
+
         var dbData = await dbService.GetEntityByCompetitionIdAsync(competitionId);
         if (dbData.Count <= 0) return null;
         await entityCache.SetCompetitionAsync(competitionId, dbData);
@@ -50,9 +51,9 @@ public class RaceRepository(
     {
         var cached = await complexCache.GetAsync(id);
         if (cached is not null) return cached;
-        
-        var dbData = await dbService.GetSingleComplexByIdAsync(id);
-        if (dbData is not null)  await complexCache.SetAsync(dbData);
+
+        var dbData = await dbService.GetComplexByIdAsync(id);
+        if (dbData is not null) await complexCache.SetAsync(dbData);
         return dbData;
     }
 
@@ -62,15 +63,11 @@ public class RaceRepository(
     public async Task<List<RaceComplex>?> GetRaceComplexByCompetitionIdAsync(string competitionId)
     {
         var cached = await complexCache.GetByCompetitionAsync(competitionId);
-        if (cached is not null && cached.Count > 0) 
-        {
-            return cached;
-        }
+        if (cached is not null && cached.Count > 0) return cached;
 
         var dbData = await dbService.GetComplexByCompetitionIdAsync(competitionId);
         if (dbData.Count <= 0) return null;
         await complexCache.SetCompetitionAsync(competitionId, dbData);
         return dbData;
-
     }
 }

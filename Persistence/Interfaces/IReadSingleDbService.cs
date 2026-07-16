@@ -14,7 +14,7 @@ public interface IReadSingleDbService<TEntity, TComplex>
     ///     Thrown when
     ///     <see cref="ReadSingleDbService{TEntity,TComplex}.SqlSelectEntityById" /> is not defined by the subclass.
     /// </exception>
-    public Task<TEntity?> GetSingleEntityByIdAsync(string id);
+    public Task<TEntity?> GetEntityByIdAsync(string id);
 
     /// <summary>
     ///     Retrieves a single complex model by its unique identifier.
@@ -25,5 +25,5 @@ public interface IReadSingleDbService<TEntity, TComplex>
     ///     Thrown when
     ///     <see cref="ReadSingleDbService{TEntity,TComplex}.SqlSelectComplexById" /> is not defined by the subclass.
     /// </exception>
-    public Task<TComplex?> GetSingleComplexByIdAsync(string id);
+    public Task<TComplex?> GetComplexByIdAsync(string id);
 }

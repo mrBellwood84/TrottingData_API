@@ -25,7 +25,7 @@ public class ReadSingleRepository<TEntity, TComplex>(
         var cacheData = await entityCache.GetAsync(id);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetSingleEntityByIdAsync(id);
+        var dbData = await dbService.GetEntityByIdAsync(id);
         if (dbData is not null) await entityCache.SetAsync(dbData);
         return dbData;
     }
@@ -38,7 +38,7 @@ public class ReadSingleRepository<TEntity, TComplex>(
         var cacheData = await complexCache.GetAsync(id);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetSingleComplexByIdAsync(id);
+        var dbData = await dbService.GetComplexByIdAsync(id);
         if (dbData is not null) await complexCache.SetAsync(dbData);
         return dbData;
     }

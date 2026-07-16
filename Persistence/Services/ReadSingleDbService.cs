@@ -27,7 +27,6 @@ public class ReadSingleDbService<TEntity, TComplex>(IConfiguration config)
     protected virtual string SqlSelectComplexById { get; } = string.Empty;
 
 
-    // todo : rename to GetEntityById
     /// <summary>
     ///     Retrieves a single simple entity by its unique identifier.
     /// </summary>
@@ -37,7 +36,7 @@ public class ReadSingleDbService<TEntity, TComplex>(IConfiguration config)
     ///     Thrown when <see cref="SqlSelectEntityById" /> is not defined by the
     ///     subclass.
     /// </exception>
-    public Task<TEntity?> GetSingleEntityByIdAsync(string id)
+    public Task<TEntity?> GetEntityByIdAsync(string id)
     {
         if (string.IsNullOrEmpty(SqlSelectEntityById))
             throw new PersistenceMissingQueryException(
@@ -47,7 +46,6 @@ public class ReadSingleDbService<TEntity, TComplex>(IConfiguration config)
         return QueryEntityAsync(SqlSelectEntityById, param);
     }
 
-    // todo : rename to GetComplexById
     /// <summary>
     ///     Retrieves a single complex model by its unique identifier.
     /// </summary>
@@ -57,7 +55,7 @@ public class ReadSingleDbService<TEntity, TComplex>(IConfiguration config)
     ///     Thrown when <see cref="SqlSelectComplexById" /> is not defined by
     ///     the subclass.
     /// </exception>
-    public Task<TComplex?> GetSingleComplexByIdAsync(string id)
+    public Task<TComplex?> GetComplexByIdAsync(string id)
     {
         if (string.IsNullOrEmpty(SqlSelectComplexById))
             throw new PersistenceMissingQueryException(
