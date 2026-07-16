@@ -1,19 +1,18 @@
-using Application.Cache.Services;
+using Application.Cache.Implementations;
+using Application.Cache.Interfaces;
 
 namespace API.Extensions;
 
-/// <summary>
-///     Extension methods for configuring in-memory caching services.
-/// </summary>
 public static class CacheExtensions
 {
     /// <summary>
-    ///     Registers the open generic cache service as a singleton in the Dependency Injection container.
+    ///     Registers open generic cache interfaces mapped to their implementations as singletons.
     /// </summary>
     public static IServiceCollection AddCache(this IServiceCollection services)
     {
-        services.AddSingleton(typeof(CacheService<>));
-        services.AddSingleton(typeof(SourcedCacheService<>));
+        services.AddSingleton(typeof(ISingleItemCache<>), typeof(SingleItemCache<>));
+        services.AddSingleton(typeof(IListItemCache<>), typeof(ListItemCache<>));
+        services.AddSingleton(typeof(ISourceItemCache<>), typeof(SourceItemCache<>));
 
         return services;
     }

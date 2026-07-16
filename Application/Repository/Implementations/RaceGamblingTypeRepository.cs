@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
@@ -11,9 +11,9 @@ namespace Application.Repository.Implementations;
 ///     checks for both flat entities and complex domain models.
 /// </summary>
 public sealed class RaceGamblingTypeRepository(
-    CacheService<RaceGamblingTypeEntity> entityCache,
-    CacheService<RaceGamblingTypeComplex> complexCache,
+    IListItemCache<RaceGamblingTypeEntity> entityCache,
+    IListItemCache<RaceGamblingTypeComplex> complexCache,
     IReadAllDbService<RaceGamblingTypeEntity, RaceGamblingTypeComplex> dbService)
-    : ReadAllRepository<RaceGamblingTypeEntity, RaceGamblingTypeComplex>(entityCache, complexCache, dbService)
+    : ListItemsRepository<RaceGamblingTypeEntity, RaceGamblingTypeComplex>(entityCache, complexCache, dbService)
 {
 }

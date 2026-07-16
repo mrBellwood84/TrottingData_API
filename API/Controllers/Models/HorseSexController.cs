@@ -9,7 +9,7 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving horse sex data,
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
-public class HorseSexController(IReadAllRepository<HorseSexEntity, HorseSexComplex> repository)
+public class HorseSexController(IListItemsRepository<HorseSexEntity, HorseSexComplex> repository)
     : ReadAllModelController<HorseSexEntity, HorseSexComplex>(repository)
 {
 }

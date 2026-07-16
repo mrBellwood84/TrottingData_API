@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Interfaces;
 using Models.Interfaces;
 using Persistence.Interfaces;
@@ -9,11 +9,12 @@ namespace Application.Repository.Services;
 ///     Provides a generic repository base that implements the cache-aside pattern
 ///     for retrieving single flat entities and complex domain models by their identifier.
 /// </summary>
-public class ReadSingleRepository<TEntity, TComplex>(
-    CacheService<TEntity> entityCache,
-    CacheService<TComplex> complexCache,
+public class SinglesItemRepository<TEntity, TComplex>(
+    ISingleItemCache<TEntity> entityCache,
+    ISingleItemCache<TComplex> complexCache,
     IReadSingleDbService<TEntity, TComplex> dbService)
-    : IReadSingleRepository<TEntity, TComplex> where TEntity : IEntity
+    : ISinglesItemRepository<TEntity, TComplex>
+    where TEntity : IEntity
     where TComplex : IEntity
 {
     /// <summary>
@@ -21,11 +22,11 @@ public class ReadSingleRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<TEntity?> GetEntityByIdAsync(string id)
     {
-        var cacheData = await entityCache.Get(id);
+        var cacheData = await entityCache.GetAsync(id);
         if (cacheData is not null) return cacheData;
 
         var dbData = await dbService.GetSingleEntityByIdAsync(id);
-        if (dbData is not null) await entityCache.Set(dbData);
+        if (dbData is not null) await entityCache.SetAsync(dbData);
         return dbData;
     }
 
@@ -34,11 +35,11 @@ public class ReadSingleRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<TComplex?> GetComplexByIdAsync(string id)
     {
-        var cacheData = await complexCache.Get(id);
+        var cacheData = await complexCache.GetAsync(id);
         if (cacheData is not null) return cacheData;
 
         var dbData = await dbService.GetSingleComplexByIdAsync(id);
-        if (dbData is not null) await complexCache.Set(dbData);
+        if (dbData is not null) await complexCache.SetAsync(dbData);
         return dbData;
     }
 }

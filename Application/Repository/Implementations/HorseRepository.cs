@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
@@ -12,16 +12,9 @@ namespace Application.Repository.Implementations;
 ///     identifiers or external source identifiers.
 /// </summary>
 public sealed class HorseRepository(
-    CacheService<HorseEntity> entityCache,
-    CacheService<HorseComplex> complexCache,
-    SourcedCacheService<HorseEntity> sourcedEntityCache,
-    SourcedCacheService<HorseComplex> sourcedComplexCache,
+    ISourceItemCache<HorseEntity> entityCache,
+    ISourceItemCache<HorseComplex> complexCache,
     IReadSourcedDbService<HorseEntity, HorseComplex> dbService)
-    : ReadSourcedRepository<HorseEntity, HorseComplex>(
-        entityCache,
-        complexCache,
-        sourcedEntityCache,
-        sourcedComplexCache,
-        dbService)
+    : SourceItemRepository<HorseEntity, HorseComplex>(entityCache, complexCache, dbService)
 {
 }

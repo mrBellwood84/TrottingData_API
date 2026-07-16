@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Exceptions;
 using Application.Repository.Interfaces;
 using Models.Interfaces;
@@ -12,17 +12,14 @@ namespace Application.Repository.Services;
 ///     to support bulk operations for both flat entities and complex domain models,
 ///     governed by application-defined model policies.
 /// </summary>
-public class ReadAllRepository<TEntity, TComplex>(
-    CacheService<TEntity> entityCache,
-    CacheService<TComplex> complexCache,
+public class ListItemsRepository<TEntity, TComplex>(
+    IListItemCache<TEntity> entityCache,
+    IListItemCache<TComplex> complexCache,
     IReadAllDbService<TEntity, TComplex> dbService)
-    : ReadSingleRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
-        IReadAllRepository<TEntity, TComplex> where TComplex : IEntity
-    where TEntity : IEntity
+    : SinglesItemRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
+        IListItemsRepository<TEntity, TComplex> where TEntity : IEntity
+    where TComplex : IEntity
 {
-    private readonly CacheService<TComplex> _complexCache = complexCache;
-    private readonly CacheService<TEntity> _entityCache = entityCache;
-
     protected virtual ModelPolicy ModelPolicy => new() { AllowGetAll = true, AllowIdList = true };
 
     /// <summary>
@@ -47,10 +44,10 @@ public class ReadAllRepository<TEntity, TComplex>(
             throw new RepositoryPolicyViolationException(
                 $"Retrieving all flat entities for {typeof(TEntity).Name} is disallowed by policy.");
 
-        if (_entityCache.Loaded) return await _entityCache.GetAll();
+        if (entityCache.Loaded) return await entityCache.GetAllAsync();
 
         var dbData = await dbService.GetEntitiesAsync();
-        await _entityCache.Set(dbData);
+        await entityCache.SetAsync(dbData);
         return dbData;
     }
 
@@ -64,10 +61,10 @@ public class ReadAllRepository<TEntity, TComplex>(
             throw new RepositoryPolicyViolationException(
                 $"Retrieving all complex models for {typeof(TComplex).Name} is disallowed by policy.");
 
-        if (_complexCache.Loaded) return await _complexCache.GetAll();
+        if (complexCache.Loaded) return await complexCache.GetAllAsync();
 
         var dbData = await dbService.GetComplexAsync();
-        await _complexCache.Set(dbData);
+        await complexCache.SetAsync(dbData);
         return dbData;
     }
 }

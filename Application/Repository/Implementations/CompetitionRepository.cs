@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
@@ -8,10 +8,10 @@ using Persistence.Interfaces;
 namespace Application.Repository.Implementations;
 
 public class CompetitionRepository(
-    CacheService<CompetitionEntity> entityCache,
-    CacheService<CompetitionComplex> complexCache,
+    IListItemCache<CompetitionEntity> entityCache,
+    IListItemCache<CompetitionComplex> complexCache,
     IReadAllDbService<CompetitionEntity, CompetitionComplex> dbService)
-    : ReadAllRepository<CompetitionEntity, CompetitionComplex>(entityCache, complexCache, dbService)
+    : ListItemsRepository<CompetitionEntity, CompetitionComplex>(entityCache, complexCache, dbService)
 {
     protected override ModelPolicy ModelPolicy { get; } = new() { AllowIdList = true, AllowGetAll = false };
 }

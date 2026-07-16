@@ -3,8 +3,8 @@ using Models.Shared;
 
 namespace Application.Repository.Interfaces;
 
-public interface IReadAllRepository<TEntity, TComplex>
-    : IReadSingleRepository<TEntity, TComplex>
+public interface IListItemsRepository<TEntity, TComplex>
+    : ISinglesItemRepository<TEntity, TComplex>
     where TEntity : IEntity
     where TComplex : IEntity
 {

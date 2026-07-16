@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
@@ -11,9 +11,9 @@ namespace Application.Repository.Implementations;
 ///     checks for both flat entities and complex domain models.
 /// </summary>
 public sealed class RaceCartTypeRepository(
-    CacheService<RaceCartTypeEntity> entityCache,
-    CacheService<RaceCartTypeComplex> complexCache,
+    IListItemCache<RaceCartTypeEntity> entityCache,
+    IListItemCache<RaceCartTypeComplex> complexCache,
     IReadAllDbService<RaceCartTypeEntity, RaceCartTypeComplex> dbService)
-    : ReadAllRepository<RaceCartTypeEntity, RaceCartTypeComplex>(entityCache, complexCache, dbService)
+    : ListItemsRepository<RaceCartTypeEntity, RaceCartTypeComplex>(entityCache, complexCache, dbService)
 {
 }

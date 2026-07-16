@@ -14,7 +14,7 @@ namespace API.Controllers.Base;
 [ApiController]
 [Route("model/[controller]")]
 [Produces("application/json")]
-public class ReadSingleModelController<TEntity, TComplex>(IReadSingleRepository<TEntity, TComplex> repository)
+public class ReadSingleModelController<TEntity, TComplex>(ISinglesItemRepository<TEntity, TComplex> repository)
     : ControllerBase
     where TEntity : IEntity
     where TComplex : IEntity

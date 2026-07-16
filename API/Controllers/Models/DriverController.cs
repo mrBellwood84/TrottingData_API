@@ -9,7 +9,7 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving driver data,
 ///     supporting lookups by both internal identifiers and external source identifiers.
 /// </summary>
-public class DriverController(IReadSourcedRepository<DriverEntity, DriverComplex> repository)
+public class DriverController(ISourceItemRepository<DriverEntity, DriverComplex> repository)
     : ReadSourceModelController<DriverEntity, DriverComplex>(repository)
 {
 }

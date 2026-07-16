@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Interfaces;
 using Models.Interfaces;
 using Persistence.Interfaces;
@@ -10,14 +10,12 @@ namespace Application.Repository.Services;
 ///     from an external source, enabling lookups via their external source identifier
 ///     with dedicated cache-aside management.
 /// </summary>
-public class ReadSourcedRepository<TEntity, TComplex>(
-    CacheService<TEntity> entityCache,
-    CacheService<TComplex> complexCache,
-    SourcedCacheService<TEntity> sourcedEntityCache,
-    SourcedCacheService<TComplex> sourcedComplexCache,
+public class SourceItemRepository<TEntity, TComplex>(
+    ISourceItemCache<TEntity> entityCache,
+    ISourceItemCache<TComplex> complexCache,
     IReadSourcedDbService<TEntity, TComplex> dbService)
-    : ReadSingleRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
-        IReadSourcedRepository<TEntity, TComplex> where TEntity : ISourcedEntity
+    : SinglesItemRepository<TEntity, TComplex>(entityCache, complexCache, dbService),
+        ISourceItemRepository<TEntity, TComplex> where TEntity : ISourcedEntity
     where TComplex : ISourcedEntity
 {
     /// <summary>
@@ -25,11 +23,11 @@ public class ReadSourcedRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<TEntity?> GetEntityBySourceIdAsync(string sourceId)
     {
-        var cacheData = await sourcedEntityCache.Get(sourceId);
+        var cacheData = await entityCache.GetSourceAsync(sourceId);
         if (cacheData is not null) return cacheData;
 
         var dbData = await dbService.GetEntityBySourceIdAsync(sourceId);
-        if (dbData is not null) await sourcedEntityCache.Set(dbData);
+        if (dbData is not null) await entityCache.SetAsync(dbData);
         return dbData;
     }
 
@@ -38,11 +36,11 @@ public class ReadSourcedRepository<TEntity, TComplex>(
     /// </summary>
     public async Task<TComplex?> GetComplexBySourceIdAsync(string sourceId)
     {
-        var cacheData = await sourcedComplexCache.Get(sourceId);
+        var cacheData = await complexCache.GetAsync(sourceId);
         if (cacheData is not null) return cacheData;
 
         var dbData = await dbService.GetComplexBySourceIdAsync(sourceId);
-        if (dbData is not null) await sourcedComplexCache.Set(dbData);
+        if (dbData is not null) await complexCache.SetAsync(dbData);
         return dbData;
     }
 }

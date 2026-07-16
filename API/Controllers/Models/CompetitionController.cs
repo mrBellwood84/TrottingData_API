@@ -5,7 +5,7 @@ using Models.Entity;
 
 namespace API.Controllers.Models;
 
-public class CompetitionController(IReadAllRepository<CompetitionEntity, CompetitionComplex> repository)
+public class CompetitionController(IListItemsRepository<CompetitionEntity, CompetitionComplex> repository)
     : ReadAllModelController<CompetitionEntity, CompetitionComplex>(repository)
 {
 }

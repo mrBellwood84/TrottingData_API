@@ -1,4 +1,4 @@
-using Application.Cache.Services;
+using Application.Cache.Interfaces;
 using Application.Repository.Services;
 using Models.Complex;
 using Models.Entity;
@@ -12,16 +12,9 @@ namespace Application.Repository.Implementations;
 ///     identifiers or external source identifiers.
 /// </summary>
 public sealed class DriverRepository(
-    CacheService<DriverEntity> entityCache,
-    CacheService<DriverComplex> complexCache,
-    SourcedCacheService<DriverEntity> sourcedEntityCache,
-    SourcedCacheService<DriverComplex> sourcedComplexCache,
+    ISourceItemCache<DriverEntity> entityCache,
+    ISourceItemCache<DriverComplex> complexCache,
     IReadSourcedDbService<DriverEntity, DriverComplex> dbService)
-    : ReadSourcedRepository<DriverEntity, DriverComplex>(
-        entityCache,
-        complexCache,
-        sourcedEntityCache,
-        sourcedComplexCache,
-        dbService)
+    : SourceItemRepository<DriverEntity, DriverComplex>(entityCache, complexCache, dbService)
 {
 }

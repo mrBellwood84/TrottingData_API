@@ -11,7 +11,7 @@ namespace API.Controllers.Base;
 /// <typeparam name="TEntity">The flat entity model type, implementing <see cref="ISourcedEntity" />.</typeparam>
 /// <typeparam name="TComplex">The aggregated complex model type, implementing <see cref="ISourcedEntity" />.</typeparam>
 /// <param name="repository">The sourced repository service responsible for data retrieval using external identifiers.</param>
-public class ReadSourceModelController<TEntity, TComplex>(IReadSourcedRepository<TEntity, TComplex> repository)
+public class ReadSourceModelController<TEntity, TComplex>(ISourceItemRepository<TEntity, TComplex> repository)
     : ReadSingleModelController<TEntity, TComplex>(repository)
     where TEntity : ISourcedEntity
     where TComplex : ISourcedEntity

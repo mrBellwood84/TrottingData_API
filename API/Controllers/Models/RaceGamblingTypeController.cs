@@ -9,7 +9,8 @@ namespace API.Controllers.Models;
 ///     Provides read-only endpoints for managing and retrieving race gambling type data,
 ///     supporting identity lookups, flat entity lists, and complex domain models.
 /// </summary>
-public class RaceGamblingTypeController(IReadAllRepository<RaceGamblingTypeEntity, RaceGamblingTypeComplex> repository)
+public class RaceGamblingTypeController(
+    IListItemsRepository<RaceGamblingTypeEntity, RaceGamblingTypeComplex> repository)
     : ReadAllModelController<RaceGamblingTypeEntity, RaceGamblingTypeComplex>(repository)
 {
 }
