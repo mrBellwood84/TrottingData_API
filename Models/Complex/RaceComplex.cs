@@ -1,6 +1,8 @@
+using Models.Interfaces;
+
 namespace Models.Complex;
 
-public class RaceComplex
+public class RaceComplex : IEntity
 {
     public string Id { get; init; }
     public short RaceNumber { get; init; }

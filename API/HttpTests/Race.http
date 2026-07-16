@@ -1,0 +1,67 @@
+@API_HostAddress = http://localhost:5007
+@competition_id = 2830cf1c-eaad-4f08-98f7-3302b75567e9
+@race_id = 07431233-a2ce-40d1-862a-f775493062d3
+
+### 1. Get simple Race entity by ID (Expected: 200 OK)
+# Arvet fra ReadSingleModelController. Henter et flatt løpsobjekt.
+GET {{API_HostAddress}}/model/race/entity/{{race_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single flat race entity by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "07431233-a2ce-40d1-862a-f775493062d3", "Race ID mismatch");
+    });
+%}
+
+
+### 2. Get complex Race model by ID (Expected: 200 OK)
+# Arvet fra ReadSingleModelController. Henter den rike, aggregerte løpsmodellen.
+GET {{API_HostAddress}}/model/race/complex/{{race_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single complex race model by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "07431233-a2ce-40d1-862a-f775493062d3", "Race ID mismatch");
+    });
+%}
+
+
+### 3. Get all flat Race entities for a Competition (Expected: 200 OK)
+# Spesifikt endepunkt i RaceController som henter flate enheter via cachen/databasen.
+GET {{API_HostAddress}}/model/race/entity/competition/{{competition_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve list of flat race entities for the competition", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one race entity");
+        client.assert(response.body[0].id !== undefined, "Race entity missing ID property");
+    });
+%}
+
+
+### 4. Get all complex Race models for a Competition (Expected: 200 OK)
+# Spesifikt endepunkt i RaceController som henter de tunge, sammensatte modellene.
+GET {{API_HostAddress}}/model/race/complex/competition/{{competition_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve list of complex race models for the competition", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one complex race");
+        client.assert(response.body[0].id !== undefined, "Complex race model missing ID property");
+    });
+%}
+
+
+### 5. Test 404 behavior for non-existing Race ID
+GET {{API_HostAddress}}/model/race/complex/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+> {%
+    client.test("Request with dummy ID should return 404 NotFound", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 NotFound");
+    });
+%}

@@ -13,7 +13,7 @@ namespace Persistence.Implementations;
 ///     resolving multi-table relations in-memory to prevent cartesian explosion.
 /// </summary>
 public class RaceDbService(IConfiguration configuration)
-    : ReadSingleDbService<RaceEntity, RaceComplex>(configuration), IRaceDbService
+    : ReadAllDbService<RaceEntity, RaceComplex>(configuration), IRaceDbService
 {
     // todo : add depth to driver and horse entity
     private const string SqlSelectComplexBase = @"
@@ -49,9 +49,9 @@ public class RaceDbService(IConfiguration configuration)
     /// <summary>
     ///     Retrieves a single flat race entity associated with the given competition ID.
     /// </summary>
-    public Task<RaceEntity?> GetEntityByCompetitionIdAsync(string competitionId)
+    public Task<List<RaceEntity>> GetEntityByCompetitionIdAsync(string competitionId)
     {
-        return QueryEntityAsync(SqlSelectEntityByCompetitionId, new { Id = competitionId });
+        return QueryEntityListAsync(SqlSelectEntityByCompetitionId, new { Id = competitionId });
     }
 
     /// <summary>

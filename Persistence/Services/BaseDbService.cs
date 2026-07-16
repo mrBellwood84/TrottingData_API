@@ -40,6 +40,13 @@ public class BaseDbService<TEntity, TComplex>(IConfiguration config)
         return data;
     }
 
+    protected async Task<List<TEntity>> QueryEntityListAsync(string query, object param)
+    {
+        await using var connection = await CreateConnection();
+        var data = await connection.QueryAsync<TEntity>(query, param);
+        return data.ToList();
+    }
+
     /// <summary>
     ///     Queries the database for a single complex model.
     ///     Marked as <see langword="virtual" /> to allow specialized overriding for custom multi-mapping.

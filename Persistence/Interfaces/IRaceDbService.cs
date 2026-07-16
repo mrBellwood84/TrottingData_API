@@ -3,12 +3,12 @@ using Models.Entity;
 
 namespace Persistence.Interfaces;
 
-public interface IRaceDbService : IReadSingleDbService<RaceEntity, RaceComplex>
+public interface IRaceDbService : IReadAllDbService<RaceEntity, RaceComplex>
 {
     /// <summary>
     ///     Retrieves a single flat race entity associated with the given competition ID.
     /// </summary>
-    Task<RaceEntity?> GetEntityByCompetitionIdAsync(string competitionId);
+    Task<List<RaceEntity>> GetEntityByCompetitionIdAsync(string competitionId);
 
     /// <summary>
     ///     Retrieves all races associated with a specific competition, fully hydated with

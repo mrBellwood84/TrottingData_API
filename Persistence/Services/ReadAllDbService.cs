@@ -67,9 +67,7 @@ public class ReadAllDbService<TEntity, TComplex>(IConfiguration config)
             throw new PersistenceMissingQueryException(
                 $"SQL statement '{nameof(SqlSelectEntities)}' for {typeof(TEntity).Name} is missing!");
 
-        await using var connection = await CreateConnection();
-        var data = await connection.QueryAsync<TEntity>(SqlSelectEntities);
-        return data.ToList();
+        return await QueryEntityListAsync(SqlSelectEntities, new {});
     }
 
     /// <summary>

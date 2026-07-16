@@ -34,6 +34,7 @@ public static class RepositoryExtensions
 
         // the advanced repositories ;)
         services.AddScoped<IReadAllRepository<CompetitionEntity, CompetitionComplex>, CompetitionRepository>();
+        services.AddScoped<IRaceRepository, RaceRepository>();
 
         return services;
     }
