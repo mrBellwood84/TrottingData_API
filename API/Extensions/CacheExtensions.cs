@@ -17,7 +17,7 @@ public static class CacheExtensions
 
         // advanced cache services :)
         services.AddSingleton(typeof(IRaceCache<>), typeof(RaceCache<>));
-        services.AddSingleton(typeof(IRaceParticipantCache), typeof(RaceParticipantCache));
+        services.AddSingleton(typeof(IRaceParticipantCache<>), typeof(RaceParticipantCache<>));
         services.AddSingleton(typeof(IRaceResultCache<>), typeof(RaceResultCache<>));
 
         return services;

@@ -1,0 +1,139 @@
+@API_HostAddress = http://localhost:5007
+@participant_id = 1b19c1ea-4646-4cfe-8a5c-78bde8487372
+@race_id = 07431233-a2ce-40d1-862a-f775493062d3
+@driver_id = 30055128
+@horse_id = 578001020200122
+@trainer_id = 4759
+
+### 1. Get simple RaceParticipant entity by ID (Expected: 200 OK)
+# Arvet fra ReadSingleModelController.
+GET {{API_HostAddress}}/model/raceparticipant/entity/{{participant_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single flat participant entity by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "1b19c1ea-4646-4cfe-8a5c-78bde8487372", "Participant ID mismatch");
+    });
+%}
+
+
+### 2. Get complex RaceParticipant model by ID (Expected: 200 OK)
+# Arvet fra ReadSingleModelController.
+GET {{API_HostAddress}}/model/raceparticipant/complex/{{participant_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve single complex participant model by ID", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.id === "1b19c1ea-4646-4cfe-8a5c-78bde8487372", "Participant ID mismatch");
+    });
+%}
+
+
+### 3. Get all flat entities for a Race (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/entity/race/{{race_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve flat participant entities for the race", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one participant");
+        client.assert(response.body[0].raceId === "07431233-a2ce-40d1-862a-f775493062d3", "Race ID inside items mismatch");
+    });
+%}
+
+
+### 4. Get all complex models for a Race (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/complex/race/{{race_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve complex participant models for the race", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one complex participant");
+    });
+%}
+
+
+### 5. Get all flat entities for a Driver (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/entity/driver/{{driver_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve flat participant entities for the driver", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one participation for driver");
+    });
+%}
+
+
+### 6. Get all complex models for a Driver (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/complex/driver/{{driver_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve complex participant models for the driver", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one complex participation for driver");
+    });
+%}
+
+
+### 7. Get all flat entities for a Horse (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/entity/horse/{{horse_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve flat participant entities for the horse", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one participation for horse");
+    });
+%}
+
+
+### 8. Get all complex models for a Horse (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/complex/horse/{{horse_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve complex participant models for the horse", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one complex participation for horse");
+    });
+%}
+
+
+### 9. Get all flat entities for a Trainer (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/entity/trainer/{{trainer_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve flat participant entities for the trainer", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one participation for trainer");
+    });
+%}
+
+
+### 10. Get all complex models for a Trainer (Expected: 200 OK)
+GET {{API_HostAddress}}/model/raceparticipant/complex/trainer/{{trainer_id}}
+Accept: application/json
+
+> {%
+    client.test("Should retrieve complex participant models for the trainer", function () {
+        client.assert(response.status === 200, "Expected HTTP 200 OK");
+        client.assert(response.body.length > 0, "Expected to find at least one complex participation for trainer");
+    });
+%}
+
+
+### 11. Test 404 behavior for non-existing Participant ID
+GET {{API_HostAddress}}/model/raceparticipant/complex/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+> {%
+    client.test("Request with dummy ID should return 404 NotFound", function () {
+        client.assert(response.status === 404, "Expected HTTP 404 NotFound");
+    });
+%}
