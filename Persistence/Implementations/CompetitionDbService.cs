@@ -9,7 +9,7 @@ namespace Persistence.Implementations;
 /// <summary>
 ///     Database service for handling competitions.
 ///     Inherits base read functionality and implements custom mapping
-///     of deep, complex object trees spanning across 11 related tables.
+///     of deep, complex object trees spanning across 16 related tables.
 /// </summary>
 public sealed class CompetitionDbService(IConfiguration configuration)
     : ReadAllDbService<CompetitionEntity, CompetitionComplex>(configuration)
@@ -19,7 +19,6 @@ public sealed class CompetitionDbService(IConfiguration configuration)
     protected override string SqlSelectEntities => @"SELECT * FROM Competition";
     protected override string SqlSelectEntityById => "SELECT * FROM Competition WHERE Id = @Id";
 
-    // todo : Add driver license to driver, add sex and type to horse!
     protected override string SqlSelectComplex => @"
         SELECT 
             c.*, 
@@ -29,8 +28,12 @@ public sealed class CompetitionDbService(IConfiguration configuration)
             rst.*, 
             rp.*, 
             d.*, 
+            dl_d.*, -- Kuskelisens
             h.*, 
+            hs.*,   -- Hestekjønn
+            ht_h.*, -- Hestetype (på hest-nivå, aliasert for å skille fra løpets ht)
             t.*,
+            dl_t.*, -- Trenerlisens
             ct.*, 
             rr.*, 
             rgt.*
@@ -41,8 +44,12 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         LEFT JOIN RaceStartType rst ON r.RaceStartTypeId = rst.Id
         LEFT JOIN RaceParticipant rp ON r.Id = rp.RaceId
         LEFT JOIN Driver d ON rp.DriverSourceId = d.SourceId
+        LEFT JOIN DriverLicense dl_d ON d.DriverLicenseId = dl_d.Id
         LEFT JOIN Horse h ON rp.HorseSourceId = h.SourceId
+        LEFT JOIN HorseSex hs ON h.HorseSexId = hs.Id
+        LEFT JOIN HorseType ht_h ON h.HorseTypeId = ht_h.Id
         LEFT JOIN Driver t ON rp.TrainerSourceId = t.SourceId
+        LEFT JOIN DriverLicense dl_t ON t.DriverLicenseId = dl_t.Id
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
         LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId
         LEFT JOIN Race_RaceGamblingType r_rgt ON r.Id = r_rgt.RaceId
@@ -73,40 +80,73 @@ public sealed class CompetitionDbService(IConfiguration configuration)
     {
         await using var connection = await CreateConnection();
 
+        // Definerer alle 16 typer i nøyaktig den rekkefølgen de kommer i SELECT-setningen
         var types = new[]
         {
-            typeof(CompetitionEntity),
-            typeof(RaceCourseComplex),
-            typeof(RaceEntity),
-            typeof(HorseTypeComplex),
-            typeof(RaceStartTypeComplex),
-            typeof(RaceParticipantComplex),
-            typeof(DriverComplex),
-            typeof(HorseComplex),
-            typeof(DriverComplex),
-            typeof(RaceCartTypeComplex),
-            typeof(RaceResultsComplex),
-            typeof(RaceGamblingTypeComplex)
+            typeof(CompetitionEntity),       // 0: c.*
+            typeof(RaceCourseComplex),        // 1: rc.*
+            typeof(RaceEntity),               // 2: r.*
+            typeof(HorseTypeComplex),         // 3: ht.* (Løpsnivå)
+            typeof(RaceStartTypeComplex),     // 4: rst.*
+            typeof(RaceParticipantComplex),   // 5: rp.*
+            typeof(DriverComplex),            // 6: d.* (Kusk)
+            typeof(DriverLicenseComplex),     // 7: dl_d.* (Kuskens lisens)
+            typeof(HorseComplex),             // 8: h.* (Hest)
+            typeof(HorseSexComplex),          // 9: hs.* (Hestens kjønn)
+            typeof(HorseTypeComplex),         // 10: ht_h.* (Hestetype på hestenivå)
+            typeof(DriverComplex),            // 11: t.* (Trener)
+            typeof(DriverLicenseComplex),     // 12: dl_t.* (Trenerens lisens)
+            typeof(RaceCartTypeComplex),      // 13: ct.*
+            typeof(RaceResultsComplex),       // 14: rr.*
+            typeof(RaceGamblingTypeComplex)   // 15: rgt.*
         };
 
         // Step 1: Fetch flat rows from the database and map them to FlatCompetitionRow
         var flatRows = await connection.QueryAsync<FlatCompetitionRow>(
             sql,
             types,
-            objects => new FlatCompetitionRow
+            objects =>
             {
-                Competition = (CompetitionEntity)objects[0],
-                Course = objects[1] as RaceCourseComplex,
-                Race = objects[2] as RaceEntity,
-                HorseType = objects[3] as HorseTypeComplex,
-                StartType = objects[4] as RaceStartTypeComplex,
-                Participant = objects[5] as RaceParticipantComplex,
-                ParticipantDriver = objects[6] as DriverComplex,
-                ParticipantHorse = objects[7] as HorseComplex,
-                ParticipantTrainer = objects[8] as DriverComplex,
-                ParticipantCartType = objects[9] as RaceCartTypeComplex,
-                ParticipantResult = objects[10] as RaceResultsComplex,
-                GamblingType = objects[11] as RaceGamblingTypeComplex
+                var row = new FlatCompetitionRow
+                {
+                    Competition = (CompetitionEntity)objects[0],
+                    Course = objects[1] as RaceCourseComplex,
+                    Race = objects[2] as RaceEntity,
+                    HorseType = objects[3] as HorseTypeComplex,
+                    StartType = objects[4] as RaceStartTypeComplex,
+                    Participant = objects[5] as RaceParticipantComplex,
+                    ParticipantDriver = objects[6] as DriverComplex,
+                    ParticipantDriverLicense = objects[7] as DriverLicenseComplex,
+                    ParticipantHorse = objects[8] as HorseComplex,
+                    ParticipantHorseSex = objects[9] as HorseSexComplex,
+                    ParticipantHorseType = objects[10] as HorseTypeComplex,
+                    ParticipantTrainer = objects[11] as DriverComplex,
+                    ParticipantTrainerLicense = objects[12] as DriverLicenseComplex,
+                    ParticipantCartType = objects[13] as RaceCartTypeComplex,
+                    ParticipantResult = objects[14] as RaceResultsComplex,
+                    GamblingType = objects[15] as RaceGamblingTypeComplex
+                };
+
+                // Hydrer kusk med lisens (null-sjekk for LEFT JOIN-sikkerhet)
+                if (row.ParticipantDriver != null)
+                {
+                    row.ParticipantDriver.License = row.ParticipantDriverLicense;
+                }
+
+                // Hydrer hest med kjønn og rase/type
+                if (row.ParticipantHorse != null)
+                {
+                    row.ParticipantHorse.Sex = row.ParticipantHorseSex;
+                    row.ParticipantHorse.Type = row.ParticipantHorseType;
+                }
+
+                // Hydrer trener med lisens
+                if (row.ParticipantTrainer != null)
+                {
+                    row.ParticipantTrainer.License = row.ParticipantTrainerLicense;
+                }
+
+                return row;
             },
             param,
             splitOn: "Id");
@@ -192,8 +232,12 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         public RaceStartTypeComplex? StartType { get; init; }
         public RaceParticipantComplex? Participant { get; init; }
         public DriverComplex? ParticipantDriver { get; init; }
+        public DriverLicenseComplex? ParticipantDriverLicense { get; init; }
         public HorseComplex? ParticipantHorse { get; init; }
-        public DriverComplex? ParticipantTrainer { get; init; } // Added Trainer property
+        public HorseSexComplex? ParticipantHorseSex { get; init; }
+        public HorseTypeComplex? ParticipantHorseType { get; init; }
+        public DriverComplex? ParticipantTrainer { get; init; }
+        public DriverLicenseComplex? ParticipantTrainerLicense { get; init; }
         public RaceCartTypeComplex? ParticipantCartType { get; init; }
         public RaceResultsComplex? ParticipantResult { get; init; }
         public RaceGamblingTypeComplex? GamblingType { get; init; }
