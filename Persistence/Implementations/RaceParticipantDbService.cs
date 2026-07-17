@@ -173,10 +173,7 @@ public class RaceParticipantDbService(IConfiguration configuration)
                 var cartType = (RaceCartTypeComplex)objects[8];
                 var result = (RaceResultsComplex)objects[9];
 
-                if (driver != null)
-                {
-                    driver.License = driverLicense;
-                }
+                if (driver != null) driver.License = driverLicense;
 
                 if (horse != null)
                 {
@@ -184,10 +181,7 @@ public class RaceParticipantDbService(IConfiguration configuration)
                     horse.Type = horseType;
                 }
 
-                if (trainer != null)
-                {
-                    trainer.License = trainerLicense;
-                }
+                if (trainer != null) trainer.License = trainerLicense;
 
                 return new RaceParticipantComplex
                 {

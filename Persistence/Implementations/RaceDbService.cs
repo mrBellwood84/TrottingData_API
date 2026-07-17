@@ -8,9 +8,9 @@ using Persistence.Services;
 namespace Persistence.Implementations;
 
 /// <summary>
-///      Database service for handling race data.
-///      Manages queries for both flat race entities and deeply nested complex race structures,
-///      resolving multi-table relations in-memory to prevent cartesian explosion.
+///     Database service for handling race data.
+///     Manages queries for both flat race entities and deeply nested complex race structures,
+///     resolving multi-table relations in-memory to prevent cartesian explosion.
 /// </summary>
 public class RaceDbService(IConfiguration configuration)
     : ReadAllDbService<RaceEntity, RaceComplex>(configuration), IRaceDbService
@@ -54,7 +54,7 @@ public class RaceDbService(IConfiguration configuration)
     private string SqlSelectComplexByCompetitionId => $"{SqlSelectComplexBase} WHERE r.CompetitionId = @Id";
 
     /// <summary>
-    ///      Retrieves a single flat race entity associated with the given competition ID.
+    ///     Retrieves a single flat race entity associated with the given competition ID.
     /// </summary>
     public Task<List<RaceEntity>> GetEntityByCompetitionIdAsync(string competitionId)
     {
@@ -62,8 +62,8 @@ public class RaceDbService(IConfiguration configuration)
     }
 
     /// <summary>
-    ///      Retrieves all races associated with a specific competition, fully hydated with
-    ///      participants, drivers, horses, results, and gambling types.
+    ///     Retrieves all races associated with a specific competition, fully hydated with
+    ///     participants, drivers, horses, results, and gambling types.
     /// </summary>
     public async Task<List<RaceComplex>> GetComplexByCompetitionIdAsync(string competitionId)
     {
@@ -73,7 +73,7 @@ public class RaceDbService(IConfiguration configuration)
     }
 
     /// <summary>
-    ///      Overrides the base method to fetch a single complex race object via the internal list mapper.
+    ///     Overrides the base method to fetch a single complex race object via the internal list mapper.
     /// </summary>
     protected override async Task<RaceComplex?> QueryComplexAsync(string query, object param)
     {
@@ -82,7 +82,7 @@ public class RaceDbService(IConfiguration configuration)
     }
 
     /// <summary>
-    ///      Executes the multi-table query and maps the flat row matrix into a structured domain model.
+    ///     Executes the multi-table query and maps the flat row matrix into a structured domain model.
     /// </summary>
     private async Task<IEnumerable<RaceComplex>> QueryComplexListInternalAsync(string sql, object param)
     {
@@ -91,20 +91,20 @@ public class RaceDbService(IConfiguration configuration)
         // Her definerer vi samtlige 14 typer i nøyaktig samme rekkefølge som de hentes i SELECT-en
         var types = new[]
         {
-            typeof(RaceEntity),              // 0: r.*
-            typeof(HorseTypeComplex),        // 1: ht.* (Hestetype på løpsnivå)
-            typeof(RaceStartTypeComplex),    // 2: rst.*
-            typeof(RaceParticipantComplex),  // 3: rp.*
-            typeof(DriverComplex),           // 4: d.* (Kusk)
-            typeof(DriverLicenseComplex),    // 5: dl_d.* (Kuskens lisens)
-            typeof(HorseComplex),            // 6: h.* (Hest)
-            typeof(HorseSexComplex),         // 7: hs.* (Hestens kjønn)
-            typeof(HorseTypeComplex),        // 8: ht_h.* (Hestetype på hestenivå)
-            typeof(DriverComplex),           // 9: t.* (Trener)
-            typeof(DriverLicenseComplex),    // 10: dl_t.* (Trenerens lisens)
-            typeof(RaceCartTypeComplex),     // 11: ct.*
-            typeof(RaceResultsComplex),      // 12: rr.*
-            typeof(RaceGamblingTypeComplex)  // 13: rgt.*
+            typeof(RaceEntity), // 0: r.*
+            typeof(HorseTypeComplex), // 1: ht.* (Hestetype på løpsnivå)
+            typeof(RaceStartTypeComplex), // 2: rst.*
+            typeof(RaceParticipantComplex), // 3: rp.*
+            typeof(DriverComplex), // 4: d.* (Kusk)
+            typeof(DriverLicenseComplex), // 5: dl_d.* (Kuskens lisens)
+            typeof(HorseComplex), // 6: h.* (Hest)
+            typeof(HorseSexComplex), // 7: hs.* (Hestens kjønn)
+            typeof(HorseTypeComplex), // 8: ht_h.* (Hestetype på hestenivå)
+            typeof(DriverComplex), // 9: t.* (Trener)
+            typeof(DriverLicenseComplex), // 10: dl_t.* (Trenerens lisens)
+            typeof(RaceCartTypeComplex), // 11: ct.*
+            typeof(RaceResultsComplex), // 12: rr.*
+            typeof(RaceGamblingTypeComplex) // 13: rgt.*
         };
 
         // Mapper rå-radene over i det flate mellomlagsobjektet vårt
@@ -132,10 +132,7 @@ public class RaceDbService(IConfiguration configuration)
                 };
 
                 // Hydrer kusk-relasjonen
-                if (row.ParticipantDriver != null)
-                {
-                    row.ParticipantDriver.License = row.ParticipantDriverLicense;
-                }
+                if (row.ParticipantDriver != null) row.ParticipantDriver.License = row.ParticipantDriverLicense;
 
                 // Hydrer heste-relasjonene
                 if (row.ParticipantHorse != null)
@@ -145,10 +142,7 @@ public class RaceDbService(IConfiguration configuration)
                 }
 
                 // Hydrer trener-relasjonen
-                if (row.ParticipantTrainer != null)
-                {
-                    row.ParticipantTrainer.License = row.ParticipantTrainerLicense;
-                }
+                if (row.ParticipantTrainer != null) row.ParticipantTrainer.License = row.ParticipantTrainerLicense;
 
                 return row;
             },
@@ -204,7 +198,7 @@ public class RaceDbService(IConfiguration configuration)
     }
 
     /// <summary>
-    ///      Temporary data container used to catch unmapped multi-join rows from Dapper.
+    ///     Temporary data container used to catch unmapped multi-join rows from Dapper.
     /// </summary>
     private sealed class FlatRaceRow
     {

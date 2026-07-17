@@ -10,7 +10,7 @@ namespace API.Controllers.Models;
 ///     API controller managing read operations for race participants.
 ///     Provides endpoints to query participants sliced by races, drivers, horses, and trainers.
 /// </summary>
-public class RaceParticipantController(IRaceParticipantRepository repository) 
+public class RaceParticipantController(IRaceParticipantRepository repository)
     : ReadSingleModelController<RaceParticipantEntity, RaceParticipantComplex>(repository)
 {
     /// <summary>
@@ -19,7 +19,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("entity/race/{raceId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByRaceAsync([FromRoute] string raceId)
+    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByRaceAsync(
+        [FromRoute] string raceId)
     {
         var data = await repository.GetEntitiesByRaceIdAsync(raceId);
         if (data == null) return NotFound();
@@ -32,7 +33,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("complex/race/{raceId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByRaceAsync([FromRoute] string raceId)
+    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByRaceAsync(
+        [FromRoute] string raceId)
     {
         var data = await repository.GetComplexByRaceIdAsync(raceId);
         if (data == null) return NotFound();
@@ -45,7 +47,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("entity/driver/{driverId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByDriverAsync([FromRoute] string driverId)
+    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByDriverAsync(
+        [FromRoute] string driverId)
     {
         var data = await repository.GetEntitiesByDriverAsync(driverId);
         if (data == null) return NotFound();
@@ -58,7 +61,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("complex/driver/{driverId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByDriverAsync([FromRoute] string driverId)
+    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByDriverAsync(
+        [FromRoute] string driverId)
     {
         var data = await repository.GetComplexByDriverAsync(driverId);
         if (data == null) return NotFound();
@@ -71,7 +75,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("entity/horse/{horseId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByHorseAsync([FromRoute] string horseId)
+    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByHorseAsync(
+        [FromRoute] string horseId)
     {
         var data = await repository.GetEntitiesByHorseAsync(horseId);
         if (data == null) return NotFound();
@@ -84,7 +89,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("complex/horse/{horseId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByHorseAsync([FromRoute] string horseId)
+    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByHorseAsync(
+        [FromRoute] string horseId)
     {
         var data = await repository.GetComplexesByHorseAsync(horseId);
         if (data == null) return NotFound();
@@ -97,7 +103,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("entity/trainer/{trainerId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByTrainerAsync([FromRoute] string trainerId)
+    public async Task<ActionResult<List<RaceParticipantEntity>>> GetParticipantEntitiesByTrainerAsync(
+        [FromRoute] string trainerId)
     {
         var data = await repository.GetEntitiesByTrainerAsync(trainerId);
         if (data == null) return NotFound();
@@ -110,7 +117,8 @@ public class RaceParticipantController(IRaceParticipantRepository repository)
     [HttpGet("complex/trainer/{trainerId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByTrainerAsync([FromRoute] string trainerId)
+    public async Task<ActionResult<List<RaceParticipantComplex>>> GetParticipantComplexByTrainerAsync(
+        [FromRoute] string trainerId)
     {
         var data = await repository.GetComplexesByTrainerAsync(trainerId);
         if (data == null) return NotFound();

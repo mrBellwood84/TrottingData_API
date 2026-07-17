@@ -83,22 +83,22 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         // Definerer alle 16 typer i nøyaktig den rekkefølgen de kommer i SELECT-setningen
         var types = new[]
         {
-            typeof(CompetitionEntity),       // 0: c.*
-            typeof(RaceCourseComplex),        // 1: rc.*
-            typeof(RaceEntity),               // 2: r.*
-            typeof(HorseTypeComplex),         // 3: ht.* (Løpsnivå)
-            typeof(RaceStartTypeComplex),     // 4: rst.*
-            typeof(RaceParticipantComplex),   // 5: rp.*
-            typeof(DriverComplex),            // 6: d.* (Kusk)
-            typeof(DriverLicenseComplex),     // 7: dl_d.* (Kuskens lisens)
-            typeof(HorseComplex),             // 8: h.* (Hest)
-            typeof(HorseSexComplex),          // 9: hs.* (Hestens kjønn)
-            typeof(HorseTypeComplex),         // 10: ht_h.* (Hestetype på hestenivå)
-            typeof(DriverComplex),            // 11: t.* (Trener)
-            typeof(DriverLicenseComplex),     // 12: dl_t.* (Trenerens lisens)
-            typeof(RaceCartTypeComplex),      // 13: ct.*
-            typeof(RaceResultsComplex),       // 14: rr.*
-            typeof(RaceGamblingTypeComplex)   // 15: rgt.*
+            typeof(CompetitionEntity), // 0: c.*
+            typeof(RaceCourseComplex), // 1: rc.*
+            typeof(RaceEntity), // 2: r.*
+            typeof(HorseTypeComplex), // 3: ht.* (Løpsnivå)
+            typeof(RaceStartTypeComplex), // 4: rst.*
+            typeof(RaceParticipantComplex), // 5: rp.*
+            typeof(DriverComplex), // 6: d.* (Kusk)
+            typeof(DriverLicenseComplex), // 7: dl_d.* (Kuskens lisens)
+            typeof(HorseComplex), // 8: h.* (Hest)
+            typeof(HorseSexComplex), // 9: hs.* (Hestens kjønn)
+            typeof(HorseTypeComplex), // 10: ht_h.* (Hestetype på hestenivå)
+            typeof(DriverComplex), // 11: t.* (Trener)
+            typeof(DriverLicenseComplex), // 12: dl_t.* (Trenerens lisens)
+            typeof(RaceCartTypeComplex), // 13: ct.*
+            typeof(RaceResultsComplex), // 14: rr.*
+            typeof(RaceGamblingTypeComplex) // 15: rgt.*
         };
 
         // Step 1: Fetch flat rows from the database and map them to FlatCompetitionRow
@@ -128,10 +128,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
                 };
 
                 // Hydrer kusk med lisens (null-sjekk for LEFT JOIN-sikkerhet)
-                if (row.ParticipantDriver != null)
-                {
-                    row.ParticipantDriver.License = row.ParticipantDriverLicense;
-                }
+                if (row.ParticipantDriver != null) row.ParticipantDriver.License = row.ParticipantDriverLicense;
 
                 // Hydrer hest med kjønn og rase/type
                 if (row.ParticipantHorse != null)
@@ -141,10 +138,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
                 }
 
                 // Hydrer trener med lisens
-                if (row.ParticipantTrainer != null)
-                {
-                    row.ParticipantTrainer.License = row.ParticipantTrainerLicense;
-                }
+                if (row.ParticipantTrainer != null) row.ParticipantTrainer.License = row.ParticipantTrainerLicense;
 
                 return row;
             },

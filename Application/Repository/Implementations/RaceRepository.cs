@@ -1,4 +1,3 @@
-using Application.Cache.Implementations;
 using Application.Cache.Interfaces;
 using Application.Repository.Interfaces;
 using Models.Complex;

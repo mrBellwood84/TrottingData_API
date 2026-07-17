@@ -5,11 +5,11 @@ using Models.Interfaces;
 namespace Application.Cache.Implementations;
 
 /// <summary>
-///     In-memory cache engine for managing race participant data of type <typeparamref name="T"/>.
+///     In-memory cache engine for managing race participant data of type <typeparamref name="T" />.
 ///     Provides isolated, grouped indexing paths for races, drivers, horses, and trainers
 ///     to prevent data contamination across different query vectors.
 /// </summary>
-/// <typeparam name="T">The model or entity type representing a race participant, implementing <see cref="IEntity"/>.</typeparam>
+/// <typeparam name="T">The model or entity type representing a race participant, implementing <see cref="IEntity" />.</typeparam>
 public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntity
 {
     private readonly GroupedCacheService<T> _driverIndex = new();
@@ -22,7 +22,7 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     ///     Retrieves a single cached participant by its unique identifier.
     /// </summary>
     /// <param name="key">The unique identifier (Id) of the participant.</param>
-    /// <returns>The cached participant of type <typeparamref name="T"/>, or <c>null</c> if not found.</returns>
+    /// <returns>The cached participant of type <typeparamref name="T" />, or <c>null</c> if not found.</returns>
     public Task<T?> GetAsync(string key)
     {
         return _master.GetAsync(key);
@@ -32,7 +32,7 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     ///     Retrieves all cached participants associated with a specific race.
     /// </summary>
     /// <param name="raceId">The unique identifier of the race.</param>
-    /// <returns>A list of cached participants of type <typeparamref name="T"/>, or <c>null</c> if the race index is cold.</returns>
+    /// <returns>A list of cached participants of type <typeparamref name="T" />, or <c>null</c> if the race index is cold.</returns>
     public Task<List<T>?> GetByRaceAsync(string raceId)
     {
         return _raceIndex.GetAsync(raceId);
@@ -42,7 +42,7 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     ///     Retrieves all cached race participations associated with a specific driver.
     /// </summary>
     /// <param name="driverId">The unique identifier of the driver.</param>
-    /// <returns>A list of cached participations of type <typeparamref name="T"/>, or <c>null</c> if the driver index is cold.</returns>
+    /// <returns>A list of cached participations of type <typeparamref name="T" />, or <c>null</c> if the driver index is cold.</returns>
     public Task<List<T>?> GetByDriverAsync(string driverId)
     {
         return _driverIndex.GetAsync(driverId);
@@ -52,7 +52,7 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     ///     Retrieves all cached race participations associated with a specific horse.
     /// </summary>
     /// <param name="horseId">The unique identifier of the horse.</param>
-    /// <returns>A list of cached participations of type <typeparamref name="T"/>, or <c>null</c> if the horse index is cold.</returns>
+    /// <returns>A list of cached participations of type <typeparamref name="T" />, or <c>null</c> if the horse index is cold.</returns>
     public Task<List<T>?> GetByHorseAsync(string horseId)
     {
         return _horseIndex.GetAsync(horseId);
@@ -62,7 +62,10 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     ///     Retrieves all cached race participations associated with a specific trainer.
     /// </summary>
     /// <param name="trainerId">The unique identifier of the trainer.</param>
-    /// <returns>A list of cached participations of type <typeparamref name="T"/>, or <c>null</c> if the trainer index is cold.</returns>
+    /// <returns>
+    ///     A list of cached participations of type <typeparamref name="T" />, or <c>null</c> if the trainer index is
+    ///     cold.
+    /// </returns>
     public Task<List<T>?> GetByTrainAsync(string trainerId)
     {
         return _trainerIndex.GetAsync(trainerId);
