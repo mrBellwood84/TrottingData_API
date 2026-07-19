@@ -25,13 +25,15 @@ public class ReadAllRepository<TEntity, TComplex>(
     /// <summary>
     ///     Retrieves a list of all identity models, subject to policy restrictions.
     /// </summary>
-    public Task<List<IdModel>> GetAllIdsAsync()
+    public async Task<List<string>> GetAllIdsAsync()
     {
         if (!ModelPolicy.AllowIdList)
             throw new RepositoryPolicyViolationException(
                 $"Retrieving IDs for {typeof(TEntity).Name} is disallowed by policy.");
 
-        return dbService.GetIdsAsync();
+        var data = await dbService.GetIdsAsync();
+        return data.Select(x => x.Id).ToList();
+
     }
 
     /// <summary>

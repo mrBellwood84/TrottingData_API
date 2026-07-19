@@ -36,7 +36,7 @@ public class RaceParticipantDbService(IConfiguration configuration)
         LEFT JOIN Driver t ON rp.TrainerSourceId = t.SourceId
         LEFT JOIN DriverLicense dl_t ON t.DriverLicenseId = dl_t.Id
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
-        LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId";
+        LEFT JOIN RaceResult rr ON rp.Id = rr.RaceParticipantId";
 
     private readonly string _sqlSelectEntityBase = "SELECT * FROM RaceParticipant";
 
@@ -154,7 +154,7 @@ public class RaceParticipantDbService(IConfiguration configuration)
             typeof(DriverComplex), // 6: t.*  (Trener)
             typeof(DriverLicenseComplex), // 7: dl_t.* (Trener-lisens)
             typeof(RaceCartTypeComplex), // 8: ct.* (Vogn)
-            typeof(RaceResultsComplex) // 9: rr.* (Resultat)
+            typeof(RaceResultComplex) // 9: rr.* (Resultat)
         };
 
         var rows = await connection.QueryAsync<RaceParticipantComplex>(
@@ -171,7 +171,7 @@ public class RaceParticipantDbService(IConfiguration configuration)
                 var trainer = (DriverComplex)objects[6];
                 var trainerLicense = (DriverLicenseComplex)objects[7];
                 var cartType = (RaceCartTypeComplex)objects[8];
-                var result = (RaceResultsComplex)objects[9];
+                var result = (RaceResultComplex)objects[9];
 
                 if (driver != null) driver.License = driverLicense;
 

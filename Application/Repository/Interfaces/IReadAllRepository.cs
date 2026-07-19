@@ -11,7 +11,7 @@ public interface IReadAllRepository<TEntity, TComplex>
     /// <summary>
     ///     Retrieves a list of all identity models, subject to policy restrictions.
     /// </summary>
-    Task<List<IdModel>> GetAllIdsAsync();
+    Task<List<string>> GetAllIdsAsync();
 
     /// <summary>
     ///     Retrieves all flat entities, returning the fully loaded cache if available,

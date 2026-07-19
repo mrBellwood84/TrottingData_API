@@ -43,7 +43,7 @@ public class RaceDbService(IConfiguration configuration)
         LEFT JOIN Driver t ON rp.TrainerSourceId = t.SourceId
         LEFT JOIN DriverLicense dl_t ON t.DriverLicenseId = dl_t.Id
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
-        LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId
+        LEFT JOIN RaceResult rr ON rp.Id = rr.RaceParticipantId
         LEFT JOIN Race_RaceGamblingType r_rgt ON r.Id = r_rgt.RaceId
         LEFT JOIN RaceGamblingType rgt ON r_rgt.RaceGamblingTypeId = rgt.Id";
 
@@ -103,7 +103,7 @@ public class RaceDbService(IConfiguration configuration)
             typeof(DriverComplex), // 9: t.* (Trener)
             typeof(DriverLicenseComplex), // 10: dl_t.* (Trenerens lisens)
             typeof(RaceCartTypeComplex), // 11: ct.*
-            typeof(RaceResultsComplex), // 12: rr.*
+            typeof(RaceResultComplex), // 12: rr.*
             typeof(RaceGamblingTypeComplex) // 13: rgt.*
         };
 
@@ -127,7 +127,7 @@ public class RaceDbService(IConfiguration configuration)
                     ParticipantTrainer = objects[9] as DriverComplex,
                     ParticipantTrainerLicense = objects[10] as DriverLicenseComplex,
                     ParticipantCartType = objects[11] as RaceCartTypeComplex,
-                    ParticipantResult = objects[12] as RaceResultsComplex,
+                    ParticipantResult = objects[12] as RaceResultComplex,
                     GamblingType = objects[13] as RaceGamblingTypeComplex
                 };
 
@@ -214,7 +214,7 @@ public class RaceDbService(IConfiguration configuration)
         public DriverComplex? ParticipantTrainer { get; init; }
         public DriverLicenseComplex? ParticipantTrainerLicense { get; init; }
         public RaceCartTypeComplex? ParticipantCartType { get; init; }
-        public RaceResultsComplex? ParticipantResult { get; init; }
+        public RaceResultComplex? ParticipantResult { get; init; }
         public RaceGamblingTypeComplex? GamblingType { get; init; }
     }
 }

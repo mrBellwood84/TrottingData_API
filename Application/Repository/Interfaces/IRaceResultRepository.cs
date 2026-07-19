@@ -3,7 +3,7 @@ using Models.Entity;
 
 namespace Application.Repository.Interfaces;
 
-public interface IRaceResultRepository : IReadSingleRepository<RaceResultEntity, RaceResultsComplex>
+public interface IRaceResultRepository : IReadSingleRepository<RaceResultEntity, RaceResultComplex>
 {
     /// <summary>
     ///     Retrieves a flat race result entity by its associated participant identifier, checking the cache first.
@@ -13,5 +13,5 @@ public interface IRaceResultRepository : IReadSingleRepository<RaceResultEntity,
     /// <summary>
     ///     Retrieves a complex race result by its associated participant identifier, checking the cache first.
     /// </summary>
-    Task<RaceResultsComplex?> GetComplexByParticipantIdAsync(string participantId);
+    Task<RaceResultComplex?> GetComplexByParticipantIdAsync(string participantId);
 }

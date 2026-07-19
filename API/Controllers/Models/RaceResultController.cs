@@ -8,7 +8,7 @@ namespace API.Controllers.Models;
 
 public class RaceResultController(
     IRaceResultRepository repository)
-    : ReadSingleModelController<RaceResultEntity, RaceResultsComplex>(repository)
+    : ReadSingleModelController<RaceResultEntity, RaceResultComplex>(repository)
 {
     [HttpGet("entity/participant/{participantId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -24,7 +24,7 @@ public class RaceResultController(
     [HttpGet("complex/participant/{participantId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RaceResultsComplex>> GetResultComplexByParticipantAsync(
+    public async Task<ActionResult<RaceResultComplex>> GetResultComplexByParticipantAsync(
         [FromRoute] string participantId)
     {
         var data = await repository.GetComplexByParticipantIdAsync(participantId);

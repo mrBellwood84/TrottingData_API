@@ -17,5 +17,5 @@ public class RaceParticipantComplex : IEntity
     public HorseComplex Horse { get; init; }
     public DriverComplex Trainer { get; init; }
     public RaceCartTypeComplex CartType { get; init; }
-    public RaceResultsComplex Result { get; init; }
+    public RaceResultComplex Result { get; init; }
 }

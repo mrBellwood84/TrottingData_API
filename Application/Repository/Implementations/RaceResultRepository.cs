@@ -14,7 +14,7 @@ namespace Application.Repository.Implementations;
 public class RaceResultRepository(
     IRaceResultDbService dbService,
     IRaceResultCache<RaceResultEntity> entityCache,
-    IRaceResultCache<RaceResultsComplex> complexCache) : IRaceResultRepository
+    IRaceResultCache<RaceResultComplex> complexCache) : IRaceResultRepository
 {
     /// <summary>
     ///     Retrieves a flat race result entity by its unique identifier, checking the cache first.
@@ -49,7 +49,7 @@ public class RaceResultRepository(
     /// <exception cref="NullReferenceException">
     ///     Thrown if the complex model exists but the underlying flat entity is missing.
     /// </exception>
-    public async Task<RaceResultsComplex?> GetComplexByIdAsync(string id)
+    public async Task<RaceResultComplex?> GetComplexByIdAsync(string id)
     {
         var cacheData = await complexCache.GetAsync(id);
         if (cacheData is not null) return cacheData;
@@ -68,7 +68,7 @@ public class RaceResultRepository(
     /// <summary>
     ///     Retrieves a complex race result by its associated participant identifier, checking the cache first.
     /// </summary>
-    public async Task<RaceResultsComplex?> GetComplexByParticipantIdAsync(string participantId)
+    public async Task<RaceResultComplex?> GetComplexByParticipantIdAsync(string participantId)
     {
         var cacheData = await complexCache.GetByParticipantAsync(participantId);
         if (cacheData is not null) return cacheData;

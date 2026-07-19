@@ -3,7 +3,7 @@ using Models.Entity;
 
 namespace Persistence.Interfaces;
 
-public interface IRaceResultDbService : IReadSingleDbService<RaceResultEntity, RaceResultsComplex>
+public interface IRaceResultDbService : IReadSingleDbService<RaceResultEntity, RaceResultComplex>
 {
     /// <summary>
     ///     Retrieves a single flat race result entity associated with a specific race participant ID.
@@ -13,5 +13,5 @@ public interface IRaceResultDbService : IReadSingleDbService<RaceResultEntity, R
     /// <summary>
     ///     Retrieves a single complex race result model associated with a specific race participant ID.
     /// </summary>
-    Task<RaceResultsComplex?> GetComplexByParticipantIdAsync(string participantId);
+    Task<RaceResultComplex?> GetComplexByParticipantIdAsync(string participantId);
 }

@@ -26,7 +26,7 @@ public class ReadAllModelController<TEntity, TComplex>(IReadAllRepository<TEntit
     [HttpGet("id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<List<IdModel>>> GetIdListAsync()
+    public async Task<ActionResult<List<string>>> GetIdListAsync()
     {
         var data = await repository.GetAllIdsAsync();
         return Ok(data);

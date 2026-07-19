@@ -51,7 +51,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         LEFT JOIN Driver t ON rp.TrainerSourceId = t.SourceId
         LEFT JOIN DriverLicense dl_t ON t.DriverLicenseId = dl_t.Id
         LEFT JOIN RaceCartType ct ON rp.CartTypeId = ct.Id
-        LEFT JOIN RaceResults rr ON rp.Id = rr.RaceParticipantId
+        LEFT JOIN RaceResult rr ON rp.Id = rr.RaceParticipantId
         LEFT JOIN Race_RaceGamblingType r_rgt ON r.Id = r_rgt.RaceId
         LEFT JOIN RaceGamblingType rgt ON r_rgt.RaceGamblingTypeId = rgt.Id";
 
@@ -97,7 +97,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
             typeof(DriverComplex), // 11: t.* (Trener)
             typeof(DriverLicenseComplex), // 12: dl_t.* (Trenerens lisens)
             typeof(RaceCartTypeComplex), // 13: ct.*
-            typeof(RaceResultsComplex), // 14: rr.*
+            typeof(RaceResultComplex), // 14: rr.*
             typeof(RaceGamblingTypeComplex) // 15: rgt.*
         };
 
@@ -123,7 +123,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
                     ParticipantTrainer = objects[11] as DriverComplex,
                     ParticipantTrainerLicense = objects[12] as DriverLicenseComplex,
                     ParticipantCartType = objects[13] as RaceCartTypeComplex,
-                    ParticipantResult = objects[14] as RaceResultsComplex,
+                    ParticipantResult = objects[14] as RaceResultComplex,
                     GamblingType = objects[15] as RaceGamblingTypeComplex
                 };
 
@@ -233,7 +233,7 @@ public sealed class CompetitionDbService(IConfiguration configuration)
         public DriverComplex? ParticipantTrainer { get; init; }
         public DriverLicenseComplex? ParticipantTrainerLicense { get; init; }
         public RaceCartTypeComplex? ParticipantCartType { get; init; }
-        public RaceResultsComplex? ParticipantResult { get; init; }
+        public RaceResultComplex? ParticipantResult { get; init; }
         public RaceGamblingTypeComplex? GamblingType { get; init; }
     }
 }

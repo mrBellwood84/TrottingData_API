@@ -13,7 +13,7 @@ namespace Persistence.Implementations;
 ///     via Dapper without the need for multi-join hydration pipelines.
 /// </summary>
 public sealed class RaceResultDbService(IConfiguration configuration)
-    : ReadSingleDbService<RaceResultEntity, RaceResultsComplex>(configuration), IRaceResultDbService
+    : ReadSingleDbService<RaceResultEntity, RaceResultComplex>(configuration), IRaceResultDbService
 {
     protected override string SqlSelectEntityById => @"SELECT * FROM RaceResults WHERE Id = @Id";
     private string SqlSelectEntityByParticipantId => @"SELECT * FROM RaceResults WHERE RaceParticipantId = @Id";
@@ -32,7 +32,7 @@ public sealed class RaceResultDbService(IConfiguration configuration)
     /// <summary>
     ///     Retrieves a single complex race result model associated with a specific race participant ID.
     /// </summary>
-    public Task<RaceResultsComplex?> GetComplexByParticipantIdAsync(string participantId)
+    public Task<RaceResultComplex?> GetComplexByParticipantIdAsync(string participantId)
     {
         return QueryComplexAsync(SqlSelectComplexByParticipantId, new { Id = participantId });
     }
