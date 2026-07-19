@@ -70,6 +70,7 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     {
         return _trainerIndex.GetAsync(trainerId);
     }
+    
 
     /// <summary>
     ///     Stores or updates a single participant in the master storage.
@@ -87,8 +88,19 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     /// <param name="items">The list of participants to cache.</param>
     public async Task SetRaceAsync(string raceId, List<T> items)
     {
-        foreach (var item in items) await _master.SetAsync(item.Id, item);
-        await _raceIndex.SetAsync(raceId, items);
+        foreach (var item in items)
+        {
+            var exist = await _master.GetAsync(item.Id);
+            if (exist == null)
+            {
+                await _master.SetAsync(item.Id, item);
+                await _raceIndex.SetAsync(raceId, item);
+                continue;
+            }
+            
+            var entity = await  _master.GetAsync(item.Id);
+            await _raceIndex.SetAsync(raceId, entity!);
+        }
     }
 
     /// <summary>
@@ -98,8 +110,19 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     /// <param name="items">The list of participations to cache.</param>
     public async Task SetDriverAsync(string driverId, List<T> items)
     {
-        foreach (var item in items) await _master.SetAsync(item.Id, item);
-        await _driverIndex.SetAsync(driverId, items);
+        foreach (var item in items)
+        {
+            var exist = await _master.GetAsync(item.Id);
+            if (exist == null)
+            {
+                await _master.SetAsync(item.Id, item);
+                await _driverIndex.SetAsync(driverId, item);
+                continue;
+            }
+            
+            var entity = await  _master.GetAsync(item.Id);
+            await _driverIndex.SetAsync(driverId, entity!);
+        }
     }
 
     /// <summary>
@@ -109,8 +132,19 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     /// <param name="items">The list of participations to cache.</param>
     public async Task SetHorseAsync(string horseId, List<T> items)
     {
-        foreach (var item in items) await _master.SetAsync(item.Id, item);
-        await _horseIndex.SetAsync(horseId, items);
+        foreach (var item in items)
+        {
+            var exist = await _master.GetAsync(item.Id);
+            if (exist == null)
+            {
+                await _master.SetAsync(item.Id, item);
+                await _horseIndex.SetAsync(horseId, item);
+                continue;
+            }
+            
+            var entity = await  _master.GetAsync(item.Id);
+            await _horseIndex.SetAsync(horseId, entity!);
+        }
     }
 
     /// <summary>
@@ -120,7 +154,18 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     /// <param name="items">The list of participations to cache.</param>
     public async Task SetTrainerAsync(string trainerId, List<T> items)
     {
-        foreach (var item in items) await _master.SetAsync(item.Id, item);
-        await _trainerIndex.SetAsync(trainerId, items);
+        foreach (var item in items)
+        {
+            var exist = await _master.GetAsync(item.Id);
+            if (exist == null)
+            {
+                await _master.SetAsync(item.Id, item);
+                await _trainerIndex.SetAsync(trainerId, item);
+                continue;
+            }
+            
+            var entity = await  _master.GetAsync(item.Id);
+            await _trainerIndex.SetAsync(trainerId, entity!);
+        }
     }
 }

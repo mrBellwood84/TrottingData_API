@@ -24,6 +24,13 @@ public class GroupedCacheService<T> where T : IEntity
         return Task.FromResult<List<T>?>(null);
     }
 
+    public Task SetAsync(string key, T item)
+    {
+        var innerDict = _data.GetOrAdd(key, _ => []);
+        innerDict[item.Id] = item;
+        return Task.CompletedTask;
+    }
+
     /// <summary>
     ///     Stores or updates a collection of items within the specified group key.
     /// </summary>
