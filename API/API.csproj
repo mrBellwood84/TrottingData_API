@@ -16,10 +16,6 @@
         <PackageReference Include="Scalar.AspNetCore" Version="2.16.11"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Controllers\Datasets\"/>
-    </ItemGroup>
-
     <PropertyGroup>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>

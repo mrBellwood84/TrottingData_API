@@ -1,0 +1,11 @@
+// todo : set ghost driver / horse if entity is missing! Trainer should remain null if no data available
+
+// dataset rikstoto : match information available from rikstoto
+
+// dataset level 1:     dataset with all available data, only recent history 
+        
+// dataset level 1t:    dataset level 1 with trainer
+
+// dataset level 2:     datasett with full history
+
+// dataset level 2t:    dataset level 2 with trainer
