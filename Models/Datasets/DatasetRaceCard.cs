@@ -1,3 +1,5 @@
+using Models.Complex;
+
 namespace Models.Datasets;
 
 public class DatasetRaceCard : DatasetBasic
@@ -5,7 +7,10 @@ public class DatasetRaceCard : DatasetBasic
     
     public DatasetRaceCard() {}
 
-    public DatasetRaceCard(DatasetBasic data)
+    public DatasetRaceCard(
+        DatasetBasic data, 
+        RaceParticipantComplex participant,
+        RaceResultComplex results)
     {
         Date = data.Date;
         RaceCourse = data.RaceCourse;
@@ -13,8 +18,28 @@ public class DatasetRaceCard : DatasetBasic
         HorseType = data.HorseType;
         StartType = data.StartType;
         Monte = data.Monte;
+
+        StartNumber = participant.StartNumber;
+        Distance = participant.TrackDistance;
+        Track = participant.TrackNumber;
+        CartType = participant.CartType?.Type;
+        ForeShoe = participant.ForeShoe;
+        HindShoe = participant.HindShoe;
+
+        DriverName = participant.Driver.Name;
+        HorseName = participant.Horse.Name;
+
+        // todo : add horse age:
+        HorseAge = -1;
+        HorseSex = participant.Horse.Sex.Sex;
+        
+        Place = results.Place;
+        // todo : parse kmTime
+        KmTime = -1;
+        Odds = results.Odds;
+        GRemark = results.GRemark;  
     }
-    
+
     // race specific data
     public int StartNumber { get; set; }
     public int Distance { get; set; }
@@ -26,7 +51,7 @@ public class DatasetRaceCard : DatasetBasic
     // participant data
     public string DriverName { get; set; }
     public string HorseName { get; set; }
-    public string HorseAge { get; set; }
+    public int HorseAge { get; set; }
     public string HorseSex { get; set; }
     
     // aggregated data
@@ -34,7 +59,6 @@ public class DatasetRaceCard : DatasetBasic
     public double HorseVolteMaxSeason { get; set; }
     public double HorseAutoMacCareer { get; set; }
     public double HorseAutoMaxSeason { get; set; }
-    // todo : check span on racecard!!
     public int HorseWinningsSeason { get; set; }
     
     public int HorseRaceTotalYear { get; set; }

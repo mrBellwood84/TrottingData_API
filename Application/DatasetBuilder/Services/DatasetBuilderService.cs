@@ -93,6 +93,14 @@ public class DatasetBuilderService<T>(
         var errorMsg = $"Race participant entity was expected for Horse: {sourceId}";
         throw new DatasetNoParticipantFoundException(errorMsg);
     }
+    
+    protected async Task<RaceResultComplex> GetRaceResultByParticipant(string participantId)
+        {
+            var data = await raceResultRepository.GetComplexByParticipantIdAsync(participantId);
+            if (data != null) return data;
+            var errorMsg = $"Race result was expected for participantId {participantId}";
+            throw new DatasetResultNotFound(errorMsg); 
+        }
 
 
     private async Task<RaceComplex> GetRaceComplexDataAsync(string raceId)

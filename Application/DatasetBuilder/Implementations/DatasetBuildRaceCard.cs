@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Application.Configurations;
 using Application.DatasetBuilder.Services;
 using Application.Repository.Interfaces;
@@ -26,24 +27,26 @@ public class DatasetBuildRaceCard(
         var approved = CheckRules();
         if (!approved) return [];
 
-        // todo : create concurrent bag to resolved race cards
-        var result = new List<DatasetRaceCard>();
+        var result = new ConcurrentBag<DatasetRaceCard>();
+        var tasks = new List<Task>();
         // todo : create task list to await all!
 
         var basic = await BuildBasicDataAsync(raceId);
 
         foreach (var item in Participants)
         {
-            var raceCard = new DatasetRaceCard(basic);
-
-            result.Add(raceCard);
+            var task = ResolveRaceCard(basic, item, result);
+            tasks.Add(task);
         }
-
-        return result;
+        
+        Task.WaitAll(tasks);
+        return result.ToList();
     }
 
-    private Task ResolveRaceCard(DatasetRaceCard raceCard, RaceParticipantComplex participant)
+    private async Task ResolveRaceCard(DatasetBasic baseData, RaceParticipantComplex participant, ConcurrentBag<DatasetRaceCard> results)
     {
-        return Task.CompletedTask;
+        var raceResult = await GetRaceResultByParticipant(participant.Id);
+        var raceCard = new DatasetRaceCard(baseData, participant, raceResult);
+        results.Add(raceCard);
     }
 }
