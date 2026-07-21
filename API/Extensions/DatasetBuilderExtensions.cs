@@ -8,7 +8,7 @@ public static class DatasetBuilderExtensions
 {
     public static IServiceCollection AddDatasetBuilders(this IServiceCollection services)
     {
-        services.AddScoped<IDatasetBuilderService<DatasetBasic>, DatasetRaceCard>();
+        services.AddTransient<IDatasetBuilderService<DatasetRaceCard>, DatasetBuildRaceCard>();
         
         return services;
     }

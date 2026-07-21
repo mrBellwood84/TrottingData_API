@@ -4,5 +4,5 @@ namespace Application.DatasetBuilder.Interfaces;
 
 public interface IDatasetBuilderService<T>
 {
-    Task<T> BuildAsync(string raceId);
+    Task<List<T>> BuildAsync(string raceId);
 }

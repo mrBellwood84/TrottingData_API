@@ -5,7 +5,7 @@ using Models.Datasets;
 
 namespace API.Controllers.Datasets;
 
-public class RaceCardController(IDatasetBuilderService<DatasetBasic> builder) : DatasetController
+public class RaceCardController(IDatasetBuilderService<DatasetRaceCard> builder) : DatasetController
 {
     
     [HttpGet("{raceId}")]

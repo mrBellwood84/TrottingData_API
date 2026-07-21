@@ -10,38 +10,111 @@ using Models.Entity;
 namespace Application.DatasetBuilder.Services;
 
 public class DatasetBuilderService<T>(
-    IOptions<DatasetBuilderOptions> options,
+    IOptions<DatasetBuilderOptions> rules,
     IReadAllRepository<CompetitionEntity, CompetitionComplex> competitionRepository,
-    IReadAllRepository<HorseTypeEntity, HorseTypeComplex> horseTypeRepository,
     IReadAllRepository<RaceCourseEntity, RaceCourseComplex> raceCourseRepository,
-    IReadAllRepository<RaceStartTypeEntity, RaceStartTypeComplex> raceStartTypeRepository,
-    IRaceRepository raceRepository) : IDatasetBuilderService<T>
-{   
-    public virtual Task<T> BuildAsync(string raceId)
+    IReadSourceRepository<DriverEntity, DriverComplex> driverRepository,
+    IReadSourceRepository<HorseEntity, HorseComplex> horseRepository,
+    IRaceRepository raceRepository,
+    IRaceParticipantRepository raceParticipantRepository,
+    IRaceResultRepository raceResultRepository) 
+    : IDatasetBuilderService<T>
+
+{
+    private RaceComplex _race = null!;
+    protected List<RaceParticipantComplex> Participants = null!;
+    
+    public virtual Task<List<T>> BuildAsync(string raceId)
     {
         var message = "No functionality added to build method";
         throw new DatasetNoBuildMethodException(message);
     }
-    
-    protected async Task<DatasetBasic> BuildBasicData(string raceId)
+
+    protected async Task InitializeRaceAsync(string raceId)
     {
-        var raceEntity = await raceRepository.GetEntityByIdAsync(raceId);
-        var competitionEntity = await competitionRepository.GetEntityByIdAsync(raceEntity!.CompetitionId);
-        var raceCourseEntity = await raceCourseRepository.GetEntityByIdAsync(competitionEntity!.RaceCourseId);
-        var horseType = raceEntity.HorseTypeId != null ? await horseTypeRepository.GetEntityByIdAsync(raceEntity.HorseTypeId) : null;
-        var startType = await raceStartTypeRepository.GetEntityByIdAsync(raceEntity.RaceStartTypeId);
-        
-        
-        var data = new DatasetBasic()
+        _race = await GetRaceComplexDataAsync(raceId);
+        Participants = _race.Participants;
+    }
+    
+    protected async Task<DatasetBasic> BuildBasicDataAsync(string raceId)
         {
-            Date = competitionEntity.Date,
-            RaceCourse = raceCourseEntity!.Name,
-            RaceNumber = raceEntity.RaceNumber,
-            HorseType = horseType?.Type,
-            StartType = startType!.Type,
-            Monte = raceEntity.Monte,
-        };
-        
-        return data;
+            var raceEntity = await GetRaceEntityDataAsync(raceId);
+            var competitionEntity = await GetCompetitionEntityDataAsync(raceEntity.CompetitionId);
+            var raceCourseEntity = await raceCourseRepository.GetEntityByIdAsync(competitionEntity.RaceCourseId);
+    
+            var data = new DatasetBasic
+            {
+                Date = competitionEntity.Date,
+                RaceCourse = raceCourseEntity!.Name,
+                RaceNumber = _race.RaceNumber,
+                HorseType = _race.HorseType.Type,
+                StartType = _race.StartType.Type,
+                Monte = _race.Monte
+            };
+    
+            return data;
+        }
+
+    protected bool CheckRules()
+    {
+        if (Participants.Count < rules.Value.MinimumParticipants) return false;
+        return true;
+    }
+
+    
+    protected async Task<DriverComplex> GetDriverAsync(string sourceId)
+    {
+        var data = await driverRepository.GetComplexBySourceIdAsync(sourceId);
+        if (data != null) return data;
+        var errorMsg = $"Driver entity was expected for source id {sourceId}";
+        throw new DatasetNoParticipantFoundException(errorMsg);
+    }
+    protected async Task<HorseComplex> GetHorseAsync(string sourceId)
+    {
+        var data = await horseRepository.GetComplexBySourceIdAsync(sourceId);
+        if (data != null) return data;
+        var errorMsg = $"Horse entity was expected for id {sourceId}";
+        throw new DatasetNoParticipantFoundException(errorMsg);
+    }
+
+    
+    protected async Task<List<RaceParticipantComplex>> GetRaceParticipantByDriverAsync(string sourceId)
+    {
+        var data = await raceParticipantRepository.GetComplexByDriverAsync(sourceId);
+        if (data != null) return data;
+        var errorMsg = $"Race participant entity was expected for Driver: {sourceId}";
+        throw new DatasetNoParticipantFoundException(errorMsg);
+    }
+    protected async Task<List<RaceParticipantComplex>> GetRaceParticipantByHorseAsync(string sourceId)
+    {
+        var data = await raceParticipantRepository.GetComplexesByHorseAsync(sourceId);
+        if (data != null) return data;
+        var errorMsg = $"Race participant entity was expected for Horse: {sourceId}";
+        throw new DatasetNoParticipantFoundException(errorMsg);
+    }
+    
+    
+    private async Task<RaceComplex> GetRaceComplexDataAsync(string raceId)
+    {
+        var data = await raceRepository.GetComplexByIdAsync(raceId);
+        if (data != null) return data;
+        var errorMsg = $"Race entity was expected for id {raceId}";
+        throw new DatasetRaceNotFoundException(errorMsg);
+    }
+
+    private async Task<RaceEntity> GetRaceEntityDataAsync(string raceId)
+    {
+        var data = await raceRepository.GetEntityByIdAsync(raceId);
+        if (data != null) return data;
+        var errorMsg = $"Race entity was expected for id {raceId}";
+        throw new DatasetRaceNotFoundException(errorMsg);
+    }
+
+    private async Task<CompetitionEntity> GetCompetitionEntityDataAsync(string competitionId)
+    {
+        var data = await competitionRepository.GetEntityByIdAsync(competitionId);
+        if (data != null) return data;
+        var errorMsg = $"Competition entity was expected for id {competitionId}";
+        throw new DatasetRaceNotFoundException(errorMsg);
     }
 }
