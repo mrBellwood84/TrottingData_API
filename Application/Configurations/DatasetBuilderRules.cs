@@ -1,7 +1,7 @@
 namespace Application.Configurations;
 
 // todo : change naming to rules, not options!!
-public class DatasetBuilderOptions
+public class DatasetBuilderRules
 {
     public int MinimumParticipants { get; init; }
 }

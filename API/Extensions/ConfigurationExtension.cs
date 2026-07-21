@@ -8,8 +8,8 @@ public static class ConfigurationExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<DatasetBuilderOptions>(
-            configuration.GetSection("DatasetBuilderOptions"));
+        services.Configure<DatasetBuilderRules>(
+            configuration.GetSection("DatasetBuilderRules"));
 
         return services;
     }

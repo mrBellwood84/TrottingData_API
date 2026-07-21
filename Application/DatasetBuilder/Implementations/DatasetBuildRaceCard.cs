@@ -9,7 +9,7 @@ using Models.Entity;
 namespace Application.DatasetBuilder.Implementations;
 
 public class DatasetBuildRaceCard(
-    IOptions<DatasetBuilderOptions> options,
+    IOptions<DatasetBuilderRules> options,
     IReadAllRepository<CompetitionEntity, CompetitionComplex> competitionRepository,
     IReadAllRepository<RaceCourseEntity, RaceCourseComplex> raceCourseRepository,
     IReadSourceRepository<DriverEntity, DriverComplex> driverRepository,

@@ -10,7 +10,7 @@ using Models.Entity;
 namespace Application.DatasetBuilder.Services;
 
 public class DatasetBuilderService<T>(
-    IOptions<DatasetBuilderOptions> rules,
+    IOptions<DatasetBuilderRules> rules,
     IReadAllRepository<CompetitionEntity, CompetitionComplex> competitionRepository,
     IReadAllRepository<RaceCourseEntity, RaceCourseComplex> raceCourseRepository,
     IReadSourceRepository<DriverEntity, DriverComplex> driverRepository,
