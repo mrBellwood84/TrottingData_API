@@ -15,22 +15,27 @@ public class DatasetRaceCard : DatasetBasic
         Monte = data.Monte;
     }
     
+    // race specific data
     public int StartNumber { get; set; }
     public int Distance { get; set; }
     public int Track { get; set; }
+    public string CartType { get; set; }
+    public bool? ForeShoe { get; set; }
+    public bool? HindShoe { get; set; }
     
+    // participant data
     public string DriverName { get; set; }
-    
     public string HorseName { get; set; }
     public string HorseAge { get; set; }
     public string HorseSex { get; set; }
     
-    // span?
-    public double HorseVolte { get; set; }
-    public double HorseAuto { get; set; }
-    public int HorseWinnings { get; set; }
-    public bool HorseForeShoe { get; set; }
-    public bool HorseHindShoe { get; set; }
+    // aggregated data
+    public double HorseVolteMaxCareer { get; set; }
+    public double HorseVolteMaxSeason { get; set; }
+    public double HorseAutoMacCareer { get; set; }
+    public double HorseAutoMaxSeason { get; set; }
+    // todo : check span on racecard!!
+    public int HorseWinningsSeason { get; set; }
     
     public int HorseRaceTotalYear { get; set; }
     public int HorseRace1PlaceYear { get; set; }
@@ -55,4 +60,12 @@ public class DatasetRaceCard : DatasetBasic
     public double HorseRace2PlaceCareerPercent { get; set; }
     public int HorseRace3PlaceCareer { get; set; }
     public double HorseRace3PlaceCareerPercent { get; set; }
+    
+    // todo : get shapes for last 5 races!!!
+    
+    // static result data for prediction!
+    public int Place { get; set; }
+    public double KmTime { get; set; }
+    public int? Odds { get; set; }
+    public bool GRemark { get; set; }
 }
