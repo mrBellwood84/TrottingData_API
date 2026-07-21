@@ -70,7 +70,7 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
     {
         return _trainerIndex.GetAsync(trainerId);
     }
-    
+
 
     /// <summary>
     ///     Stores or updates a single participant in the master storage.
@@ -97,8 +97,8 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
                 await _raceIndex.SetAsync(raceId, item);
                 continue;
             }
-            
-            var entity = await  _master.GetAsync(item.Id);
+
+            var entity = await _master.GetAsync(item.Id);
             await _raceIndex.SetAsync(raceId, entity!);
         }
     }
@@ -119,8 +119,8 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
                 await _driverIndex.SetAsync(driverId, item);
                 continue;
             }
-            
-            var entity = await  _master.GetAsync(item.Id);
+
+            var entity = await _master.GetAsync(item.Id);
             await _driverIndex.SetAsync(driverId, entity!);
         }
     }
@@ -141,8 +141,8 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
                 await _horseIndex.SetAsync(horseId, item);
                 continue;
             }
-            
-            var entity = await  _master.GetAsync(item.Id);
+
+            var entity = await _master.GetAsync(item.Id);
             await _horseIndex.SetAsync(horseId, entity!);
         }
     }
@@ -163,8 +163,8 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
                 await _trainerIndex.SetAsync(trainerId, item);
                 continue;
             }
-            
-            var entity = await  _master.GetAsync(item.Id);
+
+            var entity = await _master.GetAsync(item.Id);
             await _trainerIndex.SetAsync(trainerId, entity!);
         }
     }

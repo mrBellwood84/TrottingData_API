@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Models.Datasets;
 
 namespace API.Controllers.Base;
 
@@ -8,5 +7,4 @@ namespace API.Controllers.Base;
 [Produces("application/json")]
 public class DatasetController : ControllerBase
 {
-    
 }

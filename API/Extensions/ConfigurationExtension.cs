@@ -5,7 +5,7 @@ namespace API.Extensions;
 public static class ConfigurationExtensions
 {
     public static IServiceCollection AddConfigurations(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration configuration)
     {
         services.Configure<DatasetBuilderOptions>(

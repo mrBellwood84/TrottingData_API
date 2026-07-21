@@ -1,5 +1,4 @@
 using Models.Interfaces;
-using Models.Shared;
 
 namespace Application.Repository.Interfaces;
 

@@ -33,7 +33,6 @@ public class ReadAllRepository<TEntity, TComplex>(
 
         var data = await dbService.GetIdsAsync();
         return data.Select(x => x.Id).ToList();
-
     }
 
     /// <summary>

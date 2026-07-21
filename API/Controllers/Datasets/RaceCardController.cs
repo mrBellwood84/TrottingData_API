@@ -7,7 +7,6 @@ namespace API.Controllers.Datasets;
 
 public class RaceCardController(IDatasetBuilderService<DatasetRaceCard> builder) : DatasetController
 {
-    
     [HttpGet("{raceId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

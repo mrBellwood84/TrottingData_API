@@ -1,7 +1,6 @@
 using Application.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models.Interfaces;
-using Models.Shared;
 
 namespace API.Controllers.Base;
 
