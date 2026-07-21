@@ -1,6 +1,8 @@
+using Application.Configurations;
 using Application.DatasetBuilder.Exceptions;
 using Application.DatasetBuilder.Interfaces;
 using Application.Repository.Interfaces;
+using Microsoft.Extensions.Options;
 using Models.Complex;
 using Models.Datasets;
 using Models.Entity;
@@ -8,6 +10,7 @@ using Models.Entity;
 namespace Application.DatasetBuilder.Services;
 
 public class DatasetBuilderService<T>(
+    IOptions<DatasetBuilderOptions> options,
     IReadAllRepository<CompetitionEntity, CompetitionComplex> competitionRepository,
     IReadAllRepository<HorseTypeEntity, HorseTypeComplex> horseTypeRepository,
     IReadAllRepository<RaceCourseEntity, RaceCourseComplex> raceCourseRepository,

@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApiServices()
     .AddCache()
+    .AddConfigurations(builder.Configuration)
     .AddDatasetBuilders()
     .AddPersistence()
     .AddRepositoryServices();
