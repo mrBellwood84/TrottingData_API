@@ -29,15 +29,17 @@ public class DatasetRaceCard : DatasetBasic
         DriverName = participant.Driver.Name;
         HorseName = participant.Horse.Name;
 
-        // todo : add horse age:
-        HorseAge = -1;
+        HorseAge = DatasetHelpers.CalculateHorseAge(data.Date, participant.Horse.YearOfBirth);
         HorseSex = participant.Horse.Sex.Sex;
-        
+
         Place = results.Place;
-        // todo : parse kmTime
-        KmTime = -1;
+        FirstPlace = results.Place == 1;
+        SecondPlace = results.Place == 2;
+        ThirdPlace = results.Place == 3;
+        HavePlace = results.Place is >= 1 and <= 3;
+        KmTime = DatasetHelpers.ParseKmTime(results.KmTime);
         Odds = results.Odds;
-        GRemark = results.GRemark;  
+        GRemark = results.GRemark;
     }
 
     // race specific data
@@ -51,7 +53,7 @@ public class DatasetRaceCard : DatasetBasic
     // participant data
     public string DriverName { get; set; }
     public string HorseName { get; set; }
-    public int HorseAge { get; set; }
+    public int? HorseAge { get; set; }
     public string HorseSex { get; set; }
     
     // aggregated data
@@ -79,7 +81,7 @@ public class DatasetRaceCard : DatasetBasic
     
     public int HorseRaceTotalCareer { get; set; }
     public int HorseRace1PlaceCareer { get; set; }
-    public  double HorseRace1PlaceCareerPercent { get; set; }
+    public double HorseRace1PlaceCareerPercent { get; set; }
     public int HorseRace2PlaceCareer { get; set; }
     public double HorseRace2PlaceCareerPercent { get; set; }
     public int HorseRace3PlaceCareer { get; set; }
@@ -88,8 +90,12 @@ public class DatasetRaceCard : DatasetBasic
     // todo : get shapes for last 5 races!!!
     
     // static result data for prediction!
-    public int Place { get; set; }
-    public double KmTime { get; set; }
+    public short Place { get; set; }
+    public bool FirstPlace { get; set; }
+    public bool SecondPlace { get; set; }
+    public bool ThirdPlace { get; set; }
+    public bool HavePlace { get; set; }
+    public double? KmTime { get; set; }
     public int? Odds { get; set; }
     public bool GRemark { get; set; }
 }
