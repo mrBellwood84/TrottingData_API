@@ -52,6 +52,11 @@ public class RaceParticipantDbService(IConfiguration configuration)
     private string SqlSelectComplexByHorseSourceId => $"{SqlSelectComplexBase} WHERE rp.HorseSourceId = @Id";
     private string SqlSelectComplexByTrainerSourceId => $"{SqlSelectComplexBase} WHERE rp.TrainerSourceId = @Id";
 
+    public Task<List<RaceParticipantEntity>> GetAllEntitiesAsync()
+    {
+        return QueryEntityListInternalAsync(_sqlSelectEntityBase, new {});
+    }
+
     /// <summary>
     ///     Retrieves a list of flat participant entities registered for a specific race.
     /// </summary>

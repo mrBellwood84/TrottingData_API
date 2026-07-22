@@ -42,17 +42,19 @@ public class DatasetBuildRaceCard(
         if (!approved) return [];
 
         var result = new ConcurrentBag<DatasetRaceCard>();
-        var tasks = new List<Task>();
-
         var basic = await BuildBasicDataAsync(raceId);
+        
 
-        foreach (var item in Participants)
+        var parallelOptions = new ParallelOptions
         {
-            var task = ResolveRaceCard(basic, item, result);
-            tasks.Add(task);
-        }
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        };
 
-        await Task.WhenAll(tasks);
+        await Parallel.ForEachAsync(Participants, parallelOptions, async (item, _) =>
+        {
+            await ResolveRaceCard(basic, item, result);
+        });
+
         return result.ToList();
     }
 
@@ -146,7 +148,7 @@ public class DatasetBuildRaceCard(
             if (year + 1 == raceDate.Year)
             {
                 prevSeason.TotalRaces++;
-                prevSeason.Winnings = item.Result.Price;
+                prevSeason.Winnings += item.Result.Price;
                 if (place == 1) prevSeason.FirstPlace++;
                 if (place == 2) prevSeason.SecondPlace++;
                 if (place == 3) prevSeason.ThirdPlace++;

@@ -37,6 +37,14 @@ public class RaceCache<T> : IRaceCache<T> where T : IEntity
         return _master.SetAsync(item.Id, item);
     }
 
+    public async Task SetAsync(List<T> data)
+    {
+        foreach (var item in data)
+        {
+            await SetAsync(item);
+        }
+    }
+
     /// <summary>
     ///     Caches a list of races grouped by competition, and registers all items in the master store.
     /// </summary>

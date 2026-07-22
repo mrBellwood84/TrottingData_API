@@ -5,6 +5,7 @@ namespace Persistence.Interfaces;
 
 public interface IRaceParticipantDbService : IReadSingleDbService<RaceParticipantEntity, RaceParticipantComplex>
 {
+    Task<List<RaceParticipantEntity>> GetAllEntitiesAsync();
     /// <summary>
     ///     Retrieves a list of flat participant entities registered for a specific race.
     /// </summary>

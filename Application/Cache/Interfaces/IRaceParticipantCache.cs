@@ -53,6 +53,8 @@ public interface IRaceParticipantCache<T> where T : IEntity
     /// <param name="item">The participant item to cache.</param>
     Task SetAsync(T item);
 
+    Task SetAsync(List<T> data);
+
     /// <summary>
     ///     Caches a list of participants grouped by race, and indexes them individually in the master store.
     /// </summary>

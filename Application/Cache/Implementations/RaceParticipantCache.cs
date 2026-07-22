@@ -81,6 +81,14 @@ public class RaceParticipantCache<T> : IRaceParticipantCache<T> where T : IEntit
         return _master.SetAsync(item.Id, item);
     }
 
+    public async Task SetAsync(List<T> data)
+    {
+        foreach (var item in data)
+        {
+            await _master.SetAsync(item.Id, item);
+        }
+    }
+
     /// <summary>
     ///     Caches a list of participants grouped by race, and indexes them individually in the master store.
     /// </summary>

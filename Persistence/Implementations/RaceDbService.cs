@@ -47,6 +47,7 @@ public class RaceDbService(IConfiguration configuration)
         LEFT JOIN Race_RaceGamblingType r_rgt ON r.Id = r_rgt.RaceId
         LEFT JOIN RaceGamblingType rgt ON r_rgt.RaceGamblingTypeId = rgt.Id";
 
+    protected override string SqlSelectEntities => @"SELECT * FROM Race";   
     protected override string SqlSelectEntityById => @"SELECT * FROM Race WHERE Id = @Id";
     private string SqlSelectEntityByCompetitionId => @"SELECT * FROM Race WHERE CompetitionId = @Id";
 

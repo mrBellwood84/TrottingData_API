@@ -19,6 +19,8 @@ public interface IRaceCache<T> where T : IEntity
     /// </summary>
     Task SetAsync(T item);
 
+    Task SetAsync(List<T> data);
+
     /// <summary>
     ///     Caches a list of races grouped by competition, and registers all items in the master store.
     /// </summary>
