@@ -83,101 +83,101 @@ public class RaceParticipantRepository(
     /// <summary>
     ///     Retrieves all flat race participation associated with a specific driver.
     /// </summary>
-    /// <param name="driverId">The unique source identifier of the driver.</param>
+    /// <param name="sourceId">The unique source identifier of the driver.</param>
     /// <returns>A list of <see cref="RaceParticipantEntity" /> objects, or <c>null</c> if none exist.</returns>
-    public async Task<List<RaceParticipantEntity>?> GetEntitiesByDriverAsync(string driverId)
+    public async Task<List<RaceParticipantEntity>?> GetEntitiesByDriverAsync(string sourceId)
     {
-        var cacheData = await entityCache.GetByDriverAsync(driverId);
+        var cacheData = await entityCache.GetByDriverAsync(sourceId);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetEntitiesByDriverSourceIdAsync(driverId);
+        var dbData = await dbService.GetEntitiesByDriverSourceIdAsync(sourceId);
         if (dbData.Count == 0) return null;
 
-        await entityCache.SetDriverAsync(driverId, dbData);
+        await entityCache.SetDriverAsync(sourceId, dbData);
         return dbData;
     }
 
     /// <summary>
     ///     Retrieves all complex race participation associated with a specific driver.
     /// </summary>
-    /// <param name="driverId">The unique source identifier of the driver.</param>
+    /// <param name="sourceId">The unique source identifier of the driver.</param>
     /// <returns>A list of detailed <see cref="RaceParticipantComplex" /> models, or <c>null</c> if none exist.</returns>
-    public async Task<List<RaceParticipantComplex>?> GetComplexByDriverAsync(string driverId)
+    public async Task<List<RaceParticipantComplex>?> GetComplexByDriverAsync(string sourceId)
     {
-        var cacheData = await complexCache.GetByDriverAsync(driverId);
+        var cacheData = await complexCache.GetByDriverAsync(sourceId);
         if (cacheData is not null) return cacheData;
-        var dbData = await dbService.GetComplexesByDriverSourceIdAsync(driverId);
+        var dbData = await dbService.GetComplexesByDriverSourceIdAsync(sourceId);
         if (dbData.Count == 0) return null;
 
-        await complexCache.SetDriverAsync(driverId, dbData);
+        await complexCache.SetDriverAsync(sourceId, dbData);
         return dbData;
     }
 
     /// <summary>
     ///     Retrieves all flat race participation associated with a specific horse.
     /// </summary>
-    /// <param name="horseId">The unique source identifier of the horse.</param>
+    /// <param name="sourceId">The unique source identifier of the horse.</param>
     /// <returns>A list of <see cref="RaceParticipantEntity" /> objects, or <c>null</c> if none exist.</returns>
-    public async Task<List<RaceParticipantEntity>?> GetEntitiesByHorseAsync(string horseId)
+    public async Task<List<RaceParticipantEntity>?> GetEntitiesByHorseAsync(string sourceId)
     {
-        var cacheData = await entityCache.GetByHorseAsync(horseId);
+        var cacheData = await entityCache.GetByHorseAsync(sourceId);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetEntitiesByHorseSourceIdAsync(horseId);
+        var dbData = await dbService.GetEntitiesByHorseSourceIdAsync(sourceId);
         if (dbData.Count == 0) return null;
 
-        await entityCache.SetHorseAsync(horseId, dbData);
+        await entityCache.SetHorseAsync(sourceId, dbData);
         return dbData;
     }
 
     /// <summary>
     ///     Retrieves all complex race participation associated with a specific horse.
     /// </summary>
-    /// <param name="horseId">The unique source identifier of the horse.</param>
+    /// <param name="sourceId">The unique source identifier of the horse.</param>
     /// <returns>A list of detailed <see cref="RaceParticipantComplex" /> models, or <c>null</c> if none exist.</returns>
-    public async Task<List<RaceParticipantComplex>?> GetComplexesByHorseAsync(string horseId)
+    public async Task<List<RaceParticipantComplex>?> GetComplexesByHorseAsync(string sourceId)
     {
-        var cacheData = await complexCache.GetByHorseAsync(horseId);
+        var cacheData = await complexCache.GetByHorseAsync(sourceId);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetComplexesByHorseSourceIdAsync(horseId);
+        var dbData = await dbService.GetComplexesByHorseSourceIdAsync(sourceId);
         if (dbData.Count == 0) return null;
 
-        await complexCache.SetHorseAsync(horseId, dbData);
+        await complexCache.SetHorseAsync(sourceId, dbData);
         return dbData;
     }
 
     /// <summary>
     ///     Retrieves all flat race participation associated with a specific trainer.
     /// </summary>
-    /// <param name="trainerId">The unique source identifier of the trainer.</param>
+    /// <param name="trainerSourceId">The unique source identifier of the trainer.</param>
     /// <returns>A list of <see cref="RaceParticipantEntity" /> objects, or <c>null</c> if none exist.</returns>
-    public async Task<List<RaceParticipantEntity>?> GetEntitiesByTrainerAsync(string trainerId)
+    public async Task<List<RaceParticipantEntity>?> GetEntitiesByTrainerAsync(string trainerSourceId)
     {
-        var cacheData = await entityCache.GetByTrainAsync(trainerId);
+        var cacheData = await entityCache.GetByTrainAsync(trainerSourceId);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetEntitiesByTrainerSourceIdAsync(trainerId);
+        var dbData = await dbService.GetEntitiesByTrainerSourceIdAsync(trainerSourceId);
         if (dbData.Count == 0) return null;
 
-        await entityCache.SetTrainerAsync(trainerId, dbData);
+        await entityCache.SetTrainerAsync(trainerSourceId, dbData);
         return dbData;
     }
 
     /// <summary>
     ///     Retrieves all complex race participation associated with a specific trainer.
     /// </summary>
-    /// <param name="trainerId">The unique source identifier of the trainer.</param>
+    /// <param name="trainerSourceId">The unique source identifier of the trainer.</param>
     /// <returns>A list of detailed <see cref="RaceParticipantComplex" /> models, or <c>null</c> if none exist.</returns>
-    public async Task<List<RaceParticipantComplex>?> GetComplexesByTrainerAsync(string trainerId)
+    public async Task<List<RaceParticipantComplex>?> GetComplexesByTrainerAsync(string trainerSourceId)
     {
-        var cacheData = await complexCache.GetByTrainAsync(trainerId);
+        var cacheData = await complexCache.GetByTrainAsync(trainerSourceId);
         if (cacheData is not null) return cacheData;
 
-        var dbData = await dbService.GetComplexesByTrainerSourceIdAsync(trainerId);
+        var dbData = await dbService.GetComplexesByTrainerSourceIdAsync(trainerSourceId);
         if (dbData.Count == 0) return null;
 
-        await complexCache.SetTrainerAsync(trainerId, dbData);
+        await complexCache.SetTrainerAsync(trainerSourceId, dbData);
         return dbData;
     }
 }

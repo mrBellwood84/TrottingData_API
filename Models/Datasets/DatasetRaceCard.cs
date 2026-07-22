@@ -56,36 +56,39 @@ public class DatasetRaceCard : DatasetBasic
     public int? HorseAge { get; set; }
     public string HorseSex { get; set; }
     
-    // aggregated data
-    public double HorseVolteMaxCareer { get; set; }
-    public double HorseVolteMaxSeason { get; set; }
-    public double HorseAutoMacCareer { get; set; }
-    public double HorseAutoMaxSeason { get; set; }
-    public int HorseWinningsSeason { get; set; }
+    // historic results
+    public double? VolteBestCareer { get; set; }
+    public double? AutoBestCareer { get; set; }
+    public int WinningsCareer { get; set; }
+    public int TotalRacesCareer { get; set; }
+    public int TotalFirstPlaceCareer { get; set; }
+    public double PercentFirstPlaceCareer { get; set; }
+    public int TotalSecondPlaceCareer { get; set; }
+    public double PercentSecondPlaceCareer { get; set; }
+    public int TotalThirdPlaceCareer { get; set; }
+    public double PercentThirdYearCareer { get; set; }
     
-    public int HorseRaceTotalYear { get; set; }
-    public int HorseRace1PlaceYear { get; set; }
-    public double HorseRace1PlaceYearPercent { get; set; }
-    public int HorseRace2PlaceYear { get; set; }
-    public double HorseRace2PlaceYearPercent { get; set; }
-    public int HorseRace3PlaceYear { get; set; }
-    public double HorseRace3PlaceYearPercent { get; set; }
+    public double? VolteBestSeason { get; set; }
+    public double? AutoBestSeason { get; set; }
+    public int WinningsSeason { get; set; }
+    public int TotalRacesSeason { get; set; }
+    public int TotalFirstPlaceSeason { get; set; }
+    public double PercentFirstPlaceSeason { get; set; }
+    public int TotalSecondPlaceSeason { get; set; }
+    public double PercentSecondPlaceSeason { get; set; }
+    public int TotalThirdPlaceSeason { get; set; }
+    public double PercentThirdPlaceSeason { get; set; }
     
-    public int HorseRaceTotalPrevYear { get; set; }
-    public int HorseRace1PlacePrevYear { get; set; }
-    public double HorseRace1PlacePrevYearPercent { get; set; }
-    public int HorseRace2PlacePrevYear { get; set; }
-    public double HorseRace2PlacePrevYearPercent { get; set; }
-    public int HorseRace3PlacePrevYear { get; set; }
-    public double HorseRace3PlacePrevYearPercent { get; set; }
-    
-    public int HorseRaceTotalCareer { get; set; }
-    public int HorseRace1PlaceCareer { get; set; }
-    public double HorseRace1PlaceCareerPercent { get; set; }
-    public int HorseRace2PlaceCareer { get; set; }
-    public double HorseRace2PlaceCareerPercent { get; set; }
-    public int HorseRace3PlaceCareer { get; set; }
-    public double HorseRace3PlaceCareerPercent { get; set; }
+    public double? VolteBestPrevSeason { get; set; }
+    public double? AutoBestPrevSeason { get; set; }
+    public int WinningsPrevSeason { get; set; }
+    public int TotalRacesPrevSeason { get; set; }
+    public int TotalFirstPlacePrevSeason { get; set; }
+    public double PercentFirstPlacePrevSeason { get; set; }
+    public int TotalSecondPlacePrevSeason { get; set; }
+    public double PercentSecondPlacePrevSeason { get; set; }
+    public int TotalThirdPlacePrevSeason { get; set; }
+    public double PercentThirdPlacePrevSeason { get; set; }
     
     // todo : get shapes for last 5 races!!!
     
@@ -98,4 +101,6 @@ public class DatasetRaceCard : DatasetBasic
     public double? KmTime { get; set; }
     public int? Odds { get; set; }
     public bool GRemark { get; set; }
+    
+    
 }

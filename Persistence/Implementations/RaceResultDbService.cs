@@ -19,7 +19,7 @@ public sealed class RaceResultDbService(IConfiguration configuration)
     private string SqlSelectEntityByParticipantId => @"SELECT * FROM RaceResult WHERE RaceParticipantId = @Id";
 
     protected override string SqlSelectComplexById => @"SELECT * FROM RaceResult WHERE Id = @Id";
-    private string SqlSelectComplexByParticipantId => @"SELECT * FROM RaceResult     WHERE RaceParticipantId = @Id";
+    private string SqlSelectComplexByParticipantId => @"SELECT * FROM RaceResult WHERE RaceParticipantId = @Id";
 
     /// <summary>
     ///     Retrieves a single flat race result entity associated with a specific race participant ID.

@@ -36,16 +36,16 @@ public interface IRaceParticipantRepository : IReadSingleRepository<RaceParticip
     /// <summary>
     ///     Retrieves all flat race participation associated with a specific horse.
     /// </summary>
-    /// <param name="horseId">The unique source identifier of the horse.</param>
+    /// <param name="sourceId">The unique source identifier of the horse.</param>
     /// <returns>A list of <see cref="RaceParticipantEntity" /> objects, or <c>null</c> if none exist.</returns>
-    Task<List<RaceParticipantEntity>?> GetEntitiesByHorseAsync(string horseId);
+    Task<List<RaceParticipantEntity>?> GetEntitiesByHorseAsync(string sourceId);
 
     /// <summary>
     ///     Retrieves all complex race participation associated with a specific horse.
     /// </summary>
-    /// <param name="horseId">The unique source identifier of the horse.</param>
+    /// <param name="sourceId">The unique source identifier of the horse.</param>
     /// <returns>A list of detailed <see cref="RaceParticipantComplex" /> models, or <c>null</c> if none exist.</returns>
-    Task<List<RaceParticipantComplex>?> GetComplexesByHorseAsync(string horseId);
+    Task<List<RaceParticipantComplex>?> GetComplexesByHorseAsync(string sourceId);
 
     /// <summary>
     ///     Retrieves all flat race participation associated with a specific trainer.
